@@ -1,10 +1,12 @@
 //
 // blendMorph.pde, Antony Bartlett, 2012-03-24
 //
-// This source-code module written in the Processing programming language is for blend-morphing SVG (Scalable Vector Graphics) drawings together.
+// This source-code module written in the Processing programming language is for blend-morphing
+// SVG (Scalable Vector Graphics) drawings together.
 //
-// Blend-morphing is a technique used in 2D animation.  It requires two or more drawings that share the same structure, differing by coordinate value only.
-// The purpose is to create smooth transitions between those drawings.
+// Blend-morphing is a technique used in 2D animation.  It requires two or more drawings that share
+// the same structure, differing by coordinate value only. The purpose is to create smooth transitions
+// between those drawings.
 //
 
 // Requires the Geomerative library
@@ -204,8 +206,9 @@ RShape getOrLoadShape(String filename)
     {
       RG.init(this);
     }
-    
-    shape = RG.loadShape(filename);
+   
+    RSVG svg = new RSVGIgnoreTagWarnings();
+    shape = svg.toShape(filename);
     g_mapLoadedSVG.put(filename, shape);
   }
 
@@ -377,4 +380,28 @@ float blendMorph(float base, float arrMorph[], float arrMorphProportion[])
   return blend;
 }
 
+//
+// Suppress the warning messages that certain Inkscape tags create.
+// This is a horrible hack but those messages are just going to cause clutter and confusion!
+//
+class RSVGIgnoreTagWarnings extends RSVG
+{
+  public RShape elemToCompositeShape(XMLElement elem)
+  {
+    XMLElement elems[] = elem.getChildren();
+    for (int i = 0; i < elems.length; i++)
+    {
+      String name = elems[i].getName().toLowerCase();
+      XMLElement element = elems[i];
+
+      if (name.equals("metadata")
+      ||  name.equals("sodipodi:namedview"))
+      {
+        elem.removeChild(element);
+      }
+    }
+
+    return super.elemToCompositeShape(elem);
+  }
+}
 
