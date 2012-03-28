@@ -36,8 +36,6 @@ RStyle modifyStyleSelected(RStyle style)
 void setup()
 {
   size(900,500);
-  background(255);
-  smooth();
 
   RG.init(this);
 
@@ -51,24 +49,27 @@ void setup()
 
 void draw()
 {
-  translate(0,100);
-  drawShapeWithSelection(shape1, shape1.getStyle(), itr1);
-//  shape1.draw();
+  background(255);
+  
+  // first shape
 
-/*
-  RGeomElem elem1 = itr1.getCurrentElem();
-  RStyle normalStyle1 = elem1.getStyle();
-  RStyle selectedStyle1 = modifyStyleSelected(new RStyle(normalStyle1));
-  elem1.setStyle(selectedStyle1);
-  elem1.draw();
-  elem1.setStyle(normalStyle1);
-*/
+  translate(0,100);
+  smooth();
+  drawShapeWithSelection(shape1, itr1);
+
+  noSmooth();
+  drawArrows(itr1);
+
+  // second shape
   
   translate(500,0);
+
+  smooth();
 //  drawShapeWithSelection(shape2, shape2.getStyle());
   shape2.draw();
 
-  noLoop();
+  noSmooth();
+  drawArrows(itr2);
 }
 
 void keyPressed()
@@ -79,36 +80,57 @@ void keyPressed()
     if (itr1.hasUp())
     {
       itr1.up();
-      println("up");
     }
     break;
   case DOWN:
     if (itr1.hasDown())
     {
       itr1.down();
-      println("down");
     }
     break;
   case LEFT:
     if (itr1.hasPrevious())
     {
       itr1.previous();
-      println("left");
     }
     break;
   case RIGHT:
     if (itr1.hasNext())
     {
       itr1.next();
-      println("right");
     }
     break;
   }
-  
-  loop();
 }
 
-void drawShapeWithSelection(RShape shape, RStyle defaultStyle, RShapeIterator itrSelected)
+void drawShapeWithSelection(RShape shape, RShapeIterator itrSelected)
+{
+  drawShapeWithSelection(shape, shape.getStyle(), itrSelected, false);
+  
+  stroke(selectedStrokeColor);
+  strokeWeight(10);
+  RGeomElem elem = itrSelected.getCurrentElem();
+  RPoint point = itrSelected.getCurrentPoint();
+  
+  if (elem != null)
+  {
+    switch(elem.getType())
+    {
+    case RGeomElem.SUBSHAPE:
+    case RGeomElem.COMMAND:
+      elem.draw();
+      break;
+    }
+  }
+
+  if (point != null)
+  {
+    rectMode(CENTER);
+    rect(point.x, point.y, 5, 5);
+  }
+}
+
+void drawShapeWithSelection(RShape shape, RStyle defaultStyle, RShapeIterator itrSelected, boolean bSelected)
 {
   RStyle style = new RStyle(shape.getStyle());
   
@@ -136,7 +158,12 @@ void drawShapeWithSelection(RShape shape, RStyle defaultStyle, RShapeIterator it
 
   // End of style substitution  
   
-  if (itrSelected.getCurrentElem().equals(shape))
+  if (shape.equals(itrSelected.getCurrentElem()))
+  {
+    bSelected = true;
+  }
+  
+  if (bSelected)
   {
     modifyStyleSelected(style);
   }
@@ -149,7 +176,7 @@ void drawShapeWithSelection(RShape shape, RStyle defaultStyle, RShapeIterator it
   {
     for (int n = 0; n < shape.children.length; ++n)
     {
-      drawShapeWithSelection(shape.children[n], style, itr1); // recursion
+      drawShapeWithSelection(shape.children[n], style, itr1, bSelected); // recursion
     }
   }
 }
