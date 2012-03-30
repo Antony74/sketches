@@ -8,44 +8,59 @@ class RShapeIterator
 
   RGeomElem getCurrentElem()
   {
-    return stack.lastElement().geomElem;
+    return stack.elementAt(currentDepth).geomElem;
   }
 
   RPoint getCurrentPoint()
   {
-    return stack.lastElement().point;
+    return stack.elementAt(currentDepth).point;
   }
 
   boolean hasUp()
   {
-    return stack.size() > 1;
+    return currentDepth > 0;
   }
 
   void up()
   {
-    stack.removeElementAt(stack.size() - 1); // pop
+    --currentDepth;
   }
 
   boolean hasDown()
   {
-    return getChild(stack.lastElement().geomElem, 0) != null;
+    if (currentDepth < stack.size() - 1)
+    {
+      return true;
+    }
+    else
+    { 
+      RGeomElem current = getCurrentElem();
+      return (current == null) ? false : (getChild(current, 0) != null);
+    }
   }
 
   void down()
   {
-    stack.add(new StackElem(getChild(stack.lastElement().geomElem, 0), 0));
+    if (currentDepth >= stack.size() - 1)
+    {
+      stack.add(new StackElem(getChild(stack.lastElement().geomElem, 0), 0));
+    }
+    ++currentDepth;
   }
 
   boolean hasPrevious()
   {
-    return stack.lastElement().index > 0;
+    return stack.elementAt(currentDepth).index > 0;
   }
   
   void previous()
   {
-    RGeomElem parent = stack.elementAt(stack.size() - 2).geomElem;
-    int nIndex = stack.lastElement().index - 1;
-    up();
+    RGeomElem parent = stack.elementAt(currentDepth - 1).geomElem;
+    int nIndex = getCurrentIndex() - 1;
+    while (currentDepth < stack.size())
+    {
+      stack.removeElementAt(stack.size() - 1);
+    }
     stack.add(new StackElem(getChild(parent, nIndex), nIndex));
   }
 
@@ -53,8 +68,8 @@ class RShapeIterator
   {
     if (hasUp())
     {
-      RGeomElem parent = stack.elementAt(stack.size() - 2).geomElem;
-      int nIndex = stack.lastElement().index + 1;
+      RGeomElem parent = stack.elementAt(currentDepth - 1).geomElem;
+      int nIndex = getCurrentIndex() + 1;
       return getChild(parent, nIndex) != null;
     }
     else
@@ -65,9 +80,12 @@ class RShapeIterator
 
   void next()
   {
-    RGeomElem parent = stack.elementAt(stack.size() - 2).geomElem;
-    int nIndex = stack.lastElement().index + 1;
-    up();
+    RGeomElem parent = stack.elementAt(currentDepth - 1).geomElem;
+    int nIndex = getCurrentIndex() + 1;
+    while (currentDepth < stack.size())
+    {
+      stack.removeElementAt(stack.size() - 1);
+    }
     stack.add(new StackElem(getChild(parent, nIndex), nIndex));
   }
 
@@ -158,7 +176,13 @@ class RShapeIterator
     int index = 0;
   };
 
+  private int getCurrentIndex()
+  {
+    return stack.elementAt(currentDepth).index;
+  }
+
   private Vector<StackElem> stack = new Vector<StackElem>();
+  private int currentDepth = 0;
 };
 
 

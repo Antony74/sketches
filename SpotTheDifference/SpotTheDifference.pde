@@ -63,10 +63,8 @@ void draw()
   // second shape
   
   translate(500,0);
-
   smooth();
-//  drawShapeWithSelection(shape2, shape2.getStyle());
-  shape2.draw();
+  drawShapeWithSelection(shape2, itr2);
 
   noSmooth();
   drawArrows(itr2);
@@ -77,27 +75,31 @@ void keyPressed()
   switch(keyCode)
   {
   case UP:
-    if (itr1.hasUp())
+    if (itr1.hasUp() || itr2.hasUp())
     {
       itr1.up();
+      itr2.up();
     }
     break;
   case DOWN:
-    if (itr1.hasDown())
+    if (itr1.hasDown() || itr2.hasDown())
     {
       itr1.down();
+      itr2.down();
     }
     break;
   case LEFT:
-    if (itr1.hasPrevious())
+    if (itr1.hasPrevious() || itr2.hasPrevious())
     {
       itr1.previous();
+      itr2.previous();
     }
     break;
   case RIGHT:
-    if (itr1.hasNext())
+    if (itr1.hasNext() || itr2.hasNext())
     {
       itr1.next();
+      itr2.next();
     }
     break;
   }
@@ -109,6 +111,7 @@ void drawShapeWithSelection(RShape shape, RShapeIterator itrSelected)
   
   stroke(selectedStrokeColor);
   strokeWeight(10);
+  noFill();
   RGeomElem elem = itrSelected.getCurrentElem();
   RPoint point = itrSelected.getCurrentPoint();
   
@@ -176,7 +179,7 @@ void drawShapeWithSelection(RShape shape, RStyle defaultStyle, RShapeIterator it
   {
     for (int n = 0; n < shape.children.length; ++n)
     {
-      drawShapeWithSelection(shape.children[n], style, itr1, bSelected); // recursion
+      drawShapeWithSelection(shape.children[n], style, itrSelected, bSelected); // recursion
     }
   }
 }
