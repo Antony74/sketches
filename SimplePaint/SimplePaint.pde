@@ -4,122 +4,127 @@ boolean pmousePressed = false;
 char currentColor = 'K'; // Black
 char currentBrush = '1';
 
+Toolbar toolbar;
+
 void setup()
 {
   size(900,600);
   background(255);
   stroke(0);
   smooth();
+
+  toolbar = new Toolbar();
+
+  Button buttons[] = {
+    new BrushButton('1', 1),
+    new BrushButton('2', 2),
+    new BrushButton('3', 4),
+    new BrushButton('4', 8),
+    new BrushButton('5', 14),
+    new BrushButton('6', 24),
+    new BrushButton('7', 41),
   
-  toolbarFont = loadFont("FreeSans-16.vlw");
+    new ColorButton('K', 0,     0,   0),
+    new ColorButton('W', 255, 255, 255), // white
+    new ColorButton('R', 255,   0,   0), // red
+    new ColorButton('G', 0,   255,   0), // green
+    new ColorButton('B', 0,     0, 255) // blue
+  };
 
-  effectManager.addEffect(new BrushEffect('1', 1));
-  effectManager.addEffect(new BrushEffect('2', 2));
-  effectManager.addEffect(new BrushEffect('3', 4));
-  effectManager.addEffect(new BrushEffect('4', 8));
-  effectManager.addEffect(new BrushEffect('5', 14));
-  effectManager.addEffect(new BrushEffect('6', 24));
-  effectManager.addEffect(new BrushEffect('7', 41));
-
-  effectManager.addEffect(new EffectColor('K', 0,     0,   0));  // black
-  effectManager.addEffect(new EffectColor('W', 255, 255, 255));  // white
-  effectManager.addEffect(new EffectColor('R', 255,   0,   0));  // red
-  effectManager.addEffect(new EffectColor('G', 0,   255,   0));  // green
-  effectManager.addEffect(new EffectColor('B', 0,     0, 255));  // blue
+  toolbar.buttons = buttons;
+  
 }
 
-class EffectColor extends Effect
+class ColorButton extends Button
 {
-  EffectColor(char key, int r, int g, int b)
+  ColorButton(char key, int r, int g, int b)
   {
-    effectKey = key;
+    cKey = key;
     m_color = color(r,g,b);
   }
   
   void action()
   {
-    currentColor = effectKey;
-    effectManager.stroke(m_color);  // Is different to stroke(m_color) unqualified.  Bang goes that theory.  Drat and double drat.
+    currentColor = cKey;
+    stroke(m_color);
   }
 
   boolean isPicked()
   {
-    return currentColor == effectKey;
+    return currentColor == cKey;
+  }
+
+  boolean drawIcon()
+  {
+    noStroke();
+    fill(m_color);
+    
+    int margin = 5;
+    rect(margin, margin, width - margin - margin, height - margin - margin);
+
+    return true;
   }
   
   color m_color;
 }
 
-class BrushEffect extends Effect
+class BrushButton extends Button
 {
-  BrushEffect(char key, int weight)
+  BrushButton(char key, int weight)
   {
-    effectKey = key;
+    cKey = key;
     m_weight = weight;
   }
   
-  void action() {currentBrush = effectKey;}
-  boolean isPicked() {return currentBrush == effectKey;}
+  void action()
+  {
+    currentBrush = cKey;
+    strokeWeight(m_weight);
+  }
+
+  boolean isPicked() {return currentBrush == cKey;}
+
+  boolean drawIcon()
+  {
+    ColorButton ec = (ColorButton)toolbar.getButton(currentColor);
+    
+    strokeWeight(m_weight);
+    stroke(ec.m_color);
+    point(width * 0.5, height * 0.5);
+
+    return true;
+  }
 
   int m_weight;
 }
 
 void draw()
 {
-  if (mousePressed && pmousePressed)
+  if (toolbar.hitTest(mouseX, mouseY) == false)
   {
-    line(pmouseX, pmouseY, mouseX, mouseY);
-  }
-  else if (mousePressed)
-  {
-    point(mouseX, mouseY);
+    if (mousePressed && pmousePressed)
+    {
+      line(pmouseX, pmouseY, mouseX, mouseY);
+    }
+    else if (mousePressed)
+    {
+      point(mouseX, mouseY);
+    }
   }
 
   pmousePressed = mousePressed;
   
-  drawToolbar();
-  effectManager.draw();
+  toolbar.draw();
 }
 
 void keyTyped()
 {
-  effectManager.action(key);
+  toolbar.buttonPressed(key);
 }
 
 void mousePressed()
 {
-  effectManager.mousePressed();
-}
-
-boolean drawIcon(float x, Effect effect)
-{
-  if (effect instanceof EffectColor)
-  {
-    EffectColor ec = (EffectColor)effect;
-    noStroke();
-    
-    fill(ec.m_color);
-    
-    int margin = 3;
-        
-    rect(x + margin, margin, pvButtonSize.x - margin - margin, pvButtonSize.y - margin - margin);
-    
-    return true;
-  }
-
-  if (effect instanceof BrushEffect)
-  {
-    BrushEffect be = (BrushEffect)effect;
-    EffectColor ec = (EffectColor)effectManager.getEffect(currentColor);
-    
-    strokeWeight(be.m_weight);
-    stroke(ec.m_color);
-    point(x + (pvButtonSize.x * 0.5), pvButtonSize.y * 0.5);
-    
-    return true;
-  }
-  
-  return false;
+  toolbar.mousePressed();
 }
 
 
