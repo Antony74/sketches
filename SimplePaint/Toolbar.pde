@@ -7,6 +7,7 @@ class Button
   void action() {}
   boolean isPicked() {return false;}
   boolean drawIcon() {return false;}
+  void mousePressed() {}
 
   void draw(boolean isPressed, PFont font)
   {
@@ -46,9 +47,11 @@ class Button
     stroke(0);
     strokeWeight(1);
   
-    textFont(font, 16);
+    int nFontHeight = 32;
+  
+    textFont(font, nFontHeight);
     float nWidth = textWidth(cKey);
-    text(cKey, (width * 0.5) - (nWidth * 0.5), (height * 0.5) + 8);
+    text(cKey, (width * 0.5) - (nWidth * 0.5), (height * 0.40) + (nFontHeight * 0.5));
   }
 };
 
@@ -61,8 +64,6 @@ class Toolbar
 
   void draw()
   {
-    pushStyle();
-  
     stroke(0);
     strokeWeight(1);
     fill(200);
@@ -79,7 +80,6 @@ class Toolbar
     }
 
     popMatrix();  
-    popStyle();
   }
 
   void buttonPressed(char key)
@@ -125,22 +125,29 @@ class Toolbar
     return y < Button.height;
   }
 
-  boolean mousePressed()
+  void mousePressed()
   {
-    if (mouseButton == LEFT && mouseY < Button.height)
+    if (mouseButton == LEFT)
     {
-      int index = int(mouseX / Button.width);
-
-      if (index >= 0 && index < buttons.length)
+      if (mouseY < Button.height)
       {
-        Button button = buttons[index];
-        button.action();
+        int index = int(mouseX / Button.width);
+  
+        if (index >= 0 && index < buttons.length)
+        {
+          Button button = buttons[index];
+          button.action();
+        }
       }
-      
-      return true;
+      else
+      {
+        Button button = getButton(currentTool);
+        if (button != null)
+        {
+          button.mousePressed();
+        }
+      }
     }
-    
-    return false;
   }
 
   boolean isPressed(int index)

@@ -1,10 +1,9 @@
 
-boolean pmousePressed = false;
-
 char currentColor = 'K'; // Black
-char currentBrush = '1';
+char currentTool = '1';  // Thin brush
 
 Toolbar toolbar;
+Canvas canvas;
 
 void setup()
 {
@@ -14,8 +13,16 @@ void setup()
   smooth();
 
   toolbar = new Toolbar();
+  canvas = new Canvas();
+  canvas.setSize(width, height - Button.height);
 
   Button buttons[] = {
+    new ColorButton('K', 0,     0,   0),
+    new ColorButton('W', 255, 255, 255), // white
+    new ColorButton('R', 255,   0,   0), // red
+    new ColorButton('G', 0,   255,   0), // green
+    new ColorButton('B', 0,     0, 255), // blue
+
     new BrushButton('1', 1),
     new BrushButton('2', 2),
     new BrushButton('3', 4),
@@ -24,11 +31,8 @@ void setup()
     new BrushButton('6', 24),
     new BrushButton('7', 41),
   
-    new ColorButton('K', 0,     0,   0),
-    new ColorButton('W', 255, 255, 255), // white
-    new ColorButton('R', 255,   0,   0), // red
-    new ColorButton('G', 0,   255,   0), // green
-    new ColorButton('B', 0,     0, 255) // blue
+    new ZoomButton('+', 2),
+    new ZoomButton('-', 0.5)
   };
 
   toolbar.buttons = buttons;
@@ -46,7 +50,6 @@ class ColorButton extends Button
   void action()
   {
     currentColor = cKey;
-    stroke(m_color);
   }
 
   boolean isPicked()
@@ -78,11 +81,10 @@ class BrushButton extends Button
   
   void action()
   {
-    currentBrush = cKey;
-    strokeWeight(m_weight);
+    currentTool = cKey;
   }
 
-  boolean isPicked() {return currentBrush == cKey;}
+  boolean isPicked() {return currentTool == cKey;}
 
   boolean drawIcon()
   {
@@ -98,22 +100,46 @@ class BrushButton extends Button
   int m_weight;
 }
 
-void draw()
+class Canvas extends CanvasBase
 {
-  if (toolbar.hitTest(mouseX, mouseY) == false)
+  void draw(float mouseX, float mouseY, boolean mousePressed)
   {
-    if (mousePressed && pmousePressed)
+    Button tool = toolbar.getButton(currentTool);
+
+    if (tool instanceof BrushButton)
     {
-      line(pmouseX, pmouseY, mouseX, mouseY);
+      ColorButton cb = (ColorButton)toolbar.getButton(currentColor);
+      BrushButton bb = (BrushButton)tool;
+    
+      smooth();
+      stroke(cb.m_color);
+      strokeWeight(bb.m_weight);
+      
+      if (mousePressed && pmousePressed)
+      {
+        line(pmouseX, pmouseY, mouseX, mouseY);
+      }
+      else if (mousePressed)
+      {
+        point(mouseX, mouseY);
+      }
     }
-    else if (mousePressed)
-    {
-      point(mouseX, mouseY);
-    }
+    
+    pmouseX = mouseX;
+    pmouseY = mouseY;
+    pmousePressed = mousePressed;
   }
 
-  pmousePressed = mousePressed;
-  
+  boolean pmousePressed = false;
+  float pmouseX;
+  float pmouseY;
+};
+
+void draw()
+{
+  canvas.doDraw();
+  image(canvas, 0, Button.height);
+
   toolbar.draw();
 }
 
