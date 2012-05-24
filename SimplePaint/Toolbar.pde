@@ -4,7 +4,7 @@ class Button
   final static int width = 50;
   final static int height = 50;
   char cKey;
-  void action() {}
+  void action(int mouseButton) {}
   boolean isPicked() {return false;}
   boolean drawIcon() {return false;}
   void mousePressed() {}
@@ -87,7 +87,7 @@ class Toolbar
     Button button = getButton(key);
     if (button != null)
     {
-      button.action();
+      button.action(LEFT);
     }
   }
 
@@ -125,28 +125,38 @@ class Toolbar
     return y < Button.height;
   }
 
-  void mousePressed()
+  boolean mousePressed()
   {
-    if (mouseButton == LEFT)
+    if (mouseY < Button.height)
     {
-      if (mouseY < Button.height)
+      boolean oldShowColorWheel = showColorWheel;
+      char oldColor = currentColor;
+      showColorWheel = false;
+      
+      int index = int(mouseX / Button.width);
+
+      if (index >= 0 && index < buttons.length)
       {
-        int index = int(mouseX / Button.width);
-  
-        if (index >= 0 && index < buttons.length)
-        {
-          Button button = buttons[index];
-          button.action();
-        }
+        Button button = buttons[index];
+        button.action(mouseButton);
       }
-      else
+      
+      if (oldShowColorWheel == true && showColorWheel == true && currentColor == oldColor)
       {
-        Button button = getButton(currentTool);
-        if (button != null)
-        {
-          button.mousePressed();
-        }
+         showColorWheel = false; 
       }
+      
+      return true;
+    }
+    else
+    {
+      Button button = getButton(currentTool);
+      if (button != null)
+      {
+        button.mousePressed();
+      }
+      
+      return false;
     }
   }
 

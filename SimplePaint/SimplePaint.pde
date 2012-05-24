@@ -4,6 +4,9 @@ char currentTool = '1';  // Thin brush
 
 Toolbar toolbar;
 Canvas canvas;
+ColorWheel colorWheel;
+
+boolean showColorWheel = false;
 
 void setup()
 {
@@ -14,7 +17,13 @@ void setup()
 
   toolbar = new Toolbar();
   canvas = new Canvas();
+  colorWheel = new ColorWheel();
+
   canvas.setSize(width, height - Button.height);
+  canvas.setup();
+  
+  colorWheel.setSize(width, height - Button.height);
+  colorWheel.setup();
 
   Button buttons[] = {
     new ColorButton('K', 0,     0,   0),
@@ -47,8 +56,15 @@ class ColorButton extends Button
     m_color = color(r,g,b);
   }
   
-  void action()
+  void action(int mouseButton)
   {
+    if (mouseButton == RIGHT)
+    {
+      showColorWheel = true;
+    }
+
+    colorWheel.setHSB(hue(m_color),saturation(m_color),brightness(m_color));
+    colorWheel.bColorSelected = true;
     currentColor = cKey;
   }
 
@@ -79,7 +95,7 @@ class BrushButton extends Button
     m_weight = weight;
   }
   
-  void action()
+  void action(int mouseButton)
   {
     currentTool = cKey;
   }
@@ -115,13 +131,16 @@ class Canvas extends CanvasBase
       stroke(cb.m_color);
       strokeWeight(bb.m_weight);
       
-      if (mousePressed && pmousePressed)
+      if (mouseButton == LEFT)
       {
-        line(pmouseX, pmouseY, mouseX, mouseY);
-      }
-      else if (mousePressed)
-      {
-        point(mouseX, mouseY);
+        if (mousePressed && pmousePressed)
+        {
+          line(pmouseX, pmouseY, mouseX, mouseY);
+        }
+        else if (mousePressed)
+        {
+          point(mouseX, mouseY);
+        }
       }
     }
     
@@ -137,20 +156,47 @@ class Canvas extends CanvasBase
 
 void draw()
 {
-  canvas.doDraw();
-  image(canvas, 0, Button.height);
-
+  if (showColorWheel)
+  {
+    colorWheel.draw();
+    image(colorWheel, 0, Button.height);
+    
+    ColorButton button = (ColorButton)toolbar.getButton(currentColor);
+    button.m_color = color(colorWheel.getRed(), colorWheel.getGreen(), colorWheel.getBlue());    
+  }
+  else
+  {
+    canvas.doDraw();
+    image(canvas, 0, Button.height);
+  }
+  
   toolbar.draw();
 }
 
 void keyTyped()
 {
+  showColorWheel = false;
   toolbar.buttonPressed(key);
 }
 
 void mousePressed()
 {
-  toolbar.mousePressed();
+  boolean bProcessed = toolbar.mousePressed();
+
+  if (bProcessed == false)
+  {
+    if (showColorWheel)
+    {
+      if (mouseButton == LEFT)
+      {
+        colorWheel.mousePressed(mouseX, mouseY - Button.height, mouseButton);
+      }
+      else if (mouseButton == RIGHT)
+      {
+        showColorWheel = false;
+      }
+    }
+  }
 }
 
 

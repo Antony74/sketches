@@ -1,6 +1,13 @@
 
 class CanvasBase extends PGraphicsJava2D
 {
+  void setup()
+  {
+    beginDraw();
+    background(255);
+    endDraw();
+  }
+  
   void draw(float mouseX, float mouseY, boolean mousePressed) {}
   
   void doDraw()
