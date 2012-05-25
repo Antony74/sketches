@@ -4,9 +4,6 @@ char currentTool = '1';  // Thin brush
 
 Toolbar toolbar;
 Canvas canvas;
-ColorWheel colorWheel;
-
-boolean showColorWheel = false;
 
 void setup()
 {
@@ -17,14 +14,13 @@ void setup()
 
   toolbar = new Toolbar();
   canvas = new Canvas();
-  colorWheel = new ColorWheel();
 
   canvas.setSize(width, height - Button.height);
   canvas.setup();
   
   colorWheel.setSize(width, height - Button.height);
   colorWheel.setup();
-
+  
   Button buttons[] = {
     new ColorButton('K', 0,     0,   0),
     new ColorButton('W', 255, 255, 255), // white
@@ -46,74 +42,6 @@ void setup()
 
   toolbar.buttons = buttons;
   
-}
-
-class ColorButton extends Button
-{
-  ColorButton(char key, int r, int g, int b)
-  {
-    cKey = key;
-    m_color = color(r,g,b);
-  }
-  
-  void action(int mouseButton)
-  {
-    if (mouseButton == RIGHT)
-    {
-      showColorWheel = true;
-    }
-
-    colorWheel.setHSB(hue(m_color),saturation(m_color),brightness(m_color));
-    colorWheel.bColorSelected = true;
-    currentColor = cKey;
-  }
-
-  boolean isPicked()
-  {
-    return currentColor == cKey;
-  }
-
-  boolean drawIcon()
-  {
-    noStroke();
-    fill(m_color);
-    
-    int margin = 5;
-    rect(margin, margin, width - margin - margin, height - margin - margin);
-
-    return true;
-  }
-  
-  color m_color;
-}
-
-class BrushButton extends Button
-{
-  BrushButton(char key, int weight)
-  {
-    cKey = key;
-    m_weight = weight;
-  }
-  
-  void action(int mouseButton)
-  {
-    currentTool = cKey;
-  }
-
-  boolean isPicked() {return currentTool == cKey;}
-
-  boolean drawIcon()
-  {
-    ColorButton ec = (ColorButton)toolbar.getButton(currentColor);
-    
-    strokeWeight(m_weight);
-    stroke(ec.m_color);
-    point(width * 0.5, height * 0.5);
-
-    return true;
-  }
-
-  int m_weight;
 }
 
 class Canvas extends CanvasBase
@@ -156,15 +84,9 @@ class Canvas extends CanvasBase
 
 void draw()
 {
-  if (showColorWheel)
-  {
-    colorWheel.draw();
-    image(colorWheel, 0, Button.height);
-    
-    ColorButton button = (ColorButton)toolbar.getButton(currentColor);
-    button.m_color = color(colorWheel.getRed(), colorWheel.getGreen(), colorWheel.getBlue());    
-  }
-  else
+  boolean drawn = drawColorWheel();
+
+  if (drawn == false)
   {
     canvas.doDraw();
     image(canvas, 0, Button.height);
