@@ -30,8 +30,14 @@ ColorPanel colorWheel = new ColorPanel()
 
   void setHSB(float h, float s, float b)
   {
-    selectedColor = color(h,s,b);
+    setSelectedColor(color(round(h),round(s),round(b)));
     bColorSelected = true;
+  }
+
+  void setSelectedColor(color newSelectedColor)
+  {
+    selectedColor = newSelectedColor;
+//    println("hue " + hue(newSelectedColor) + ", saturation " + saturation(newSelectedColor) + ", brightness " + brightness(newSelectedColor));
   }
 
   int nSegments = 12;
@@ -184,7 +190,12 @@ ColorPanel colorWheel = new ColorPanel()
   
       fill(segment.segmentColor);
       
-      arc(xWheel, yWheel, wheelDiameter, wheelDiameter, segment.arcStart, segment.arcStop);  
+      arc(xWheel, yWheel, wheelDiameter, wheelDiameter, segment.arcStart, segment.arcStop);
+      
+      if (segment.segmentColor == selectedColor)
+      {
+        selectedSegment = segment;
+      }
     }
   
     fill(128);
@@ -280,7 +291,7 @@ ColorPanel colorWheel = new ColorPanel()
             xBlock = -1;
             yBlock = -1;
             bColorSelected = true;
-            selectedColor = segment.segmentColor;
+            setSelectedColor(segment.segmentColor);
           }
         }
       }
@@ -291,7 +302,7 @@ ColorPanel colorWheel = new ColorPanel()
           if (greys[n].hitTest(mouseX, mouseY))
           {
             selectedSegment = null;
-            selectedColor = greys[n].m_color;
+            setSelectedColor(greys[n].m_color);
             bColorSelected = true;
           }
         }
@@ -349,7 +360,7 @@ ColorPanel colorWheel = new ColorPanel()
         
         if (xIndex + nBlocks - nBlocksInThisRow == xBlock && yIndex == yBlock)
         {
-            selectedColor = color(nHue, nSaturation, nBrightness);
+            setHSB(nHue, nSaturation, nBrightness);
         }
         
         if (color(nHue, nSaturation, nBrightness) == selectedColor)
