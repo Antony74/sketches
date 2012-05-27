@@ -20,6 +20,7 @@ class BrushButton extends Button
     
     strokeWeight(m_weight);
     stroke(ec.m_color);
+    smooth();
     point(width * 0.5, height * 0.5);
 
     return true;

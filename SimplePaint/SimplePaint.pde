@@ -9,8 +9,6 @@ void setup()
 {
   size(900,600);
   background(255);
-  stroke(0);
-  smooth();
 
   toolbar = new Toolbar();
   canvas = new Canvas();
@@ -84,12 +82,15 @@ class Canvas extends CanvasBase
 
 void draw()
 {
+  background(128);
+  
   boolean drawn = drawColorWheel();
 
   if (drawn == false)
   {
-    canvas.doDraw();
-    image(canvas, 0, Button.height);
+    canvas.doDraw(mouseX, mouseY - Button.height, mousePressed);
+    noSmooth();
+    image(canvas, canvas.pannedX, canvas.pannedY + Button.height, canvas.zoomedWidth, canvas.zoomedHeight);
   }
   
   toolbar.draw();
