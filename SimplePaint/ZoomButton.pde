@@ -22,4 +22,24 @@ class ZoomButton extends Button
   float m_zoomFactor;
 };
 
+class PanButton extends Button
+{
+  PanButton(char key)
+  {
+    cKey = key;
+  }
+
+  void action(int mouseButton)
+  {
+    currentTool = cKey;
+  }
+
+  boolean isPicked() {return currentTool == cKey;}
+
+  void mouseDragged()
+  {
+    canvas.pan(mouseX - pmouseX, mouseY - pmouseY);
+  }
+};
+
 

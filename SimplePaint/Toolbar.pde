@@ -8,6 +8,7 @@ class Button
   boolean isPicked() {return false;}
   boolean drawIcon() {return false;}
   void mousePressed() {}
+  void mouseDragged() {}
 
   void draw(boolean isPressed, PFont font)
   {
@@ -158,6 +159,15 @@ class Toolbar
       
       return false;
     }
+  }
+
+  void mouseDragged()
+  {
+      Button button = getButton(currentTool);
+      if (button != null)
+      {
+        button.mouseDragged();
+      }
   }
 
   boolean isPressed(int index)

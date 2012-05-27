@@ -6,7 +6,7 @@ class ColorPanel extends PGraphicsJava2D
   // We can be interacted with in a fairly familiar fashion  
   void setup() {throw new RuntimeException("Oops, this was meant to have been overidden");}
   void draw() {throw new RuntimeException("Oops, this was meant to have been overidden");}
-  void mousePressed(float mouseX, float mouseY, int mouseButton) {throw new RuntimeException("Oops, this was meant to have been overidden");}
+  boolean mousePressed(float mouseX, float mouseY, int mouseButton) {throw new RuntimeException("Oops, this was meant to have been overidden");}
 
   // The selected color is accessed in this slightly cumbersome fashion to avoid making assumptions about the callers color-space
   float getRed() {throw new RuntimeException("Oops, this was meant to have been overidden");}
@@ -257,22 +257,34 @@ ColorPanel colorWheel = new ColorPanel()
     endDraw();
   }
   
-  void mousePressed(float mouseX, float mouseY, int mouseButton)
+  boolean mousePressed(float mouseX, float mouseY, int mouseButton)
   {
+    boolean returnValue = false;
+    
     if (mouseButton == LEFT)
     {
+      color previousColor = selectedColor;
+
       float distance = dist(xWheel,yWheel,mouseX,mouseY);
       
       if (distance < wheelInnerDiameter/2)
       {
         if (selectedSegment != null)
         {
+          int prevXBlock = xBlock;
+          int prevYBlock = yBlock;
+          
           PVector v = new PVector(mouseX, mouseY);
           rotateCoord(v, selectedSegment.middle() - (0.25*PI));
           float xBase = xWheel - sliceRadius;
           float yBase = yWheel - sliceRadius;
           xBlock = (int)((v.x - xBase) / blockSize);
           yBlock = (int)((v.y - yBase) / blockSize);
+
+          if (xBlock == prevXBlock && yBlock == prevYBlock && xBlock >= 0 && yBlock >= 0 && xBlock + yBlock > nBlocks - 2)
+          {
+            returnValue = true;
+          }
         }
       }
       else if (distance < wheelDiameter/2)
@@ -292,6 +304,10 @@ ColorPanel colorWheel = new ColorPanel()
             yBlock = -1;
             bColorSelected = true;
             setSelectedColor(segment.segmentColor);
+            if (previousColor == segment.segmentColor)
+            {
+              returnValue = true;
+            }
           }
         }
       }
@@ -304,10 +320,16 @@ ColorPanel colorWheel = new ColorPanel()
             selectedSegment = null;
             setSelectedColor(greys[n].m_color);
             bColorSelected = true;
+            if (previousColor == greys[n].m_color)
+            {
+              returnValue = true;
+            }
           }
         }
       }
     }
+
+    return returnValue;
   }
   
   void drawColorCubeSlice(float nHue, float x, float y, float nSize)

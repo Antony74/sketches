@@ -36,6 +36,7 @@ class ColorButton extends Button
 
     colorWheel.setHSB(hue(m_color),saturation(m_color),brightness(m_color));
     currentColor = cKey;
+    currentTool = currentBrush;
   }
 
   boolean isPicked()

@@ -1,6 +1,7 @@
 
 char currentColor = 'K'; // Black
 char currentTool = '1';  // Thin brush
+char currentBrush = '1'; // Thin brush
 
 Toolbar toolbar;
 Canvas canvas;
@@ -35,7 +36,9 @@ void setup()
     new BrushButton('7', 41),
   
     new ZoomButton('+', 2),
-    new ZoomButton('-', 0.5)
+    new ZoomButton('-', 0.5),
+    
+    new PanButton('P')
   };
 
   toolbar.buttons = buttons;
@@ -112,7 +115,12 @@ void mousePressed()
     {
       if (mouseButton == LEFT)
       {
-        colorWheel.mousePressed(mouseX, mouseY - Button.height, mouseButton);
+        boolean dismiss = colorWheel.mousePressed(mouseX, mouseY - Button.height, mouseButton);
+        if (dismiss)
+        {
+          showColorWheel = false;
+          mousePressed = false;
+        }
       }
       else if (mouseButton == RIGHT)
       {
@@ -120,6 +128,11 @@ void mousePressed()
       }
     }
   }
+}
+
+void mouseDragged()
+{
+  toolbar.mouseDragged();
 }
 
 

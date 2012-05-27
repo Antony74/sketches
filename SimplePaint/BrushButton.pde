@@ -10,6 +10,7 @@ class BrushButton extends Button
   void action(int mouseButton)
   {
     currentTool = cKey;
+    currentBrush = cKey;
   }
 
   boolean isPicked() {return currentTool == cKey;}

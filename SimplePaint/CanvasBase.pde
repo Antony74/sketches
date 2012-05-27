@@ -48,6 +48,14 @@ class CanvasBase extends PGraphicsJava2D
     }
   }
 
+  void pan(float x, float y)
+  {
+    pannedX += x;
+    pannedY += y;
+    
+    applyPanLimits();
+  }
+
   void applyPanLimits()
   {
     if (zoomedWidth < width || zoomedHeight < height)
