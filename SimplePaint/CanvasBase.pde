@@ -92,4 +92,47 @@ class CanvasBase extends PGraphicsJava2D
   float zoomedHeight;
 };
 
+void drawGrid()
+{
+  if (canvas.zoomedWidth / canvas.width > 20)
+  {
+    noFill();
+    strokeWeight(1);
+    noSmooth();
+    
+    for (int x = 0; x < canvas.width; ++x)
+    {
+      float xZoomed = x * canvas.zoomedWidth / canvas.width;
+      xZoomed += canvas.pannedX;
+      
+      if (xZoomed >= 0 && xZoomed < width)
+      {
+        for (int y = Button.height; y < height; ++y)
+        {
+          stroke((y%2) == 0 ? 64 : 192);
+          point(xZoomed,y);
+        }
+      }
+    }
+
+    for (int y = 0; y < canvas.height; ++y)
+    {
+      float yZoomed = y * canvas.zoomedHeight / canvas.height;
+      yZoomed += canvas.pannedY;
+      
+      if (yZoomed >= 0 && yZoomed < height - Button.height)
+      {
+        yZoomed += Button.height;
+        
+        for (int x = 0; x < width; ++x)
+        {
+          stroke((x%2) == 1 ? 64 : 192);
+          point(x,yZoomed);
+        }
+      }
+    }
+
+  }
+}
+
 

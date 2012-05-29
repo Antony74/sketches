@@ -94,6 +94,7 @@ void draw()
     canvas.doDraw(mouseX, mouseY - Button.height, mousePressed);
     noSmooth();
     image(canvas, canvas.pannedX, canvas.pannedY + Button.height, canvas.zoomedWidth, canvas.zoomedHeight);
+    drawGrid();
   }
   
   toolbar.draw();
