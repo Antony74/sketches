@@ -38,7 +38,10 @@ void setup()
     new ZoomButton('+', 2),
     new ZoomButton('-', 0.5),
     
-    new PanButton('P')
+    new PanButton('P'),
+    
+    new UndoButton('Z'),
+    new RedoButton('Y')
   };
 
   toolbar.buttons = buttons;
@@ -134,6 +137,11 @@ void mousePressed()
 void mouseDragged()
 {
   toolbar.mouseDragged();
+}
+
+void mouseReleased()
+{
+  canvas.mouseReleased();
 }
 
 

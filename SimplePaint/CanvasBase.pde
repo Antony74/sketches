@@ -1,12 +1,21 @@
 
+final int maxHistory = 20;
+
 class CanvasBase extends PGraphicsJava2D
 {
   void setup()
   {
+    history = new color[maxHistory][width*height];
+
     beginDraw();
     background(255);
     zoomedWidth = width;
     zoomedHeight = height;
+    loadPixels();
+    arrayCopy(pixels, history[0]);
+    historyIndex = 0;
+    historyMin = 0;
+    historyMax = 0;
     endDraw();
   }
   
@@ -86,10 +95,88 @@ class CanvasBase extends PGraphicsJava2D
     }
   }
   
+  void mouseReleased()
+  {
+    loadPixels();
+    boolean bChanged = false;
+    for (int n = 0; n < pixels.length; ++n)
+    {
+      if (pixels[n] != history[historyIndex][n])
+      {
+        bChanged = true;
+        break;
+      }
+    }
+
+    if (bChanged)
+    {
+      ++historyIndex;
+      if (historyIndex >= history.length)
+      {
+        historyIndex = 0;
+      }
+      arrayCopy(pixels, history[historyIndex]);
+      historyMax = historyIndex;
+      if (historyMin == historyMax)
+      {
+        ++historyMin;
+        if (historyMin >= history.length)
+        {
+          historyMin = 0;
+        }
+      }
+    }
+  }
+  
+  boolean canUndo()
+  {
+    return historyMin != historyIndex;
+  }
+  
+  boolean canRedo()
+  {
+    return historyMax != historyIndex;
+  }
+  
+  void loadHistory()
+  {
+    arrayCopy(history[historyIndex], pixels);
+    updatePixels();
+  }
+
+  void undo()
+  {
+    if (canUndo())
+    {
+      --historyIndex;
+      if (historyIndex < 0)
+        historyIndex = history.length - 1;
+        
+      loadHistory();
+    }
+  }
+  
+  void redo()
+  {
+    if (canRedo())
+    {
+      ++historyIndex;
+      if (historyIndex >= history.length)
+        historyIndex = 0;
+        
+      loadHistory();
+    }
+  }
+
   float pannedX = 0;
   float pannedY = 0;
   float zoomedWidth;
   float zoomedHeight;
+
+  color history[][];
+  int historyIndex;
+  int historyMin;
+  int historyMax;
 };
 
 void drawGrid()
