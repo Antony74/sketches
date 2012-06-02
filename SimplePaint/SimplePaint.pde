@@ -11,11 +11,18 @@ void setup()
   size(900,600);
   background(255);
 
+  PImage initialImage = null;
+  
+  if (online == false)
+  {
+    initialImage = loadImage("SavedPainting.png");
+  }
+
   toolbar = new Toolbar();
   canvas = new Canvas();
 
   canvas.setSize(width, height - Button.height);
-  canvas.setup();
+  canvas.setup(initialImage);
   
   colorWheel.setSize(width, height - Button.height);
   colorWheel.setup();
@@ -43,6 +50,8 @@ void setup()
     new UndoButton('Z'),
     new RedoButton('Y')
   };
+
+  buttons = addSaveButton(buttons, 'S');
 
   toolbar.buttons = buttons;
   

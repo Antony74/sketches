@@ -3,12 +3,18 @@ final int maxHistory = 20;
 
 class CanvasBase extends PGraphicsJava2D
 {
-  void setup()
+  void setup(PImage initialImage)
   {
     history = new color[maxHistory][width*height];
 
     beginDraw();
     background(255);
+    
+    if (initialImage != null)
+    {
+      image(initialImage, 0, 0);
+    }
+    
     zoomedWidth = width;
     zoomedHeight = height;
     loadPixels();
