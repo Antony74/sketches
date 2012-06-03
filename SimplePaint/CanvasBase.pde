@@ -228,4 +228,32 @@ void drawGrid()
   }
 }
 
+void mouseWheel(int delta)
+{
+  if (delta > 0)
+  {
+    canvas.zoom(mouseX, mouseY - Button.height, sqrt(0.5));
+  }
+  else if (delta < 0)
+  {
+    canvas.zoom(mouseX, mouseY - Button.height, sqrt(2.0));
+  }
+}
+
+/**
+Wheel mouse taken from http://wiki.processing.org/index.php/Wheel_mouse
+@author Rick Companje
+*/
+ 
+void setupWheelMouse()
+{
+  if (online == false) // The wheel is already used to scroll the web page
+  {
+    addMouseWheelListener(new java.awt.event.MouseWheelListener() { 
+      public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) { 
+        mouseWheel(evt.getWheelRotation());
+    }});
+    } 
+}
+
 

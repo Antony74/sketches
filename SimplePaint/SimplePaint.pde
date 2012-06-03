@@ -15,7 +15,11 @@ void setup()
   
   if (online == false)
   {
-    initialImage = loadImage("SavedPainting.png");
+    File file = new File(savePath("data\\SavedPainting.png"));
+    if (file.exists())
+    {
+      initialImage = loadImage("SavedPainting.png");
+    }
   }
 
   toolbar = new Toolbar();
@@ -54,6 +58,8 @@ void setup()
   buttons = addSaveButton(buttons, 'S');
 
   toolbar.buttons = buttons;
+  
+  setupWheelMouse();
   
 }
 
