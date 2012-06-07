@@ -1,4 +1,24 @@
 
+PGraphics imageZoomIn;
+PGraphics imageZoomOut;
+
+void setupZoomCursors()
+{
+  imageZoomIn = createGraphics(32,32,JAVA2D);
+  imageZoomIn.beginDraw();
+  imageZoomIn.fill(0);
+  imageZoomIn.textFont(toolbar.font, 48);
+  imageZoomIn.text('+', 0, 32);
+  imageZoomIn.endDraw();
+
+  imageZoomOut = createGraphics(32,32,JAVA2D);
+  imageZoomOut.beginDraw();
+  imageZoomOut.fill(0);
+  imageZoomOut.textFont(toolbar.font,64);
+  imageZoomOut.text('-', 0, 32);
+  imageZoomOut.endDraw();
+}
+
 class ZoomButton extends Button
 {
   ZoomButton(char key, float zoomFactor)
@@ -17,6 +37,14 @@ class ZoomButton extends Button
   void mousePressed()
   {
     canvas.zoom(mouseX, mouseY - Button.height, m_zoomFactor);
+  }
+
+  void setCursor()
+  {
+    if (m_zoomFactor > 1)
+      cursor(imageZoomIn);
+    else
+      cursor(imageZoomOut);
   }
 
   float m_zoomFactor;
@@ -74,6 +102,11 @@ class PanButton extends Button
     popMatrix();
 
     return true;
+  }
+
+  void setCursor()
+  {
+    cursor(MOVE);
   }
 
 };

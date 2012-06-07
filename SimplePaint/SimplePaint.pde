@@ -60,7 +60,7 @@ void setup()
   toolbar.buttons = buttons;
   
   setupWheelMouse();
-  
+  setupZoomCursors();  
 }
 
 class Canvas extends CanvasBase
@@ -147,6 +147,11 @@ void mousePressed()
       }
     }
   }
+}
+
+void mouseMoved()
+{
+  toolbar.mouseMoved();
 }
 
 void mouseDragged()

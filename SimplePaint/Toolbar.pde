@@ -18,7 +18,7 @@ class Button
     }
     else if (isPicked())
     {
-      fill(200, 200, 0); // dirty ugly yellow color which all my other colors show up against
+      fill(200, 200, 0);
     }
     else
     {
@@ -53,6 +53,11 @@ class Button
     textFont(font, nFontHeight);
     float nWidth = textWidth(cKey);
     text(cKey, (width * 0.5) - (nWidth * 0.5), (height * 0.40) + (nFontHeight * 0.5));
+  }
+
+  void setCursor()
+  {
+    cursor(ARROW);
   }
 };
 
@@ -168,6 +173,22 @@ class Toolbar
       {
         button.mouseDragged();
       }
+  }
+
+  void mouseMoved()
+  {
+    if (mouseY > Button.height)
+    {
+      Button button = getButton(currentTool);
+      if (button != null)
+      {
+        button.setCursor();
+      }
+    }
+    else
+    {
+      cursor(ARROW);
+    }
   }
 
   boolean isPressed(int index)
