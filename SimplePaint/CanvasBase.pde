@@ -228,15 +228,25 @@ void drawGrid()
   }
 }
 
-void mouseWheel(int delta)
+// Simple mechanism for not thrashing our processor core when we're not doing anything
+ 
+int nLoop = 2;
+
+void loop(int n)
 {
-  if (delta > 0)
+  nLoop = n;
+  loop();
+}
+
+void drawloopComplete()
+{
+  if (nLoop > 0)
   {
-    canvas.zoom(mouseX, mouseY - Button.height, sqrt(0.5));
-  }
-  else if (delta < 0)
-  {
-    canvas.zoom(mouseX, mouseY - Button.height, sqrt(2.0));
+    --nLoop;
+    if (nLoop == 0)
+    {
+      noLoop();
+    }
   }
 }
 

@@ -116,12 +116,21 @@ void draw()
   }
   
   toolbar.draw();
+  
+  drawloopComplete();
 }
 
 void keyTyped()
 {
   showColorWheel = false;
   toolbar.buttonPressed(key);
+
+  loop(1);
+}
+
+void keyReleased()
+{
+  loop(1);
 }
 
 void mousePressed()
@@ -147,6 +156,8 @@ void mousePressed()
       }
     }
   }
+
+  loop(2);
 }
 
 void mouseMoved()
@@ -157,11 +168,29 @@ void mouseMoved()
 void mouseDragged()
 {
   toolbar.mouseDragged();
+
+  loop(-1);
 }
 
 void mouseReleased()
 {
   canvas.mouseReleased();
+
+  loop(2);
+}
+
+void mouseWheel(int delta)
+{
+  if (delta > 0)
+  {
+    canvas.zoom(mouseX, mouseY - Button.height, sqrt(0.5));
+  }
+  else if (delta < 0)
+  {
+    canvas.zoom(mouseX, mouseY - Button.height, sqrt(2.0));
+  }
+
+  loop(2);
 }
 
 
