@@ -3,7 +3,7 @@ class UndoButton extends Button
 {
   UndoButton(char key)
   {
-    cKey = key;
+    super(key);
   }
 
   void buttonPressed(int mouseButton)
@@ -36,7 +36,7 @@ class RedoButton extends Button
 {
   RedoButton(char key)
   {
-    cKey = key;
+    super(key);
   }
 
   void buttonPressed(int mouseButton)

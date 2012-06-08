@@ -3,13 +3,24 @@ final int maxHistory = 20;
 
 class CanvasBase extends PGraphicsJava2D
 {
-  void setup(PImage initialImage)
+  void setup()
   {
     history = new color[maxHistory][width*height];
 
     beginDraw();
     background(255);
     
+    PImage initialImage = null;
+    
+    if (online == false)
+    {
+      File file = new File(savePath("data\\SavedPainting.png"));
+      if (file.exists())
+      {
+        initialImage = loadImage("SavedPainting.png");
+      }
+    }
+  
     if (initialImage != null)
     {
       image(initialImage, 0, 0);

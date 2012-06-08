@@ -19,7 +19,7 @@ class SaveButton extends Button
 {
   SaveButton(char key)
   {
-    cKey = key;
+    super(key);
   }
   
   void buttonPressed(int mouseButton)

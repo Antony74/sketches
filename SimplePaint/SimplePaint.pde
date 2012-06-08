@@ -11,22 +11,11 @@ void setup()
   size(900,600);
   background(255);
 
-  PImage initialImage = null;
-  
-  if (online == false)
-  {
-    File file = new File(savePath("data\\SavedPainting.png"));
-    if (file.exists())
-    {
-      initialImage = loadImage("SavedPainting.png");
-    }
-  }
-
   toolbar = new Toolbar();
   canvas = new Canvas();
 
   canvas.setSize(width, height - Button.height);
-  canvas.setup(initialImage);
+  canvas.setup();
   
   colorWheel.setSize(width, height - Button.height);
   colorWheel.setup();

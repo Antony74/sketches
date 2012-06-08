@@ -23,7 +23,7 @@ class ColorButton extends Button
 {
   ColorButton(char key, int r, int g, int b)
   {
-    cKey = key;
+    super(key);
     m_color = color(r,g,b);
   }
   

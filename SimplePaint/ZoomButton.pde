@@ -23,7 +23,7 @@ class ZoomButton extends Button
 {
   ZoomButton(char key, float zoomFactor)
   {
-    cKey = key;
+    super(key);
     m_zoomFactor = zoomFactor;
   }
 
@@ -54,7 +54,7 @@ class PanButton extends Button
 {
   PanButton(char key)
   {
-    cKey = key;
+    super(key);
   }
 
   void buttonPressed(int mouseButton)

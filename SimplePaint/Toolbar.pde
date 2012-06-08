@@ -5,6 +5,8 @@ class Button
   final static int height = 50;
   char cKey;
   Toolbar m_toolbar;
+
+  Button(char key) {cKey = key;}
   void buttonPressed(int mouseButton) {}
   boolean isPicked() {return false;}
   boolean drawIcon() {return false;}

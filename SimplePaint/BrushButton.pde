@@ -3,7 +3,7 @@ class BrushButton extends Button
 {
   BrushButton(char key, int weight)
   {
-    cKey = key;
+    super(key);
     m_weight = weight;
   }
   
