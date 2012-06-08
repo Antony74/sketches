@@ -1,8 +1,4 @@
 
-char currentColor = 'K'; // Black
-char currentTool = '1';  // Thin brush
-char currentBrush = '1'; // Thin brush
-
 Toolbar toolbar;
 Canvas canvas;
 
@@ -10,6 +6,10 @@ void setup()
 {
   size(900,600);
   background(255);
+
+  currentColor = 'K'; // Black
+  currentTool = '1';  // Thin brush
+  currentBrush = '1'; // Thin brush
 
   toolbar = new Toolbar();
   canvas = new Canvas();

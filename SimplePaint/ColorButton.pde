@@ -1,4 +1,5 @@
 
+char currentColor;
 boolean showColorWheel = false;
 
 boolean drawColorWheel(Toolbar toolbar)
@@ -29,7 +30,11 @@ class ColorButton extends Button
   
   void buttonPressed(int mouseButton)
   {
-    if (mouseButton == RIGHT)
+    if (cKey == currentColor && showColorWheel == true)
+    {
+      showColorWheel = false;
+    }
+    else if (mouseButton == RIGHT)
     {
       showColorWheel = true;
     }
@@ -37,11 +42,6 @@ class ColorButton extends Button
     colorWheel.setHSB(hue(m_color),saturation(m_color),brightness(m_color));
     currentColor = cKey;
     currentTool = currentBrush;
-  }
-
-  boolean isPicked()
-  {
-    return currentColor == cKey;
   }
 
   boolean drawIcon()

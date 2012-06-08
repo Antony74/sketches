@@ -1,4 +1,6 @@
 
+char currentBrush;
+
 class BrushButton extends Button
 {
   BrushButton(char key, int weight)
@@ -12,8 +14,6 @@ class BrushButton extends Button
     currentTool = cKey;
     currentBrush = cKey;
   }
-
-  boolean isPicked() {return currentTool == cKey;}
 
   boolean drawIcon()
   {

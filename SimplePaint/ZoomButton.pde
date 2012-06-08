@@ -27,13 +27,6 @@ class ZoomButton extends Button
     m_zoomFactor = zoomFactor;
   }
 
-  void buttonPressed(int mouseButton)
-  {
-    currentTool = cKey;
-  }
-
-  boolean isPicked() {return currentTool == cKey;}
-
   void mousePressedOnCanvas()
   {
     canvas.zoom(mouseX, mouseY - Button.height, m_zoomFactor);
@@ -56,13 +49,6 @@ class PanButton extends Button
   {
     super(key);
   }
-
-  void buttonPressed(int mouseButton)
-  {
-    currentTool = cKey;
-  }
-
-  boolean isPicked() {return currentTool == cKey;}
 
   void mouseDraggedOnCanvas()
   {

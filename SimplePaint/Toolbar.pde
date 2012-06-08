@@ -1,4 +1,6 @@
 
+char currentTool;
+
 class Button
 {
   final static int width = 50;
@@ -7,8 +9,8 @@ class Button
   Toolbar m_toolbar;
 
   Button(char key) {cKey = key;}
-  void buttonPressed(int mouseButton) {}
-  boolean isPicked() {return false;}
+  void buttonPressed(int mouseButton) {currentTool = cKey;}
+  boolean isPicked() {return currentTool == cKey;}
   boolean drawIcon() {return false;}
   void mousePressedOnCanvas() {}
   void mouseDraggedOnCanvas() {}
@@ -138,21 +140,12 @@ class Toolbar
   {
     if (mouseY < Button.height)
     {
-      boolean oldShowColorWheel = showColorWheel;
-      char oldColor = currentColor;
-      showColorWheel = false;
-      
       int index = int(mouseX / Button.width);
 
       if (index >= 0 && index < buttons.length)
       {
         Button button = buttons[index];
         button.buttonPressed(mouseButton);
-      }
-      
-      if (oldShowColorWheel == true && showColorWheel == true && currentColor == oldColor)
-      {
-         showColorWheel = false; 
       }
       
       return true;
