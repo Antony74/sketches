@@ -196,7 +196,7 @@ class CanvasBase extends PGraphicsJava2D
   int historyMax;
 };
 
-void drawGrid()
+void drawGrid(CanvasBase canvas, float yTranslate)
 {
   if (canvas.zoomedWidth / canvas.width > 20)
   {
@@ -208,6 +208,7 @@ void drawGrid()
     {
       float xZoomed = x * canvas.zoomedWidth / canvas.width;
       xZoomed += canvas.pannedX;
+      xZoomed = round(xZoomed); // Makes no sense, but fixes a grid-drawing bug
       
       if (xZoomed >= 0 && xZoomed < width)
       {
@@ -224,9 +225,10 @@ void drawGrid()
       float yZoomed = y * canvas.zoomedHeight / canvas.height;
       yZoomed += canvas.pannedY;
       
-      if (yZoomed >= 0 && yZoomed < height - Button.height)
+      if (yZoomed >= 0 && yZoomed < height - yTranslate)
       {
-        yZoomed += Button.height;
+        yZoomed += yTranslate;
+        yZoomed = round(yZoomed);  // Makes no sense, but fixes a grid-drawing bug
         
         for (int x = 0; x < width; ++x)
         {
