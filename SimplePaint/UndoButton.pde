@@ -1,14 +1,15 @@
 
 class UndoButton extends Button
 {
-  UndoButton(char key)
+  UndoButton(char key, CanvasBase myCanvas)
   {
     super(key);
+    canvasBase = myCanvas;
   }
 
   void buttonPressed(int mouseButton)
   {
-    canvas.undo();
+    canvasBase.undo();
   }
   
   boolean drawIcon()
@@ -16,7 +17,7 @@ class UndoButton extends Button
     int head = 10;
 
     strokeWeight(3);
-    if (canvas.canUndo())
+    if (canvasBase.canUndo())
       stroke(0,0,255);
     else
       stroke(160);
@@ -30,18 +31,20 @@ class UndoButton extends Button
     return true;
   }
 
+  CanvasBase canvasBase;
 };
 
 class RedoButton extends Button
 {
-  RedoButton(char key)
+  RedoButton(char key, CanvasBase myCanvas)
   {
     super(key);
+    canvasBase = myCanvas;
   }
 
   void buttonPressed(int mouseButton)
   {
-    canvas.redo();
+    canvasBase.redo();
   }
 
   boolean drawIcon()
@@ -49,7 +52,7 @@ class RedoButton extends Button
     int head = 10;
 
     strokeWeight(3);
-    if (canvas.canRedo())
+    if (canvasBase.canRedo())
       stroke(0,0,255);
     else
       stroke(160);
@@ -62,5 +65,8 @@ class RedoButton extends Button
 
     return true;
   }
+
+  CanvasBase canvasBase;
 };
+
 

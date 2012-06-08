@@ -212,7 +212,7 @@ void drawGrid(CanvasBase canvas, float yTranslate)
       
       if (xZoomed >= 0 && xZoomed < width)
       {
-        for (int y = Button.height; y < height; ++y)
+        for (int y = (int)yTranslate; y < height; ++y)
         {
           stroke((y%2) == 0 ? 64 : 192);
           point(xZoomed,y);

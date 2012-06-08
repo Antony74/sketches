@@ -21,15 +21,16 @@ void setupZoomCursors(PFont font)
 
 class ZoomButton extends Button
 {
-  ZoomButton(char key, float zoomFactor)
+  ZoomButton(char key, float zoomFactor, CanvasBase myCanvas)
   {
     super(key);
     m_zoomFactor = zoomFactor;
+    canvasBase = myCanvas;
   }
 
   void mousePressedOnCanvas()
   {
-    canvas.zoom(mouseX, mouseY - Button.height, m_zoomFactor);
+    canvasBase.zoom(mouseX, mouseY - Button.height, m_zoomFactor);
   }
 
   void setCursor()
@@ -41,18 +42,20 @@ class ZoomButton extends Button
   }
 
   float m_zoomFactor;
+  CanvasBase canvasBase;
 };
 
 class PanButton extends Button
 {
-  PanButton(char key)
+  PanButton(char key, CanvasBase myCanvas)
   {
     super(key);
+    canvasBase = myCanvas;
   }
 
   void mouseDraggedOnCanvas()
   {
-    canvas.pan(mouseX - pmouseX, mouseY - pmouseY);
+    canvasBase.pan(mouseX - pmouseX, mouseY - pmouseY);
   }
 
   boolean drawIcon()
@@ -95,6 +98,7 @@ class PanButton extends Button
     cursor(MOVE);
   }
 
+  CanvasBase canvasBase;
 };
 
 

@@ -35,16 +35,16 @@ void setup()
     new BrushButton('6', 24),
     new BrushButton('7', 41),
   
-    new ZoomButton('+', 2),
-    new ZoomButton('-', 0.5),
+    new ZoomButton('+', 2,   canvas),
+    new ZoomButton('-', 0.5, canvas),
     
-    new PanButton('P'),
+    new PanButton('P',  canvas),
     
-    new UndoButton('Z'),
-    new RedoButton('Y')
+    new UndoButton('Z', canvas),
+    new RedoButton('Y', canvas)
   };
 
-  buttons = addSaveButton(buttons, 'S');
+  buttons = addSaveButton(buttons, 'S', canvas);
 
   toolbar.setButtons(buttons);
   

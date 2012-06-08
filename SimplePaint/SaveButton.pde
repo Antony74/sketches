@@ -1,5 +1,5 @@
 
-Button[] addSaveButton(Button buttons[], char saveKey)
+Button[] addSaveButton(Button buttons[], char saveKey, CanvasBase canvasBase)
 {
   if (online)
   {
@@ -7,24 +7,25 @@ Button[] addSaveButton(Button buttons[], char saveKey)
   }
   else
   {
-    canvas.parent = this; // Make save() work
+    canvasBase.parent = this; // Make save() work
     Button buttons2[] = new Button[buttons.length + 1];
     arrayCopy(buttons, 0, buttons2, 1, buttons.length);
-    buttons2[0] = new SaveButton(saveKey);
+    buttons2[0] = new SaveButton(saveKey, canvasBase);
     return buttons2;
   }
 }
 
 class SaveButton extends Button
 {
-  SaveButton(char key)
+  SaveButton(char key, CanvasBase myCanvas)
   {
     super(key);
+    canvasBase = myCanvas;
   }
   
   void buttonPressed(int mouseButton)
   {
-    canvas.save("SavedPainting.png");
+    canvasBase.save("SavedPainting.png");
   }
 
   boolean drawIcon()
@@ -55,6 +56,7 @@ class SaveButton extends Button
     return true;
   }
 
+  CanvasBase canvasBase;
 }
 
 
