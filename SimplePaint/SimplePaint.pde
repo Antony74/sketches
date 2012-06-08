@@ -57,10 +57,10 @@ void setup()
 
   buttons = addSaveButton(buttons, 'S');
 
-  toolbar.buttons = buttons;
+  toolbar.setButtons(buttons);
   
   setupWheelMouse();
-  setupZoomCursors();  
+  setupZoomCursors(toolbar.font);  
 }
 
 class Canvas extends CanvasBase
@@ -105,7 +105,7 @@ void draw()
 {
   background(128);
   
-  boolean drawn = drawColorWheel();
+  boolean drawn = drawColorWheel(toolbar);
 
   if (drawn == false)
   {

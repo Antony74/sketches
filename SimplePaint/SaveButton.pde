@@ -22,7 +22,7 @@ class SaveButton extends Button
     cKey = key;
   }
   
-  void action(int mouseButton)
+  void buttonPressed(int mouseButton)
   {
     canvas.save("SavedPainting.png");
   }

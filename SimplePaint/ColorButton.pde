@@ -1,7 +1,7 @@
 
 boolean showColorWheel = false;
 
-boolean drawColorWheel()
+boolean drawColorWheel(Toolbar toolbar)
 {
   if (showColorWheel == true)
   {
@@ -27,7 +27,7 @@ class ColorButton extends Button
     m_color = color(r,g,b);
   }
   
-  void action(int mouseButton)
+  void buttonPressed(int mouseButton)
   {
     if (mouseButton == RIGHT)
     {

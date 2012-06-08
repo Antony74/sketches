@@ -7,7 +7,7 @@ class BrushButton extends Button
     m_weight = weight;
   }
   
-  void action(int mouseButton)
+  void buttonPressed(int mouseButton)
   {
     currentTool = cKey;
     currentBrush = cKey;
@@ -17,7 +17,7 @@ class BrushButton extends Button
 
   boolean drawIcon()
   {
-    ColorButton ec = (ColorButton)toolbar.getButton(currentColor);
+    ColorButton ec = (ColorButton)m_toolbar.getButton(currentColor);
     
     strokeWeight(m_weight);
     stroke(ec.m_color);

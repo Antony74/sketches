@@ -4,11 +4,12 @@ class Button
   final static int width = 50;
   final static int height = 50;
   char cKey;
-  void action(int mouseButton) {}
+  Toolbar m_toolbar;
+  void buttonPressed(int mouseButton) {}
   boolean isPicked() {return false;}
   boolean drawIcon() {return false;}
-  void mousePressed() {}
-  void mouseDragged() {}
+  void mousePressedOnCanvas() {}
+  void mouseDraggedOnCanvas() {}
 
   void draw(boolean isPressed, PFont font)
   {
@@ -93,7 +94,7 @@ class Toolbar
     Button button = getButton(key);
     if (button != null)
     {
-      button.action(LEFT);
+      button.buttonPressed(LEFT);
     }
   }
 
@@ -144,7 +145,7 @@ class Toolbar
       if (index >= 0 && index < buttons.length)
       {
         Button button = buttons[index];
-        button.action(mouseButton);
+        button.buttonPressed(mouseButton);
       }
       
       if (oldShowColorWheel == true && showColorWheel == true && currentColor == oldColor)
@@ -159,7 +160,7 @@ class Toolbar
       Button button = getButton(currentTool);
       if (button != null)
       {
-        button.mousePressed();
+        button.mousePressedOnCanvas();
       }
       
       return false;
@@ -171,7 +172,7 @@ class Toolbar
       Button button = getButton(currentTool);
       if (button != null)
       {
-        button.mouseDragged();
+        button.mouseDraggedOnCanvas();
       }
   }
 
@@ -213,6 +214,16 @@ class Toolbar
     }
 
     return false;
+  }
+
+  void setButtons(Button theButtons[])
+  {
+    for (int n = 0; n < theButtons.length; ++n)
+    {
+      theButtons[n].m_toolbar = this;
+    }
+
+    buttons = theButtons;
   }
 
   Button buttons[];  

@@ -2,19 +2,19 @@
 PGraphics imageZoomIn;
 PGraphics imageZoomOut;
 
-void setupZoomCursors()
+void setupZoomCursors(PFont font)
 {
   imageZoomIn = createGraphics(32,32,JAVA2D);
   imageZoomIn.beginDraw();
   imageZoomIn.fill(0);
-  imageZoomIn.textFont(toolbar.font, 48);
+  imageZoomIn.textFont(font, 48);
   imageZoomIn.text('+', 0, 32);
   imageZoomIn.endDraw();
 
   imageZoomOut = createGraphics(32,32,JAVA2D);
   imageZoomOut.beginDraw();
   imageZoomOut.fill(0);
-  imageZoomOut.textFont(toolbar.font,64);
+  imageZoomOut.textFont(font,64);
   imageZoomOut.text('-', 0, 32);
   imageZoomOut.endDraw();
 }
@@ -27,14 +27,14 @@ class ZoomButton extends Button
     m_zoomFactor = zoomFactor;
   }
 
-  void action(int mouseButton)
+  void buttonPressed(int mouseButton)
   {
     currentTool = cKey;
   }
 
   boolean isPicked() {return currentTool == cKey;}
 
-  void mousePressed()
+  void mousePressedOnCanvas()
   {
     canvas.zoom(mouseX, mouseY - Button.height, m_zoomFactor);
   }
@@ -57,14 +57,14 @@ class PanButton extends Button
     cKey = key;
   }
 
-  void action(int mouseButton)
+  void buttonPressed(int mouseButton)
   {
     currentTool = cKey;
   }
 
   boolean isPicked() {return currentTool == cKey;}
 
-  void mouseDragged()
+  void mouseDraggedOnCanvas()
   {
     canvas.pan(mouseX - pmouseX, mouseY - pmouseY);
   }

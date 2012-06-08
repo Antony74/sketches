@@ -6,7 +6,7 @@ class UndoButton extends Button
     cKey = key;
   }
 
-  void action(int mouseButton)
+  void buttonPressed(int mouseButton)
   {
     canvas.undo();
   }
@@ -39,7 +39,7 @@ class RedoButton extends Button
     cKey = key;
   }
 
-  void action(int mouseButton)
+  void buttonPressed(int mouseButton)
   {
     canvas.redo();
   }
