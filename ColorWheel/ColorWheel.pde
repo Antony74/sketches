@@ -1,6 +1,45 @@
 
-class CColorWheel extends PGraphicsJava2D
+class ColorPanel extends PGraphicsJava2D
 {
+  // This would all be abstract if Processing's lack of privacy and several quirks of Java weren't ganging up on me!
+
+  // We can be interacted with in a fairly familiar fashion  
+  void setup() {throw new RuntimeException("Oops, this was meant to have been overidden");}
+  void draw() {throw new RuntimeException("Oops, this was meant to have been overidden");}
+  boolean mousePressed(float mouseX, float mouseY, int mouseButton) {throw new RuntimeException("Oops, this was meant to have been overidden");}
+
+  // The selected color is accessed in this slightly cumbersome fashion to avoid making assumptions about the callers color-space
+  float getRed() {throw new RuntimeException("Oops, this was meant to have been overidden");}
+  float getGreen() {throw new RuntimeException("Oops, this was meant to have been overidden");}
+  float getBlue() {throw new RuntimeException("Oops, this was meant to have been overidden");}
+  float getHue() {throw new RuntimeException("Oops, this was meant to have been overidden");}
+  float getSaturation() {throw new RuntimeException("Oops, this was meant to have been overidden");}
+  float getBrightness() {throw new RuntimeException("Oops, this was meant to have been overidden");}
+  void setHSB(float h, float s, float b) {throw new RuntimeException("Oops, this was meant to have been overidden");}
+};
+
+ColorPanel colorWheel = new ColorPanel()
+{
+  // The selected color is accessed in this slightly cumbersome fashion to avoid making assumptions about the callers color-space
+  float getRed() {return red(selectedColor);}
+  float getGreen() {return green(selectedColor);}
+  float getBlue() {return blue(selectedColor);}
+  float getHue() {return hue(selectedColor);}
+  float getSaturation() {return saturation(selectedColor);}
+  float getBrightness() {return brightness(selectedColor);}
+
+  void setHSB(float h, float s, float b)
+  {
+    setSelectedColor(color(round(h),round(s),round(b)));
+    bColorSelected = true;
+  }
+
+  void setSelectedColor(color newSelectedColor)
+  {
+    selectedColor = newSelectedColor;
+//    println("hue " + hue(newSelectedColor) + ", saturation " + saturation(newSelectedColor) + ", brightness " + brightness(newSelectedColor));
+  }
+
   int nSegments = 12;
   int nBlocks = 6;
   int nBlockGap = 3;
@@ -130,7 +169,7 @@ class CColorWheel extends PGraphicsJava2D
     
     for (int nBlock = 0; nBlock < nBlocks; ++nBlock)
     {
-      greys[nBlock] = new Rect(blockStart + (greyWidth * nBlock), height - (blockSize * 1.75), greyWidth - 4, blockSize - 4, color(round(nBlock * 255 / (nBlocks-1))));
+      greys[nBlock] = new Rect(blockStart + (greyWidth * nBlock), height * 0.9, greyWidth - 4, blockSize - 4, color(round(nBlock * 255 / (nBlocks-1))));
     }
   
     greys[0].vExpand(blockSize * 0.5);
@@ -151,7 +190,12 @@ class CColorWheel extends PGraphicsJava2D
   
       fill(segment.segmentColor);
       
-      arc(xWheel, yWheel, wheelDiameter, wheelDiameter, segment.arcStart, segment.arcStop);  
+      arc(xWheel, yWheel, wheelDiameter, wheelDiameter, segment.arcStart, segment.arcStop);
+      
+      if (segment.segmentColor == selectedColor)
+      {
+        selectedSegment = segment;
+      }
     }
   
     fill(128);
@@ -213,22 +257,34 @@ class CColorWheel extends PGraphicsJava2D
     endDraw();
   }
   
-  void mousePressed(float mouseX, float mouseY, int mouseButton)
+  boolean mousePressed(float mouseX, float mouseY, int mouseButton)
   {
+    boolean returnValue = false;
+    
     if (mouseButton == LEFT)
     {
+      color previousColor = selectedColor;
+
       float distance = dist(xWheel,yWheel,mouseX,mouseY);
       
       if (distance < wheelInnerDiameter/2)
       {
         if (selectedSegment != null)
         {
+          int prevXBlock = xBlock;
+          int prevYBlock = yBlock;
+          
           PVector v = new PVector(mouseX, mouseY);
           rotateCoord(v, selectedSegment.middle() - (0.25*PI));
           float xBase = xWheel - sliceRadius;
           float yBase = yWheel - sliceRadius;
           xBlock = (int)((v.x - xBase) / blockSize);
           yBlock = (int)((v.y - yBase) / blockSize);
+
+          if (xBlock == prevXBlock && yBlock == prevYBlock && xBlock >= 0 && yBlock >= 0 && xBlock + yBlock > nBlocks - 2)
+          {
+            returnValue = true;
+          }
         }
       }
       else if (distance < wheelDiameter/2)
@@ -247,7 +303,11 @@ class CColorWheel extends PGraphicsJava2D
             xBlock = -1;
             yBlock = -1;
             bColorSelected = true;
-            selectedColor = segment.segmentColor;
+            setSelectedColor(segment.segmentColor);
+            if (previousColor == segment.segmentColor)
+            {
+              returnValue = true;
+            }
           }
         }
       }
@@ -258,12 +318,18 @@ class CColorWheel extends PGraphicsJava2D
           if (greys[n].hitTest(mouseX, mouseY))
           {
             selectedSegment = null;
-            selectedColor = greys[n].m_color;
+            setSelectedColor(greys[n].m_color);
             bColorSelected = true;
+            if (previousColor == greys[n].m_color)
+            {
+              returnValue = true;
+            }
           }
         }
       }
     }
+
+    return returnValue;
   }
   
   void drawColorCubeSlice(float nHue, float x, float y, float nSize)
@@ -316,7 +382,7 @@ class CColorWheel extends PGraphicsJava2D
         
         if (xIndex + nBlocks - nBlocksInThisRow == xBlock && yIndex == yBlock)
         {
-            selectedColor = color(nHue, nSaturation, nBrightness);
+            setHSB(nHue, nSaturation, nBrightness);
         }
         
         if (color(nHue, nSaturation, nBrightness) == selectedColor)
@@ -343,6 +409,6 @@ class CColorWheel extends PGraphicsJava2D
     v.x = xWheel + (distance * cos(angle));
     v.y = yWheel + (distance * sin(angle));
   }
-  
 };
+
 
