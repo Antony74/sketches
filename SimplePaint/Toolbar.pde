@@ -7,13 +7,42 @@ class Button
   final static int height = 50;
   char cKey;
   Toolbar m_toolbar;
+  PImage icon;
 
-  Button(char key) {cKey = key;}
+  Button(char key)
+  {
+    cKey = key;
+  }
+
+  Button(char key, PImage img)
+  {
+    cKey = key;
+    icon = img;
+  }
+  
   void buttonPressed(int mouseButton) {currentTool = cKey;}
   boolean isPicked() {return currentTool == cKey;}
-  boolean drawIcon() {return false;}
   void mousePressedOnCanvas() {}
   void mouseDraggedOnCanvas() {}
+
+  boolean drawIcon()
+  {
+    if (icon == null)
+    {
+      return false;
+    }
+    else
+    {
+      smooth();
+      if (isPicked())
+      {
+        tint(200,200,0);
+      }
+      image(icon, 0, 0, width, height);
+      noTint();
+      return true;
+    }
+  }
 
   void draw(boolean isPressed, PFont font)
   {
@@ -211,14 +240,15 @@ class Toolbar
     return false;
   }
 
-  void setButtons(Button theButtons[])
+  void setButtons(Vector<Button> vecButtons)
   {
-    for (int n = 0; n < theButtons.length; ++n)
+    buttons = new Button[vecButtons.size()];
+    
+    for (int n = 0; n < buttons.length; ++n)
     {
-      theButtons[n].m_toolbar = this;
+      buttons[n] = vecButtons.elementAt(n);
+      buttons[n].m_toolbar = this;
     }
-
-    buttons = theButtons;
   }
 
   Button buttons[];  

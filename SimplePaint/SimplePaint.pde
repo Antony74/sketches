@@ -15,38 +15,41 @@ void setup()
   canvas = new Canvas();
 
   canvas.setSize(width, height - Button.height);
-  canvas.setup();
+  canvas.setup(this);
   
   colorWheel.setSize(width, height - Button.height);
   colorWheel.setup();
   
-  Button buttons[] = {
-    new ColorButton('K', 0,     0,   0),
-    new ColorButton('W', 255, 255, 255), // white
-    new ColorButton('R', 255,   0,   0), // red
-    new ColorButton('G', 0,   255,   0), // green
-    new ColorButton('B', 0,     0, 255), // blue
-
-    new BrushButton('1', 1),
-    new BrushButton('2', 2),
-    new BrushButton('3', 4),
-    new BrushButton('4', 8),
-    new BrushButton('5', 14),
-    new BrushButton('6', 24),
-    new BrushButton('7', 41),
+  Vector<Button> vecButtons = new Vector<Button>();
   
-    new ZoomButton('+', 2,   canvas),
-    new ZoomButton('-', 0.5, canvas),
-    
-    new PanButton('P',  canvas),
-    
-    new UndoButton('Z', canvas),
-    new RedoButton('Y', canvas)
-  };
+  if (online == false)
+  {
+    vecButtons.add(new SaveButton('S', canvas));
+  }
+  
+  vecButtons.add(new ColorButton('K', 0,     0,   0)); // Black
+  vecButtons.add(new ColorButton('W', 255, 255, 255)); // white
+  vecButtons.add(new ColorButton('R', 255,   0,   0)); // red
+  vecButtons.add(new ColorButton('G', 0,   255,   0)); // green
+  vecButtons.add(new ColorButton('B', 0,     0, 255)); // blue
 
-  buttons = addSaveButton(buttons, 'S', canvas);
+  vecButtons.add(new BrushButton('1', 1));
+  vecButtons.add(new BrushButton('2', 2));
+  vecButtons.add(new BrushButton('3', 4));
+  vecButtons.add(new BrushButton('4', 8));
+  vecButtons.add(new BrushButton('5', 14));
+  vecButtons.add(new BrushButton('6', 24));
+  vecButtons.add(new BrushButton('7', 41));
 
-  toolbar.setButtons(buttons);
+  vecButtons.add(new ZoomButton('+', 2,   canvas));
+  vecButtons.add(new ZoomButton('-', 0.5, canvas));
+  
+  vecButtons.add(new PanButton('P',  canvas));
+  
+  vecButtons.add(new UndoButton('Z', canvas));
+  vecButtons.add(new RedoButton('Y', canvas));
+
+  toolbar.setButtons(vecButtons);
   
   setupWheelMouse();
   setupZoomCursors(toolbar.font);  
@@ -107,6 +110,11 @@ void draw()
   toolbar.draw();
   
   drawloopComplete();
+}
+
+void keyPressed()
+{
+  loop(1);
 }
 
 void keyTyped()

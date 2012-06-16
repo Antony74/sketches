@@ -3,8 +3,9 @@ final int maxHistory = 20;
 
 class CanvasBase extends PGraphicsJava2D
 {
-  void setup()
+  void setup(PApplet sketch)
   {
+    parent = sketch;
     history = new color[maxHistory][width*height];
 
     beginDraw();
@@ -35,8 +36,71 @@ class CanvasBase extends PGraphicsJava2D
     historyMax = 0;
     endDraw();
   }
-  
-  void draw(float mouseX, float mouseY, boolean mousePressed) {}
+
+  float pmouseX;
+  float pmouseY;
+
+  PImage setupEffectA() {return null;}
+  PImage setupEffectB() {return null;}
+  PImage setupEffectC() {return null;}
+  PImage setupEffectD() {return null;}
+  PImage setupEffectE() {return null;}
+  PImage setupEffectF() {return null;}
+  PImage setupEffectG() {return null;}
+  PImage setupEffectH() {return null;}
+  PImage setupEffectI() {return null;}
+  PImage setupEffectJ() {return null;}
+
+  void drawEffectA(float mouseX, float mouseY, boolean mousePressed, float pmouseX, float pmouseY) {}
+  void drawEffectB(float mouseX, float mouseY, boolean mousePressed, float pmouseX, float pmouseY) {}
+  void drawEffectC(float mouseX, float mouseY, boolean mousePressed, float pmouseX, float pmouseY) {}
+  void drawEffectD(float mouseX, float mouseY, boolean mousePressed, float pmouseX, float pmouseY) {}
+  void drawEffectE(float mouseX, float mouseY, boolean mousePressed, float pmouseX, float pmouseY) {}
+  void drawEffectF(float mouseX, float mouseY, boolean mousePressed, float pmouseX, float pmouseY) {}
+  void drawEffectG(float mouseX, float mouseY, boolean mousePressed, float pmouseX, float pmouseY) {}
+  void drawEffectH(float mouseX, float mouseY, boolean mousePressed, float pmouseX, float pmouseY) {}
+  void drawEffectI(float mouseX, float mouseY, boolean mousePressed, float pmouseX, float pmouseY) {}
+  void drawEffectJ(float mouseX, float mouseY, boolean mousePressed, float pmouseX, float pmouseY) {}
+   
+  void draw(float mouseX, float mouseY, boolean mousePressed)
+  {
+    switch(currentTool)
+    {
+    case 'A':
+      drawEffectA(mouseX, mouseY, mousePressed, pmouseX, pmouseY);
+      break;
+    case 'B':
+      drawEffectB(mouseX, mouseY, mousePressed, pmouseX, pmouseY);
+      break;
+    case 'C':
+      drawEffectC(mouseX, mouseY, mousePressed, pmouseX, pmouseY);
+      break;
+    case 'D':
+      drawEffectD(mouseX, mouseY, mousePressed, pmouseX, pmouseY);
+      break;
+    case 'E':
+      drawEffectE(mouseX, mouseY, mousePressed, pmouseX, pmouseY);
+      break;
+    case 'F':
+      drawEffectF(mouseX, mouseY, mousePressed, pmouseX, pmouseY);
+      break;
+    case 'G':
+      drawEffectG(mouseX, mouseY, mousePressed, pmouseX, pmouseY);
+      break;
+    case 'H':
+      drawEffectH(mouseX, mouseY, mousePressed, pmouseX, pmouseY);
+      break;
+    case 'I':
+      drawEffectI(mouseX, mouseY, mousePressed, pmouseX, pmouseY);
+      break;
+    case 'J':
+      drawEffectJ(mouseX, mouseY, mousePressed, pmouseX, pmouseY);
+      break;
+    }
+
+    pmouseX = mouseX;
+    pmouseY = mouseY;
+  }
   
   void doDraw(float mouseX, float mouseY, boolean mousePressed)
   {
