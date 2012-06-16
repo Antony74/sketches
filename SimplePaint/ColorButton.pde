@@ -55,6 +55,8 @@ class ColorButton extends Button
     return true;
   }
   
+  boolean isPicked() {return currentColor == cKey;}
+
   color m_color;
 }
 
