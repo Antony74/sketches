@@ -11,7 +11,7 @@ void setup()
   canvas = new Canvas();
 
   canvas.setSize(width, height - Button.height);
-  canvas.setup();
+  canvas.setup(this);
   
   Vector<Button> vecButtons = new Vector<Button>();
   

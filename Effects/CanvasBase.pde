@@ -3,8 +3,9 @@ final int maxHistory = 20;
 
 class CanvasBase extends PGraphicsJava2D
 {
-  void setup()
+  void setup(PApplet sketch)
   {
+    parent = sketch;
     history = new color[maxHistory][width*height];
 
     beginDraw();
