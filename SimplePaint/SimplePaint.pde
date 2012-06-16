@@ -22,10 +22,10 @@ void setup()
   
   Vector<Button> vecButtons = new Vector<Button>();
   
-  if (online == false)
-  {
-    vecButtons.add(new SaveButton('S', canvas));
-  }
+//  if (online == false)
+//  {
+//    vecButtons.add(new SaveButton('S', canvas));
+//  }
   
   vecButtons.add(new ColorButton('K', 0,     0,   0)); // Black
   vecButtons.add(new ColorButton('W', 255, 255, 255)); // white
@@ -40,6 +40,8 @@ void setup()
   vecButtons.add(new BrushButton('5', 14));
   vecButtons.add(new BrushButton('6', 24));
   vecButtons.add(new BrushButton('7', 41));
+
+  vecButtons.add(new Button('F'));
 
   vecButtons.add(new ZoomButton('+', 2,   canvas));
   vecButtons.add(new ZoomButton('-', 0.5, canvas));
@@ -60,13 +62,13 @@ class Canvas extends CanvasBase
   void draw(float mouseX, float mouseY, boolean mousePressed)
   {
     Button tool = toolbar.getButton(currentTool);
+    ColorButton cb = (ColorButton)toolbar.getButton(currentColor);
 
     if (tool instanceof BrushButton)
     {
-      ColorButton cb = (ColorButton)toolbar.getButton(currentColor);
       BrushButton bb = (BrushButton)tool;
     
-      smooth();
+      noSmooth();
       stroke(cb.m_color);
       strokeWeight(bb.m_weight);
       
@@ -82,10 +84,49 @@ class Canvas extends CanvasBase
         }
       }
     }
+    else if (mousePressed && currentTool == 'F')
+    {
+      floodFill(round(mouseX), round(mouseY), get(round(mouseX),round(mouseY)), cb.m_color);
+    }
     
     pmouseX = mouseX;
     pmouseY = mouseY;
     pmousePressed = mousePressed;
+  }
+
+  // This is the second laziest way I can think of implementing flood fill.
+  // The laziest caused a stack overflow due to too much recursion ;-)
+  void floodFill(int x, int y, color before, color after)
+  {
+    class XY
+    {
+      XY(int xx, int yy) {x = xx; y = yy;}
+      int x;
+      int y;
+    };
+
+    if (before == after || get(x,y) != before)
+      return; // Nothing needs doing
+
+    LinkedList<XY> pts = new LinkedList<XY>();
+    pts.add(new XY(x,y));
+    
+    while (pts.size() > 0)
+    {
+      XY pt = pts.getLast();
+      set(pt.x, pt.y, after);
+
+      if (pt.x+1 < width && get(pt.x+1,pt.y) == before)
+        pts.addLast(new XY(pt.x+1,pt.y));
+      else if (pt.x-1 >= 0 && get(pt.x-1,pt.y) == before)
+        pts.addLast(new XY(pt.x-1,pt.y));
+      else if (pt.y+1 < height && get(pt.x,pt.y+1) == before)
+        pts.addLast(new XY(pt.x,pt.y+1));
+      else if (pt.y-1 >= 0 && get(pt.x,pt.y-1) == before)
+        pts.addLast(new XY(pt.x,pt.y-1));
+      else
+        pts.removeLast();
+    }
   }
 
   boolean pmousePressed = false;
