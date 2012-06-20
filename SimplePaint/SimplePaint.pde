@@ -26,7 +26,7 @@ void setup()
 //  {
 //    vecButtons.add(new SaveButton('S', canvas));
 //  }
-  
+
   vecButtons.add(new ColorButton('K', 0,     0,   0)); // Black
   vecButtons.add(new ColorButton('W', 255, 255, 255)); // white
   vecButtons.add(new ColorButton('R', 255,   0,   0)); // red
@@ -41,7 +41,7 @@ void setup()
   vecButtons.add(new BrushButton('6', 24));
   vecButtons.add(new BrushButton('7', 41));
 
-  vecButtons.add(new Button('F'));
+  vecButtons.add(new FloodButton('F'));
 
   vecButtons.add(new ZoomButton('+', 2,   canvas));
   vecButtons.add(new ZoomButton('-', 0.5, canvas));
@@ -84,7 +84,7 @@ class Canvas extends CanvasBase
         }
       }
     }
-    else if (mousePressed && currentTool == 'F')
+    else if (mousePressed && tool instanceof FloodButton)
     {
       floodFill(round(mouseX), round(mouseY), get(round(mouseX),round(mouseY)), cb.m_color);
     }
