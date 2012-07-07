@@ -115,22 +115,28 @@ class Cell
   int vertices = 15;
   PVector position[];
   PVector velocity[];
+  PVector centre = new PVector();
+  float area;
 
+  final float hookesConstant = 0.00013;
+  final float pressureConstant = 500;
+  final float initialRadius = 200;
+    
   Cell()
   {
     position = new PVector[vertices];
     velocity = new PVector[vertices];
 
-    float baseVelocityX = -0.25;
-    float baseVelocityY = -0.25;
+    float baseVelocityX = 0;
+    float baseVelocityY = 0;
     
     for (int n = 0; n < vertices; ++n)
     {
       position[n] = new PVector();
       velocity[n] = new PVector();
 
-      position[n].x = (width * 0.5)  + (135 * cos(TWO_PI * n / (vertices-1)));
-      position[n].y = (height * 0.5) + (135 * sin(TWO_PI * n / (vertices-1)));
+      position[n].x = (width * 0.5)  + (initialRadius * cos(TWO_PI * n / (vertices-1)));
+      position[n].y = (height * 0.5) + (initialRadius * sin(TWO_PI * n / (vertices-1)));
       velocity[n].x = baseVelocityX + random(-0.2,0.2);
       velocity[n].y = baseVelocityY + random(-0.2,0.2);
     }
@@ -149,12 +155,39 @@ class Cell
     endShape();
   }
 
+  float twiceTriangleArea(float x1, float y1, float x2, float y2, float x3, float y3)
+  {
+    return abs( ((x1*(y2-y3)) + (x2*(y3-y1)) + (x3*(y1-y2))) );
+  }
+
+  void updateCentreAndArea()
+  {
+    centre.x = 0;
+    centre.y = 0;
+    area = 0;
+    
+    for (int n = 0; n < vertices; ++n)
+    {
+      centre.x += position[n].x;
+      centre.y += position[n].y;
+    }
+  
+    centre.x /= vertices;
+    centre.y /= vertices;
+
+    // Calculate area (assumes the cell wall stays reasonably well behaved)
+    for (int n = 0; n < vertices; ++n)
+    {
+      int nNext = (n + 1) % vertices;
+      area += twiceTriangleArea(centre.x,centre.y,position[n].x,position[n].y,position[nNext].x,position[nNext].y);
+    }
+
+    area /= 2;
+  }
+
   void move()
   {
-    float xMin = position[0].x;
-    float xMax = position[0].x;
-    float yMin = position[0].y;
-    float yMax = position[0].y;
+    updateCentreAndArea();
     
     for (int n = 0; n < vertices; ++n)
     {
@@ -162,46 +195,28 @@ class Cell
       position[n].x += velocity[n].x;
       position[n].y += velocity[n].y;
       
-      // Add this point to the cell's minimum bounding rectangle
-      xMin = min(xMin, position[n].x);
-      xMax = max(xMax, position[n].x);
-      yMin = min(yMin, position[n].y);
-      yMax = max(yMax, position[n].y);
-      
       int nNext = (n + 1) % vertices;
 
       // Hooke's law
-      float xForce = 0.01 * (position[n].x - position[nNext].x);
-      float yForce = 0.01 * (position[n].y - position[nNext].y);
+      float xForce = hookesConstant * (position[n].x - position[nNext].x);
+      float yForce = hookesConstant * (position[n].y - position[nNext].y);
       
-      position[n].x -= xForce;
-      position[n].y -= yForce;
-      position[nNext].x += xForce;
-      position[nNext].y += yForce;
+      velocity[n].x -= xForce;
+      velocity[n].y -= yForce;
+      velocity[nNext].x += xForce;
+      velocity[nNext].y += yForce;
     }
     
-    float xForce = (xMax - xMin) - 400;
-    float yForce = (yMax - yMin) - 400;
-    
-    xForce /= 200;
-    yForce /= 200;
-    
-    float xCentre = (xMin + xMax) / 2;
-    float yCentre = (yMin + yMax) / 2;
-    
+    // Something a bit like pressure
+    float force = pressureConstant / area;
     for (int n = 0; n < vertices; ++n)
     {
-      if (position[n].x > xCentre)
-        position[n].x -= xForce;
-      else
-        position[n].y -= yForce;
-        
-      if (position[n].y > yCentre)
-        position[n].y -= yForce;
-      else
-        position[n].y += yForce;
-    }  
+      float distance = dist(centre.x, centre.y, position[n].x, position[n].y);
+      velocity[n].x += (position[n].x - centre.x) * force / distance;
+      velocity[n].y += (position[n].y - centre.y) * force / distance;
+    }
   }
+    
 };
 
 
