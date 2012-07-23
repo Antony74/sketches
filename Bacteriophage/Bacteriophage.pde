@@ -1,16 +1,16 @@
 // All organisms appearing in this work are fictitious.
 // Any resemblance to actual biology is purely coincidental! ;-)
 
-LinkedList<Virus> viruses;
+ArrayList<Virus> viruses;
 Cell cell;
 PGraphics backgroundGraphic;
 
 void setup()
 {
-  size(900,600);
+  size(900,500);
   smooth();
 
-  viruses = new LinkedList<Virus>();
+  viruses = new ArrayList<Virus>();
   cell = new Cell();
   cell.activate();
 
@@ -19,39 +19,47 @@ void setup()
     Virus virus = new Virus(random(width/2) + (width/4), random(height/2) + (height/4));
     viruses.add(virus);
   }
-  
+
   // A bit of noise beats a plain background
-  final float step = 0.005;
   backgroundGraphic = createGraphics(width, height, JAVA2D);
+  
   backgroundGraphic.beginDraw();
+  backgroundGraphic.loadPixels();
+
+  final float step = 0.005;
+
   for (int x = 0; x < width; ++x)
   {
     for (int y = 0; y < height; ++y)
     {
-      backgroundGraphic.set(x,y,color(0,noise(x*step,y*step)*255,0));
+        backgroundGraphic.pixels[x + (y*width)] = color(0,noise(x*step,y*step)*255,0);
     }
   }
+
+  backgroundGraphic.updatePixels();
   backgroundGraphic.endDraw();
 }
 
 void draw()
 {
   image(backgroundGraphic, 0, 0);
-  
+
   //
   // Draw viruses
   //
-  ListIterator<Virus> itr = viruses.listIterator();
-  while (itr.hasNext())
+
+  for (int n = 0; n < viruses.size(); ++n)
   {
-    Virus virus = itr.next();
+    Virus virus = viruses.get(n);
+
     virus.move();
     virus.draw();
 
     if (virus.position.x < -50 || virus.position.x > width + 50
     ||  virus.position.y < -50 || virus.position.y > height + 50)
     {
-      itr.remove();
+      viruses.remove(n);
+      --n;
     }
   }
 
@@ -322,14 +330,15 @@ class Cell
     }
     else
     {
-      ListIterator<Virus> itr = viruses.listIterator();
-      while (itr.hasNext())
+      for (int n = 0; n < viruses.size(); ++n)
       {
-        Virus virus = itr.next();
+        Virus virus = viruses.get(n);
+
         if (dist(centre.x, centre.y, virus.position.x, virus.position.y) < 100)
         {
           infected = 1;
-          itr.remove();
+          viruses.remove(n);
+          break;
         }
       }
     }
