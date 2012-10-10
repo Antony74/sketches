@@ -48,10 +48,10 @@ void setup()
 
     bodyDef.position.x = Math.random() * width / SCALE;
     bodyDef.position.y = Math.random() * height /SCALE;
-    bodyDef.linearVelocity.x = (Math.random() * 20) - 5;
-    bodyDef.linearVelocity.y = (Math.random() * 20) - 5;
+    bodyDef.linearVelocity.x = (Math.random() - 0.5) * 7.0;
+    bodyDef.linearVelocity.y = (Math.random() - 0.5) * 7.0;
     bodyDef.angle = Math.random() * TWO_PI;
-    bodyDef.angularVelocity = (Math.random() * 50) - 25;
+    bodyDef.angularVelocity = (Math.random() - 0.5) * 15;
     b2Body body = world.CreateBody(bodyDef);
     body.CreateFixture(fixDef);
     body.SetUserData(dRadius);
@@ -65,10 +65,9 @@ void draw()
   background(128);
 
   world.Step(
-         1 / 60 //frame-rate
-      , 10 //velocity iterations
-      , 10 //position iterations
-   );
+         1 / 10,  // frame-rate
+         8,       // velocity iterations
+         3);      // position iterations
 
    world.ClearForces();
 
