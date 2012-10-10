@@ -1,40 +1,50 @@
 
-// Currently need to uncomment this to run in Java
-//float eval(String sCode) {return 0.0;}
-
-Object world;
 final int SCALE = 30;
 
 void setup()
 {
   size(900,500);
+  smooth();
 
-  String sCode = "worldInit(" + width + ", " + height + ", " + SCALE + ");";  
+  String sCode;
 
-  eval(sCode);
+  if (getIsJava())
+  {
+    Context cx = Context.enter();
+    context = cx;
+    scope = cx.initStandardObjects();
+  
+    sCode = getFileAsString(savePath("Box2dWeb_2_1_a_3.js"));
+    evaluate(sCode);
+  
+    sCode = getFileAsString(savePath("YinYang.js"));
+    evaluate(sCode);
+  }
+
+  sCode = "worldInit(" + width + ", " + height + ", " + SCALE + ");"; 
+  evaluate(sCode);
 }
-
-boolean bFirstTime = true;
 
 void draw()
 {
   background(128);
 
-  eval("worldStep();");
+  evaluate("worldStep();");
   
-  float bMore = eval("worldGetFirstBody();");
+  boolean bMore = evaluateBoolean("worldGetFirstBody();");
   
-  while (bMore != 0.0)
+  while (bMore)
   {
-     float x = eval("body.GetPosition().x");
-     float y = eval("body.GetPosition().y");
-     float radius = eval("body.GetUserData();");
-     float angle = eval("body.GetAngle();");
+     float x = evaluateFloat("body.GetPosition().x");
+     float y = evaluateFloat("body.GetPosition().y");
+     float radius = evaluateFloat("body.GetUserData();");
+     float angle = evaluateFloat("body.GetAngle();");
     
      yinYang(x * SCALE, y * SCALE, radius * SCALE * 2.0, angle);
      
-     bMore = eval("worldGetNextBody();");
+     bMore = evaluateBoolean("worldGetNextBody();");
   }
+
 }
 
 void yinYang(float x, float y, float diameter, float angle)

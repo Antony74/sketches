@@ -95,4 +95,10 @@ function worldGetNextBody()
   return body != null;
 }
 
+// Evaluate.pde needs the Float class in Java which Processing.js does not define, so here's a nasty hack to ensure Javascript compatibility
+var Float = new function()
+{
+  this.parseFloat = function(s) {return s;};
+}
+
 
