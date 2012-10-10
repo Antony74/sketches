@@ -1,4 +1,7 @@
 
+// Currently need to uncomment this to run in Java
+//float eval(String sCode) {return 0.0;}
+
 Object world;
 final int SCALE = 30;
 
@@ -6,7 +9,9 @@ void setup()
 {
   size(900,500);
 
-  worldInit(width, height, SCALE);  
+  String sCode = "worldInit(" + width + ", " + height + ", " + SCALE + ");";  
+
+  eval(sCode);
 }
 
 boolean bFirstTime = true;
@@ -15,27 +20,32 @@ void draw()
 {
   background(128);
 
-  worldStep();
+  eval("worldStep();");
   
-  boolean bMore = eval("worldGetFirstBody();");
+  float bMore = eval("worldGetFirstBody();");
   
-  while (bMore)
+  while (bMore != 0.0)
   {
-     yinYang(body.GetPosition().x * SCALE, body.GetPosition().y * SCALE, body.GetUserData() * SCALE * 2.0, body.GetAngle());
+     float x = eval("body.GetPosition().x");
+     float y = eval("body.GetPosition().y");
+     float radius = eval("body.GetUserData();");
+     float angle = eval("body.GetAngle();");
+    
+     yinYang(x * SCALE, y * SCALE, radius * SCALE * 2.0, angle);
      
      bMore = eval("worldGetNextBody();");
   }
 }
 
-void yinYang(double x, double y, double diameter, double angle)
+void yinYang(float x, float y, float diameter, float angle)
 {
   pushMatrix();
   translate(x,y);
   rotate(angle);
   
-  double radius = diameter / 2.0;
-  double q = diameter / 4.0;
-  double e = diameter / 8.0;
+  float radius = diameter / 2.0;
+  float q = diameter / 4.0;
+  float e = diameter / 8.0;
   
   stroke(0);
 
