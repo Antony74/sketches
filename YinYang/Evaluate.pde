@@ -1,7 +1,17 @@
+//
+// Evaluate.pde
+//
+// Evaluation of JavaScript cross-compatible with two Processing platforms.
+// 1. Standard Java-based Processing (using the JavaScript engine provided by Rhino).
+// 2. Processing.js (evaluating JavaScript natively).
+//
 
 // Import Rhino - a Java-based implementation of JavaScript
 // http://www.mozilla.org/rhino/
 import org.mozilla.javascript.*;
+
+// One little wrinkle is that you may have to uncomment this in Java mode only.
+//String eval(String sCode) {return null;}
 
 Object context;
 Object scope;
@@ -13,31 +23,18 @@ boolean getIsJava()
   return !runningInJavaScript;
 }
 
-//Object eval(String sCode) {return null;}
-
-Object evaluate(String sCode)
+String evaluate(String sCode)
 {
   if (getIsJava())
   {
     Context cx = (Context)context;
-    return cx.evaluateString((Scriptable)scope, sCode, "<cmd>", 1, null);
+    Object o = cx.evaluateString((Scriptable)scope, sCode, "<cmd>", 1, null);
+    return o.toString();
   }
   else
   {
     return eval(sCode);
   }
-}
-
-boolean evaluateBoolean(String sCode)
-{
-  return (Boolean)evaluate(sCode);
-}
-
-float evaluateFloat(String sCode)
-{
-  // Nasty hack for compatibility with both Java and Javascript.  Note that Float is defined in YinYang.js.
-  String s = evaluate(sCode).toString();
-  return Float.parseFloat(s);
 }
 
 String getFileAsString(String sFilename)

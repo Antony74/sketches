@@ -1,3 +1,9 @@
+//
+// YinYang.js
+//
+// This script sets up and runs our little model "world" within the Box2D physics engine, and
+// also contains a few little functions to help us work with JavaScript.
+//
 
 var world;
 var SCALE;
@@ -71,6 +77,8 @@ function worldStep()
    world.ClearForces();
 }
 
+// Define a couple of simple helpers so that we only have to pass primatives between Processing and JavaScript
+
 function worldGetFirstBody()
 {
   body = world.GetBodyList();
@@ -95,10 +103,19 @@ function worldGetNextBody()
   return body != null;
 }
 
-// Evaluate.pde needs the Float class in Java which Processing.js does not define, so here's a nasty hack to ensure Javascript compatibility
+// These two classes - Float and Boolean - do not appear to be supported by Processing.js.
+// On the one hand they're not needed, because JavaScript is a weakly-typed language, but if
+// Processing.js code is to be compatible with Java-based Processing too, we need them,
+// and this minimal proxy is enough to prevent this sketch from failing to parse as JavaScript. 
+
 var Float = new function()
 {
   this.parseFloat = function(s) {return s;};
+}
+
+var Boolean = new function()
+{
+  this.valueOf = function(s) {return s;};
 }
 
 

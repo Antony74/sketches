@@ -31,18 +31,18 @@ void draw()
 
   evaluate("worldStep();");
   
-  boolean bMore = evaluateBoolean("worldGetFirstBody();");
+  boolean bMore = Boolean.valueOf(evaluate("worldGetFirstBody();"));
   
   while (bMore)
   {
-     float x = evaluateFloat("body.GetPosition().x");
-     float y = evaluateFloat("body.GetPosition().y");
-     float radius = evaluateFloat("body.GetUserData();");
-     float angle = evaluateFloat("body.GetAngle();");
+     float x = Float.parseFloat(evaluate("body.GetPosition().x"));
+     float y = Float.parseFloat(evaluate("body.GetPosition().y"));
+     float radius = Float.parseFloat(evaluate("body.GetUserData();"));
+     float angle = Float.parseFloat(evaluate("body.GetAngle();"));
     
      yinYang(x * SCALE, y * SCALE, radius * SCALE * 2.0, angle);
      
-     bMore = evaluateBoolean("worldGetNextBody();");
+     bMore = Boolean.valueOf(evaluate("worldGetNextBody();"));
   }
 
 }
