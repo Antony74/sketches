@@ -41,7 +41,18 @@ String getFileAsString(String sFilename)
 {
   try
   {
-    return new Scanner( new File(sFilename) ).useDelimiter("\\A").next();
+    InputStream stream;
+    try
+    {
+      getAppletContext();
+      stream = createInput(sFilename);    
+    }
+    catch(NullPointerException e)
+    {
+      stream = new FileInputStream(savePath(sFilename));
+    }
+    
+    return new Scanner( stream ).useDelimiter("\\A").next();
   }
   catch(IOException e)
   {

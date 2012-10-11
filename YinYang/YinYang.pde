@@ -14,10 +14,10 @@ void setup()
     context = cx;
     scope = cx.initStandardObjects();
   
-    sCode = getFileAsString(savePath("Box2dWeb_2_1_a_3.js"));
+    sCode = getFileAsString("Box2dWeb_2_1_a_3.js");
     evaluate(sCode);
   
-    sCode = getFileAsString(savePath("YinYang.js"));
+    sCode = getFileAsString("YinYang.js");
     evaluate(sCode);
   }
 
