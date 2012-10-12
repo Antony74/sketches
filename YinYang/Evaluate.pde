@@ -28,7 +28,19 @@ String evaluate(String sCode)
   if (getIsJava())
   {
     Context cx = (Context)context;
-    Object o = cx.evaluateString((Scriptable)scope, sCode, "<cmd>", 1, null);
+    Object o;
+
+    try
+    {
+      o = cx.evaluateString((Scriptable)scope, sCode, "<cmd>", 1, null);
+    }
+    catch(RuntimeException e)
+    {
+      text(e.toString(),100,100);
+      noLoop();
+      return "";
+    }
+    
     return o.toString();
   }
   else
@@ -52,7 +64,9 @@ String getFileAsString(String sFilename)
       stream = new FileInputStream(savePath(sFilename));
     }
     
-    return new Scanner( stream ).useDelimiter("\\A").next();
+    String s = new Scanner( stream ).useDelimiter("\\A").next();
+
+    return s;
   }
   catch(IOException e)
   {

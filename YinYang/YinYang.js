@@ -18,7 +18,7 @@ function worldInit(width, height, nScale)
                  true);                              // Allow bodies to sleep, although in this case they probably don't
 
    var fixDef = new Box2D.Dynamics.b2FixtureDef();
-   fixDef.density = 1.0;
+   fixDef.density = 10.0;
    fixDef.friction = 0.0;
    fixDef.restitution = 1.0;
 
@@ -57,10 +57,10 @@ function worldInit(width, height, nScale)
 
     bodyDef.position.x = Math.random() * width / SCALE;
     bodyDef.position.y = Math.random() * height / SCALE;
-    bodyDef.linearVelocity.x = (Math.random() - 0.5) * 7.0;
-    bodyDef.linearVelocity.y = (Math.random() - 0.5) * 7.0;
+    bodyDef.linearVelocity.x = (Math.random() - 0.5) * 5.0;
+    bodyDef.linearVelocity.y = (Math.random() - 0.5) * 5.0;
     bodyDef.angle = Math.random() * 2.0 * Math.PI;
-    bodyDef.angularVelocity = (Math.random() - 0.5) * 15;
+    bodyDef.angularVelocity = (Math.random() - 0.5) * 2.5;
     var body = world.CreateBody(bodyDef);
     body.CreateFixture(fixDef);
     body.SetUserData(dRadius);

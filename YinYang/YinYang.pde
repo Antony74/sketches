@@ -11,6 +11,15 @@ void setup()
   if (getIsJava())
   {
     Context cx = Context.enter();
+    
+    // Rhino's default mode of operation is to compile JavaScipt into JVM-byte-code and run it.
+    // Remove these optimizations and make it run in interpreted mode instead.
+    // There are two reasons for doing this.
+    // 1. You can't put self-modifying byte-code in a Java applet... I can see why that might be a security concern ;-)
+    // 2. Once we're up and running we feed Rhino a lot of throw away stuff to evaluate, so we actually get better
+   //     performance by not bothering to compile everything first.
+    cx.setOptimizationLevel(-1);
+    
     context = cx;
     scope = cx.initStandardObjects();
   
@@ -22,6 +31,7 @@ void setup()
   }
 
   sCode = "worldInit(" + width + ", " + height + ", " + SCALE + ");"; 
+
   evaluate(sCode);
 }
 
@@ -44,7 +54,6 @@ void draw()
      
      bMore = Boolean.valueOf(evaluate("worldGetNextBody();"));
   }
-
 }
 
 void yinYang(float x, float y, float diameter, float angle)
