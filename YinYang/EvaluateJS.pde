@@ -10,8 +10,13 @@
 // http://www.mozilla.org/rhino/
 import org.mozilla.javascript.*;
 
-// One little wrinkle is that you may have to uncomment this in Java mode only.
+// One little wrinkle is that you have to uncomment this eval function in Java mode only.
+
 //String eval(String sCode) {return null;}
+
+// I've been trying to build Processing from source so I can compile it into the core, but no luck so far :-(
+// http://forum.processing.org/topic/building-processing-from-source-windows
+
 
 Object context;
 Object scope;
@@ -23,7 +28,35 @@ boolean getIsJava()
   return !runningInJavaScript;
 }
 
-String evaluate(String sCode)
+void initJS()
+{
+  if (getIsJava())
+  {
+    Context cx = Context.enter();
+    
+    // Rhino's default mode of operation is to compile JavaScript into JVM-byte-code and run it.
+    // Remove these optimizations and make it run in interpreted mode instead.
+    // There are two reasons for doing this.
+    // 1. You can't put self-modifying byte-code in a Java applet... I can see why that might be a security concern ;-)
+    // 2. Once we're up and running we feed Rhino a lot of throw away stuff to evaluate, so we actually get better
+   //     performance by not bothering to compile everything first.
+    cx.setOptimizationLevel(-1);
+    
+    context = cx;
+    scope = cx.initStandardObjects();
+  }
+}
+
+void importJS(String sFilename)
+{
+  if (getIsJava())
+  {
+    String sCode = getFileAsString(sFilename);
+    evaluateJS(sCode);
+  }
+}
+
+String evaluateJS(String sCode)
 {
   if (getIsJava())
   {

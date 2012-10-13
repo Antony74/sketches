@@ -2,7 +2,7 @@
 // YinYang.js
 //
 // This script sets up and runs our little model "world" within the Box2D physics engine, and
-// also contains a few little functions to help us work with JavaScript.
+// also contains a few little functions to make it easier for us to interact with JavaScript.
 //
 
 var world;
@@ -24,7 +24,7 @@ function worldInit(width, height, nScale)
 
    var bodyDef = new Box2D.Dynamics.b2BodyDef();
   
-   // Create a box around the visible extents of our little world
+   // Create a box around the visible extents of our 2D world
 
    bodyDef.type = Box2D.Dynamics.b2Body.b2_staticBody;
    
