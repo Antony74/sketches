@@ -103,19 +103,4 @@ function worldGetNextBody()
   return body != null;
 }
 
-// These two classes - Float and Boolean - do not appear to be supported by Processing.js.
-// On the one hand they're not needed, because JavaScript is a weakly-typed language, but if
-// Processing.js code is to be compatible with Java-based Processing too, we need them,
-// and this minimal proxy is enough to prevent this sketch from failing to parse as JavaScript. 
-
-var Float = new function()
-{
-  this.parseFloat = function(s) {return s;};
-}
-
-var Boolean = new function()
-{
-  this.valueOf = function(s) {return s;};
-}
-
 

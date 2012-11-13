@@ -23,18 +23,18 @@ void draw()
 
   evaluateJS("worldStep();");
   
-  boolean bMore = Boolean.valueOf(evaluateJS("worldGetFirstBody();"));
+  boolean bMore = boolean(evaluateJS("worldGetFirstBody();"));
   
   while (bMore)
   {
-     float x = Float.parseFloat(evaluateJS("body.GetPosition().x"));
-     float y = Float.parseFloat(evaluateJS("body.GetPosition().y"));
-     float radius = Float.parseFloat(evaluateJS("body.GetUserData();"));
-     float angle = Float.parseFloat(evaluateJS("body.GetAngle();"));
+     float x = float(evaluateJS("body.GetPosition().x"));
+     float y = float(evaluateJS("body.GetPosition().y"));
+     float radius = float(evaluateJS("body.GetUserData();"));
+     float angle = float(evaluateJS("body.GetAngle();"));
     
      yinYang(x * SCALE, y * SCALE, radius * SCALE * 2.0, angle);
      
-     bMore = Boolean.valueOf(evaluateJS("worldGetNextBody();"));
+     bMore = boolean(evaluateJS("worldGetNextBody();"));
   }
 }
 
