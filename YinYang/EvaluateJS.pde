@@ -11,12 +11,10 @@
 import org.mozilla.javascript.*;
 
 // One little wrinkle is that you have to uncomment this eval function in Java mode only.
+// If you build Processing from source then it can be patched to prevent the need for this.
+// https://github.com/Antony74/Processing/commit/047772019342a879810718feda579c89634a60b8
 
-//String eval(String sCode) {return null;}
-
-// I've been trying to build Processing from source so I can compile it into the core, but no luck so far :-(
-// http://forum.processing.org/topic/building-processing-from-source-windows
-
+//String eval(String sCode) {return "";}
 
 Object context;
 Object scope;
