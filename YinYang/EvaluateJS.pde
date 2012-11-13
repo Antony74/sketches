@@ -21,9 +21,7 @@ Object scope;
 
 boolean getIsJava()
 {
-  // Exploit type coercion to tell the two platforms apart
-  boolean runningInJavaScript = (""+2.0==""+2);
-  return !runningInJavaScript;
+  return (platformProgrammingLanguage == "JAVA");
 }
 
 void initJS()
