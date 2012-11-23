@@ -19,13 +19,27 @@ import org.mozilla.javascript.*;
 Object context;
 Object scope;
 
+boolean isJava = false;
+
 boolean getIsJava()
 {
-  return (platformProgrammingLanguage == "JAVA");
+  return isJava;
 }
 
 void initJS()
 {
+  try
+  {
+    if (javaVersionName != null)
+    {
+      isJava = true;
+    }
+  }
+  catch(Exception e)
+  {
+    // This isn't Java - seems pretty inconceivable that the code above could cause an exception in Java
+  }
+    
   if (getIsJava())
   {
     Context cx = Context.enter();
