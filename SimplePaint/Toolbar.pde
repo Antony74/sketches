@@ -240,13 +240,13 @@ class Toolbar
     return false;
   }
 
-  void setButtons(Vector<Button> vecButtons)
+  void setButtons(ArrayList<Button> vecButtons)
   {
     buttons = new Button[vecButtons.size()];
     
     for (int n = 0; n < buttons.length; ++n)
     {
-      buttons[n] = vecButtons.elementAt(n);
+      buttons[n] = vecButtons.get(n);
       buttons[n].m_toolbar = this;
     }
   }

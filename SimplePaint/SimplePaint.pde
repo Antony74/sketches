@@ -20,7 +20,7 @@ void setup()
   colorWheel.setSize(width, height - Button.height);
   colorWheel.setup();
   
-  Vector<Button> vecButtons = new Vector<Button>();
+  ArrayList<Button> vecButtons = new ArrayList<Button>();
   
 //  if (online == false)
 //  {
@@ -108,24 +108,24 @@ class Canvas extends CanvasBase
     if (before == after || get(x,y) != before)
       return; // Nothing needs doing
 
-    LinkedList<XY> pts = new LinkedList<XY>();
+    ArrayList<XY> pts = new ArrayList<XY>();
     pts.add(new XY(x,y));
     
     while (pts.size() > 0)
     {
-      XY pt = pts.getLast();
+      XY pt = pts.get(pts.size() - 1);
       set(pt.x, pt.y, after);
 
       if (pt.x+1 < width && get(pt.x+1,pt.y) == before)
-        pts.addLast(new XY(pt.x+1,pt.y));
+        pts.add(new XY(pt.x+1,pt.y));
       else if (pt.x-1 >= 0 && get(pt.x-1,pt.y) == before)
-        pts.addLast(new XY(pt.x-1,pt.y));
+        pts.add(new XY(pt.x-1,pt.y));
       else if (pt.y+1 < height && get(pt.x,pt.y+1) == before)
-        pts.addLast(new XY(pt.x,pt.y+1));
+        pts.add(new XY(pt.x,pt.y+1));
       else if (pt.y-1 >= 0 && get(pt.x,pt.y-1) == before)
-        pts.addLast(new XY(pt.x,pt.y-1));
+        pts.add(new XY(pt.x,pt.y-1));
       else
-        pts.removeLast();
+        pts.remove(pts.size() - 1);
     }
   }
 
