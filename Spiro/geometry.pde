@@ -1,4 +1,9 @@
 
+float dist(PVector v1, PVector v2)
+{
+  return dist(v1.x, v1.y, v2.x, v2.y);
+}
+
 class Rectangle
 {
   float xMin;
@@ -160,6 +165,8 @@ class Polygon
 
   boolean getIntersection(Polygon other, PVector ptIntersection)
   {
+    boolean bFound = false;
+    
     for (int n = 0; n < arrVertices.size(); ++n)
     {
       PVector pt1 = arrVertices.get(n);
@@ -170,16 +177,22 @@ class Polygon
         PVector pt3 = other.arrVertices.get(m);
         PVector pt4 = other.arrVertices.get( (m+1) % other.arrVertices.size() );
         
-        boolean brc = getIntersection(pt1.x, pt1.y, pt2.x, pt2.y, pt3.x, pt3.y, pt4.x, pt4.y, ptIntersection);
+        PVector pt = new PVector();
+        boolean brc = getIntersection(pt1.x, pt1.y, pt2.x, pt2.y, pt3.x, pt3.y, pt4.x, pt4.y, pt);
 
         if (brc)
         {
-          return true;
+          if (bFound == false || pivot == null || dist(pivot, pt) > dist(pivot, ptIntersection))
+          {
+            ptIntersection.x = pt.x;
+            ptIntersection.y = pt.y;
+            bFound = true;
+          }
         }
       }
     }
 
-    return false;
+    return bFound;
   }
 
   boolean getIntersection(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, PVector pt)
@@ -233,25 +246,11 @@ class Polygon
     for (int n = 0; n < arrVertices.size(); ++n)
     {
       PVector pt = arrVertices.get(n);
-      float x = pt.x + translate.x;
-      float y = pt.y + translate.y;
-      
-      if (pivot != null)
-      {
-        x -= pivot.x;
-        y -= pivot.y;
+      PVector pt2 = new PVector(pt.x, pt.y);
 
-        float hypotenuse = dist(0, 0, x, y);
-        float angle = atan2(y, x);
-        angle += rotate;
-        x = hypotenuse * cos(angle);
-        y = hypotenuse * sin(angle);
-        
-        x += pivot.x;
-        y += pivot.y;
-      }
-      
-      poly.add(x, y);
+      transformPt(translate, pivot, rotate, pt2);
+
+      poly.add(pt2.x, pt2.y);
     }
     
     return poly;
@@ -259,8 +258,11 @@ class Polygon
 
   void transformPt(PVector translate, PVector pivot, float rotate, PVector pt)
   {
-      float x = pt.x + translate.x;
-      float y = pt.y + translate.y;
+      float x = pt.x;
+      float y = pt.y;
+      
+      x += translate.x;
+      y += translate.y;
       
       if (pivot != null)
       {
