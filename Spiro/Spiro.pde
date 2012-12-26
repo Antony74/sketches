@@ -49,12 +49,12 @@ void draw()
   }
   else
   {
-    poly = polyDynamic.rotate(pivot, 0.03);
+    poly = polyDynamic.rotate(pivot, 0.1);
   }
  
   boolean brc = poly.getIntersection(polyStatic, pt);
 
-  if (brc && (pivot == null || dist(pivot.x, pivot.y, pt.x, pt.y) > 1))
+  if (brc && (pivot == null || dist(pivot.x, pivot.y, pt.x, pt.y) > 3))
   {
     pivot = pt;
   }

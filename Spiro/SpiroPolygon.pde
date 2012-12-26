@@ -46,7 +46,7 @@ class SpiroPolygon
 
         if (brc)
         {
-          if (bFound == false || pivot == null || dist(pivot, pt) > dist(pivot, ptIntersection))
+          if (bFound == false || pivot == null || distVec(pivot, pt) > distVec(pivot, ptIntersection))
           {
             ptIntersection.x = pt.x;
             ptIntersection.y = pt.y;
