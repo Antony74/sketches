@@ -4,12 +4,11 @@ SpiroPolygon polyDynamic = new SpiroPolygon();
 
 PVector pivot;
 
-int myPixels[];
+PGraphics myGraphics;
 
 void setup()
 {
   size(900,600);
-  myPixels = new int[width*height];
   background(255);
 
   for (float n = 0; n < TWO_PI; n += PI/6)
@@ -26,35 +25,21 @@ void setup()
 
   noFill();
 
-  loadPixels();
-
-  for (int n = 0; n < pixels.length; ++n)
-  {
-    myPixels[n] = pixels[n];
-  }
+  myGraphics = createGraphics(width, height);
+  myGraphics.beginDraw();
+  myGraphics.background(128);
+  myGraphics.endDraw();
 }
 
 void draw()
 {
-  loadPixels();
-  for (int n = 0; n < pixels.length; ++n)
-  {
-    pixels[n] = myPixels[n];
-  }
-  updatePixels();
+  image(myGraphics, 0, 0);
 
   if (pivot != null)
   {
-    polyDynamic.drawPen();
+    polyDynamic.drawPen(myGraphics);
   }
   
-  loadPixels();
-
-  for (int n = 0; n < pixels.length; ++n)
-  {
-    myPixels[n] = pixels[n];
-  }
-
   PVector pt = new PVector();
   SpiroPolygon poly;
 

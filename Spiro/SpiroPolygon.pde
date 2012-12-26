@@ -8,11 +8,6 @@ class SpiroPolygon
   {
     arrVertices = new ArrayList<PVector>();
   }
-  
-  SpiroPolygon(int initialCapacity)
-  {
-    arrVertices = new ArrayList<PVector>(initialCapacity);
-  }
 
   void add(float x, float y)
   {
@@ -110,9 +105,10 @@ class SpiroPolygon
     endShape(CLOSE);
   }
 
-  void drawPen()
+  void drawPen(PGraphics someGraphics)
   {
-    stroke(150, 0, 150);
+    someGraphics.beginDraw();
+    someGraphics.stroke(150, 0, 150);
     
     if (prevPen == null && currentPen == null)
     {
@@ -120,16 +116,17 @@ class SpiroPolygon
     }
     else if (prevPen == null)
     {
-      point(currentPen.x, currentPen.y);
+      someGraphics.point(currentPen.x, currentPen.y);
       
       prevPen = new PVector(currentPen.x, currentPen.y);
     }
     else
     {
-      line(prevPen.x, prevPen.y, currentPen.x, currentPen.y);
+      someGraphics.line(prevPen.x, prevPen.y, currentPen.x, currentPen.y);
       prevPen.x = currentPen.x;
       prevPen.y = currentPen.y;
     }
+    someGraphics.endDraw();
   }
 
   SpiroPolygon translate(float x, float y)
@@ -144,7 +141,7 @@ class SpiroPolygon
   
   SpiroPolygon transform(PVector translate, PVector pivot, float rotate)
   {
-    SpiroPolygon poly = new SpiroPolygon(arrVertices.size());
+    SpiroPolygon poly = new SpiroPolygon();
     
     for (int n = 0; n < arrVertices.size(); ++n)
     {
