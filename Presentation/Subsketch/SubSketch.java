@@ -1,4 +1,12 @@
 
+// java -classpath .;../../../Processing/processing/build/windows/work/core/library/core.jar SubSketch
+
+import java.io.InputStream;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
+
 class SubSketch
 {
 	public static void main(String[] args)
@@ -8,6 +16,29 @@ class SubSketch
 	}
 
 	void doSomething()
+	{
+		ClassLoader clParent = Thread.currentThread().getContextClassLoader();
+		ClassLoader clChild = new SubSketchClassLoader(clParent);
+		Thread.currentThread().setContextClassLoader(clChild);
+
+		try
+		{
+			Class<?> mainClass = Thread.currentThread().getContextClassLoader().loadClass("Spiro");
+
+			Constructor<?> constructor = mainClass.getConstructor(new Class[] { });
+			Runnable theSubSketch = (Runnable) constructor.newInstance();
+
+			System.out.println("prerun");
+			theSubSketch.run();
+			System.out.println("postrun");
+		}
+		catch (Exception e)
+		{
+			System.err.println(e.toString());
+		}
+	}
+
+	void doSomethingElse()
 	{
 		UUEncoder en = new UUEncoder();
 		en.print(0x00746143);
@@ -75,6 +106,68 @@ class SubSketch
 
 		}
 		
+	};
+
+	class SubSketchClassLoader extends ClassLoader
+	{
+		protected SubSketchClassLoader(ClassLoader parent)
+		{
+			super(parent);
+			
+			try
+			{
+				sketch = new JarFile("../../Spiro/application.linux32/lib/Spiro.jar");
+			}
+			catch(IOException e)
+			{
+				System.err.println(e.toString());
+			}
+		}
+	
+		public Class findClass(String className) throws ClassNotFoundException
+		{
+			System.out.println(className);
+			
+			String filename = className + ".class";
+			
+			ZipEntry entry = sketch.getEntry(filename);
+			
+			InputStream inputStream = null;
+				
+			if (entry != null)
+			{
+				System.out.println("found");
+				
+				try
+				{
+					inputStream = sketch.getInputStream(entry);
+				}
+				catch(IOException e)
+				{
+					System.err.println(e.toString());
+				}
+			}
+
+			if (inputStream != null)
+			{
+				try
+				{
+					int len = inputStream.available();
+					byte buffer[] = new byte[len];
+					inputStream.read(buffer, 0, len);
+					
+					return defineClass(className, buffer, 0, len);
+				}
+				catch(IOException e)
+				{
+					System.err.println(e.toString());
+				}
+			}
+			
+			return super.findClass(className);
+		}
+		
+		JarFile sketch;
 	};
 
 };
