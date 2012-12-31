@@ -1,9 +1,12 @@
 
 // java -classpath .;../../../Processing/processing/build/windows/work/core/library/core.jar SubSketch
 
+// java -cp Spiro.jar;core.jar Spiro
+
 import java.io.InputStream;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -12,10 +15,10 @@ class SubSketch
 	public static void main(String[] args)
 	{
 		SubSketch sub = new SubSketch();
-		sub.doSomething();
+		sub.doSomething(args);
 	}
 
-	void doSomething()
+	void doSomething(String[] args)
 	{
 		ClassLoader clParent = Thread.currentThread().getContextClassLoader();
 		ClassLoader clChild = new SubSketchClassLoader(clParent);
@@ -25,11 +28,12 @@ class SubSketch
 		{
 			Class<?> mainClass = Thread.currentThread().getContextClassLoader().loadClass("Spiro");
 
-			Constructor<?> constructor = mainClass.getConstructor(new Class[] { });
-			Runnable theSubSketch = (Runnable) constructor.newInstance();
+			Runnable theSubSketch = (Runnable) mainClass.newInstance();
+
+			Method method = mainClass.getDeclaredMethod("main", new Class[]{String[].class});
 
 			System.out.println("prerun");
-			theSubSketch.run();
+			method.invoke(theSubSketch, new Object[]{args});
 			System.out.println("postrun");
 		}
 		catch (Exception e)
