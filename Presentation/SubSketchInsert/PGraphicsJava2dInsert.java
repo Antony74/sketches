@@ -1,5 +1,7 @@
 
-// java -classpath .;../../../Processing/processing/build/windows/work/core/library/core.jar SubSketch
+// javac -classpath .;../../../Processing/processing/build/windows/work/core/library/core.jar SubSketchInsert.java
+
+// java -classpath .;../../../Processing/processing/build/windows/work/core/library/core.jar SubSketchInsert
 
 // java -cp Spiro.jar;core.jar Spiro
 
@@ -10,31 +12,39 @@ import java.lang.reflect.Method;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
-class SubSketch
+class SubSketchInsert
 {
 	public static void main(String[] args)
 	{
-		SubSketch sub = new SubSketch();
+		SubSketchInsert sub = new SubSketchInsert();
 		sub.doSomething(args);
 	}
 
 	void doSomething(String[] args)
 	{
 		ClassLoader clParent = Thread.currentThread().getContextClassLoader();
-		ClassLoader clChild = new SubSketchClassLoader(clParent);
+		ClassLoader clChild = new ClassLoaderInsert(clParent);
 		Thread.currentThread().setContextClassLoader(clChild);
 
+		System.out.println("ContextClassLoader " + Thread.currentThread().getContextClassLoader().getClass().getName());
+		System.out.println("Thread name " + Thread.currentThread().getName());
+
+		PGraphicsJava2dInsert recorder = new PGraphicsJava2dInsert();
+	  
 		try
 		{
-			Class<?> mainClass = Thread.currentThread().getContextClassLoader().loadClass("Spiro");
+			Class<?> classSubSketch = Thread.currentThread().getContextClassLoader().loadClass("Spiro");
 
-			Runnable theSubSketch = (Runnable) mainClass.newInstance();
-
-			Method method = mainClass.getDeclaredMethod("main", new Class[]{String[].class});
-
+			processing.core.PApplet subsketch = (processing.core.PApplet)classSubSketch.newInstance();
 			System.out.println("prerun");
-			method.invoke(theSubSketch, new Object[]{args});
+			subsketch.beginRecord(new PGraphicsJava2dInsert());
+			subsketch.runSketch(new String[]{subsketch.getClass().getName()}, subsketch);
 			System.out.println("postrun");
+
+//			Method methodMain = classSubSketch.getDeclaredMethod("main", new Class[]{String[].class});
+//			Method methodBeginRecord = classSubSketch.getDeclaredMethod("beginRecord", new Class[]{processing.core.PGraphics.class});
+
+//			methodMain.invoke(subsketch, new Object[]{args});
 		}
 		catch (Exception e)
 		{
@@ -112,9 +122,9 @@ class SubSketch
 		
 	};
 
-	class SubSketchClassLoader extends ClassLoader
+	class ClassLoaderInsert extends ClassLoader
 	{
-		protected SubSketchClassLoader(ClassLoader parent)
+		protected ClassLoaderInsert(ClassLoader parent)
 		{
 			super(parent);
 			
@@ -173,6 +183,27 @@ class SubSketch
 		
 		JarFile sketch;
 	};
+};
 
+public class PGraphicsJava2dInsert extends processing.core.PGraphics
+{
+
+	boolean bFirstTime = true;
+
+	public PGraphicsJava2dInsert()
+	{
+		super();
+	}
+	
+	public void requestDraw()
+	{
+		if (bFirstTime)
+		{
+			System.out.println("Cool, we're in PGraphicsJava2dInsert.requestDraw()");
+			bFirstTime = false;
+		}
+		
+		super.requestDraw();
+	}
 };
 
