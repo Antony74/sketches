@@ -1,50 +1,64 @@
 
+// This is the command line I use for running the Spiro sketch on it's own, just to prove it works.
+//
+// java -cp Spiro.jar;core.jar Spiro
+
+// This is the command line I use to compile this source file.
+//
 // javac -classpath .;../../../Processing/processing/build/windows/work/core/library/core.jar SubSketchInsert.java
 
-// java -classpath .;../../../Processing/processing/build/windows/work/core/library/core.jar SubSketchInsert
+// This is the command line I use to run this code and get it to insert itself into the Spiro sketch.
+//
+// java -classpath .;../../../Processing/processing/build/windows/work/core/library/core.jar SubSketchInsert Spiro ../../Spiro/application.linux32/lib/Spiro.jar
 
-// java -cp Spiro.jar;core.jar Spiro
 
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
-class SubSketchInsert
+public class SubSketchInsert extends processing.core.PGraphics
 {
+	UUEncoder m_UUEncoder;
+	boolean m_bSizeSet = false;
+	processing.core.PApplet m_subsketch;
+	String m_sSketchClassname;
+	String m_sJarFilename;
+
 	public static void main(String[] args)
 	{
-		SubSketchInsert sub = new SubSketchInsert();
-		sub.doSomething(args);
+		if (args.length == 2)
+		{
+			SubSketchInsert sub = new SubSketchInsert();
+			sub.m_sSketchClassname = args[0];
+			sub.m_sJarFilename = args[1];
+			sub.doMain();
+		}
+		else
+		{
+			System.err.println();
+			System.err.println("Usage: sketchClassname jarFilename");
+		}
 	}
 
-	void doSomething(String[] args)
+	void doMain()
 	{
-		ClassLoader clParent = Thread.currentThread().getContextClassLoader();
-		ClassLoader clChild = new ClassLoaderInsert(clParent);
-		Thread.currentThread().setContextClassLoader(clChild);
+		m_UUEncoder = new UUEncoder(System.out);
+		System.setOut(System.err); // Keep the output stream for communicating about this sub-sketch
+	
+		ClassLoader myClassLoader = new ClassLoaderInsert(Thread.currentThread().getContextClassLoader());
 
-		System.out.println("ContextClassLoader " + Thread.currentThread().getContextClassLoader().getClass().getName());
-		System.out.println("Thread name " + Thread.currentThread().getName());
-
-		PGraphicsJava2dInsert recorder = new PGraphicsJava2dInsert();
-	  
 		try
 		{
-			Class<?> classSubSketch = Thread.currentThread().getContextClassLoader().loadClass("Spiro");
+			Class<?> classSubSketch = myClassLoader.loadClass(m_sSketchClassname);
 
-			processing.core.PApplet subsketch = (processing.core.PApplet)classSubSketch.newInstance();
-			System.out.println("prerun");
-			subsketch.beginRecord(new PGraphicsJava2dInsert());
-			subsketch.runSketch(new String[]{subsketch.getClass().getName()}, subsketch);
-			System.out.println("postrun");
+			m_subsketch = (processing.core.PApplet)classSubSketch.newInstance();
 
-//			Method methodMain = classSubSketch.getDeclaredMethod("main", new Class[]{String[].class});
-//			Method methodBeginRecord = classSubSketch.getDeclaredMethod("beginRecord", new Class[]{processing.core.PGraphics.class});
-
-//			methodMain.invoke(subsketch, new Object[]{args});
+			m_subsketch.beginRecord(this);
+			m_subsketch.runSketch(new String[]{m_subsketch.getClass().getName()}, m_subsketch);
 		}
 		catch (Exception e)
 		{
@@ -52,24 +66,42 @@ class SubSketchInsert
 		}
 	}
 
-	void doSomethingElse()
+	public void pushMatrix() {}
+	public void resetMatrix() {}
+	public void popMatrix() {}
+
+	public void endDraw()
 	{
-		UUEncoder en = new UUEncoder();
-		en.print(0x00746143);
-		System.out.println();
+		if (m_bSizeSet == false)
+		{
+			m_UUEncoder.print(m_subsketch.width);
+			m_UUEncoder.print(m_subsketch.height);
+			m_bSizeSet = true;
+		}
+		
+		m_subsketch.loadPixels();
+		for (int n = 0; n < m_subsketch.pixels.length; ++n)
+		{
+			m_UUEncoder.print(m_subsketch.pixels[n]);
+		}
 	}
 
+	//
+	// UUEncoder
+	//
 	class UUEncoder
 	{
 		byte m_buffer[];
 		int m_nSize;
 		int m_nColumn;
+		PrintStream m_PrintStream;
 		
-		UUEncoder()
+		UUEncoder(PrintStream ps)
 		{
 			m_buffer = new byte[3];
 			m_nSize = 0;
 			m_nColumn = 0;
+			m_PrintStream = ps;
 		}
 		
 		void print(int n)
@@ -104,17 +136,17 @@ class SubSketchInsert
 			
 			byte b4 = (byte)( 32 + (m_buffer[2] & 0x3F) );
 
-			System.out.print((char)b1);
-			System.out.print((char)b2);
-			System.out.print((char)b3);
-			System.out.print((char)b4);
+			m_PrintStream.print((char)b1);
+			m_PrintStream.print((char)b2);
+			m_PrintStream.print((char)b3);
+			m_PrintStream.print((char)b4);
 
 			m_nSize = 0;
 			m_nColumn += 4;
 
-			if (m_nColumn == 80)
+			if (m_nColumn == 60)
 			{
-				System.out.println();
+				m_PrintStream.println();
 				m_nColumn = 0;
 			}
 
@@ -122,6 +154,9 @@ class SubSketchInsert
 		
 	};
 
+	//
+	// ClassLoaderInsert
+	//
 	class ClassLoaderInsert extends ClassLoader
 	{
 		protected ClassLoaderInsert(ClassLoader parent)
@@ -130,7 +165,7 @@ class SubSketchInsert
 			
 			try
 			{
-				sketch = new JarFile("../../Spiro/application.linux32/lib/Spiro.jar");
+				sketch = new JarFile(m_sJarFilename);
 			}
 			catch(IOException e)
 			{
@@ -140,7 +175,7 @@ class SubSketchInsert
 	
 		public Class findClass(String className) throws ClassNotFoundException
 		{
-			System.out.println(className);
+//			System.out.println(className);
 			
 			String filename = className + ".class";
 			
@@ -150,7 +185,7 @@ class SubSketchInsert
 				
 			if (entry != null)
 			{
-				System.out.println("found");
+//				System.out.println("found");
 				
 				try
 				{
@@ -183,27 +218,5 @@ class SubSketchInsert
 		
 		JarFile sketch;
 	};
-};
-
-public class PGraphicsJava2dInsert extends processing.core.PGraphics
-{
-
-	boolean bFirstTime = true;
-
-	public PGraphicsJava2dInsert()
-	{
-		super();
-	}
-	
-	public void requestDraw()
-	{
-		if (bFirstTime)
-		{
-			System.out.println("Cool, we're in PGraphicsJava2dInsert.requestDraw()");
-			bFirstTime = false;
-		}
-		
-		super.requestDraw();
-	}
 };
 
