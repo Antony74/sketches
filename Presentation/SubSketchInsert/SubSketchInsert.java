@@ -106,31 +106,31 @@ public class SubSketchInsert extends processing.core.PGraphics
 		
 		void print(int n)
 		{
-			m_buffer[m_nSize] = (byte)(n >> 0);
+			m_buffer[m_nSize] = (byte)(n >>> 0);
 			++m_nSize;
 			if (m_nSize == 3) print2();
-			m_buffer[m_nSize] = (byte)(n >> 8);
+			m_buffer[m_nSize] = (byte)(n >>> 8);
 			++m_nSize;
 			if (m_nSize == 3) print2();
-			m_buffer[m_nSize] = (byte)(n >> 16);
+			m_buffer[m_nSize] = (byte)(n >>> 16);
 			++m_nSize;
 			if (m_nSize == 3) print2();
-			m_buffer[m_nSize] = (byte)(n >> 24);
+			m_buffer[m_nSize] = (byte)(n >>> 24);
 			++m_nSize;
 			if (m_nSize == 3) print2();
 		}
 		
 		void print2()
 		{
-			byte b1 = (byte)( 32 + (m_buffer[0] >> 2) );
+			byte b1 = (byte)( 32 + (m_buffer[0] >>> 2) );
 			
 			int n2a = (m_buffer[0] & 0x3) << 4;
-			int n2b = m_buffer[1] >> 4;
+			int n2b = m_buffer[1] >>> 4;
 			
 			byte b2 = (byte)( 32 + (n2a | n2b) );
 
 			int n3a = (m_buffer[1] & 0xF) << 2;
-			int n3b = m_buffer[2] >> 6;
+			int n3b = m_buffer[2] >>> 6;
 			
 			byte b3 = (byte)(32 + (n3a | n3b) );
 			
