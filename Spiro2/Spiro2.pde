@@ -3,6 +3,8 @@
 // http://www.ricardmarxer.com/geomerative/
 import geomerative.*;
 
+import java.awt.geom.Point2D;
+
 Slider sliderStatic;
 Slider sliderDynamic;
 
@@ -10,6 +12,8 @@ PGraphics myGraphics;
 
 PVector ptPenBase;
 PVector ptPrevious;
+
+float slideAmount = 3;
 
 class Slider
 {
@@ -118,9 +122,7 @@ void draw()
   image(myGraphics, 0, 0);
 
   myGraphics.beginDraw();
-  myGraphics.pushMatrix();
   
-  float slideAmount = 1;
   sliderStatic.slide(slideAmount);
   sliderDynamic.slide(slideAmount);
 
@@ -140,22 +142,39 @@ void draw()
 //  line(rp1.x, rp1.y, rp1.x + rp2.x, rp1.y + rp2.y);
 
   translate(rp1.x, rp1.y);
-  myGraphics.translate(rp1.x, rp1.y);
 
   float angle = atan2(rp2.y, rp2.x) - atan2(rp4.y, rp4.x);
   rotate(angle);
-  myGraphics.rotate(angle);
 
   translate(-rp3.x, -rp3.y);
-  myGraphics.translate(-rp3.x, -rp3.y);
 
   sliderDynamic.path.draw(this);
 
-  myGraphics.stroke(150, 0, 150);
-  myGraphics.point(ptPenBase.x, ptPenBase.y);
+  PGraphicsJava2D pg = (PGraphicsJava2D)g;
+  Point2D ptOut = new Point2D.Float();
+  
+  pg.g2.getTransform().transform(new Point2D.Float(ptPenBase.x, ptPenBase.y), ptOut);
 
-  myGraphics.popMatrix();
+  myGraphics.stroke(150, 0, 150);
+  
+  PVector pt = new PVector((float)ptOut.getX(), (float)ptOut.getY());
+
+  if (ptPrevious != null)
+  {
+    myGraphics.line(ptPrevious.x, ptPrevious.y, pt.x, pt.y);
+  }
+
+  ptPrevious = pt;
+  
   myGraphics.endDraw();
+}
+
+void mousePressed()
+{
+  if (mouseButton == LEFT)
+    ++slideAmount;
+  else
+    --slideAmount;
 }
 
 
