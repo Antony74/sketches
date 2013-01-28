@@ -5,12 +5,19 @@ import geomerative.*;
 
 RFont m_font;
 RGroup m_group;
-RPoint m_pts[];
-RPath m_path;
+RShape m_shape;
+ArrayList<RPoint> m_pts;
+
+LetterFactory m_LetterFactory;
 
 float m_textWidth = 0;
 
 String m_sTyped = "";
+
+int m_nClicks = 0;
+
+PVector m_lineStart = new PVector(0,0);
+PVector m_lineEnd = new PVector(0,0);
 
 void setup()
 {
@@ -19,6 +26,9 @@ void setup()
 
   RG.init(this);
   m_font = new RFont(dataPath("impact.ttf"));
+  m_LetterFactory = new LetterFactory(m_font);
+
+  m_pts = new ArrayList<RPoint>();
 }
 
 void draw()
@@ -27,25 +37,29 @@ void draw()
   stroke(0);
   strokeWeight(1);
   
+  pushMatrix();
   translate((width - m_textWidth)/2, height/10);
   if (m_sTyped.length() > 0)
   {
     m_group.draw();
 
-    for (int n = 0; n < m_pts.length; ++n)
+    for (int n = 0; n < m_pts.size(); ++n)
     {
-//      ellipse(m_pts[n].x, m_pts[n].y, 10, 10);
+      ellipse(m_pts.get(n).x, m_pts.get(n).y, 6, 6);
     }
-  
-    if (m_path != null)
+
+    if (m_shape != null)
     {
-      RCommand cmd = m_path.commands[second() % m_path.commands.length];
+      RPath path = m_shape.paths[second() % m_shape.paths.length];
       stroke(255,0,0);
       strokeWeight(3);
-      cmd.draw();
+      path.draw();
     }
-    
   }
+
+  popMatrix();
+  line(m_lineStart.x, m_lineStart.y, m_lineEnd.x, m_lineEnd.y);
+
 }
 
 void keyTyped()
@@ -60,30 +74,33 @@ void keyTyped()
   else
   {
     m_sTyped += key;
+    m_LetterFactory.doThing(key);
   }
   
   if (m_sTyped.length() > 0)
   {
     m_group = m_font.toGroup(m_sTyped); 
+    m_shape = m_font.toShape(key);
+    RG.setPolygonizer(RG.ADAPTATIVE);
+    m_group.polygonize();
+//    makeConvexGroup(m_group);
     
-    simplifyGroup(m_group, 0.01);
-    
-    m_pts = m_group.getPoints();
+    RPoint pts[] = m_group.getPoints();
 
-    float xMin = m_pts[0].x;
-    float xMax = m_pts[0].x;
+    float xMin = pts[0].x;
+    float xMax = pts[0].x;
 
-    for (int n = 1; n < m_pts.length; ++n)
+    for (int n = 1; n < pts.length; ++n)
     {
-      xMin = min(xMin, m_pts[n].x);
-      xMax = max(xMax, m_pts[n].x);
+      xMin = min(xMin, pts[n].x);
+      xMax = max(xMax, pts[n].x);
     }
     
     m_textWidth = xMax - xMin;
   }
 }
 
-void simplifyGroup(RGroup group, float acceptableError)
+void makeConvexGroup(RGroup group)
 {
   for (int n = 0; n < group.elements.length; ++n)
   {
@@ -91,7 +108,7 @@ void simplifyGroup(RGroup group, float acceptableError)
     
     if (elem.getClass().getName() == "geomerative.RShape")
     {
-      simplifyShape((RShape)elem, acceptableError);
+      makeConvexShape((RShape)elem);
     }
     else
     {
@@ -100,70 +117,105 @@ void simplifyGroup(RGroup group, float acceptableError)
   }
 }
 
-void simplifyShape(RShape shape, float acceptableError)
+void makeConvexShape(RShape shape)
 {
   for (int n = 0; n < shape.paths.length; ++n)
   {
-    simplifyPath(shape.paths[n], acceptableError);
+    makeConvexPath(shape.paths[n]);
   }
 
   if (shape.children != null)
   {
     for (int n = 0; n < shape.children.length; ++n)
     {
-      simplifyShape(shape.children[n], acceptableError);
+      makeConvexShape(shape.children[n]);
     }
   }
 }
 
-void simplifyPath(RPath path, float acceptableError)
+void makeConvexPath(RPath path)
 {
-  if (m_path == null)
-  {
-    m_path = path;
-  }
-  
-  ArrayList<RCommand> simplified = new ArrayList<RCommand>();
-    
   for (int n = 0; n < path.commands.length; ++n)
   {
     RCommand cmd1 = path.commands[n];
-    RCommand cmd2 = path.commands[(n+1)%path.commands.length];
+    RCommand cmd2 = path.commands[(n+1) % path.commands.length];
+
+    float angle = getAngle(cmd2) - getAngle(cmd1);    
     
-    if (cmd1.countControlPoints() != 0)
+    if ( angle >= HALF_PI || angle < -HALF_PI )
     {
-      throw new RuntimeException("Command has " + cmd1.countControlPoints() + " control point(s).  Not a line");
-    }
-    
-    float dist1 = dist(cmd1.startPoint, cmd1.endPoint); 
-    float dist2 = dist(cmd2.startPoint, cmd2.endPoint);
-    float dist3 = dist(cmd1.startPoint, cmd2.endPoint);
-
-//    println(dist1 + ", " + dist2 + ", " + dist3);
-
-    if (dist3 == 0 || (dist1 + dist2) / dist3 < 1 + acceptableError)
-    {
-      cmd2.startPoint = cmd1.startPoint;
-
-//      println("yay");
-
+      // convex
     }
     else
     {
-      simplified.add(cmd1);
+      m_pts.add(cmd1.endPoint);
+      println(angle / PI);
     }
-  } 
-
-  path.commands = new RCommand[simplified.size()];
-  for (int n = 0; n < simplified.size(); ++n)
-  {
-    path.commands[n] = simplified.get(n);
   }
 }
 
-float dist(RPoint p1, RPoint p2)
+float getAngle(RCommand cmd)
 {
-  return dist(p1.x, p1.y, p2.x, p2.y);
+    float angle = atan2(cmd.endPoint.y - cmd.startPoint.y, cmd.endPoint.x - cmd.startPoint.x);
+    return angle;      
+}
+
+void mouseClicked()
+{
+  ++m_nClicks;
+  
+  if (m_nClicks % 2 == 0)
+  {
+    m_lineStart.x = mouseX;
+    m_lineStart.y = mouseY;
+  }
+  else
+  {
+    m_lineEnd.x = mouseX;
+    m_lineEnd.y = mouseY;
+  }
+}
+
+RPoint getLineLineSegmentIntersection(RPoint p1, RPoint p2, RPoint p3, RPoint p4)
+{
+  RPoint ptIntersection = getLineLineIntersection(p1, p2, p3, p4);
+
+  if (ptIntersection != null)
+  {  
+    Rectangle rect34 = new Rectangle(p3.x, p3.y, p4.x, p4.y);
+    rect34.normalise();
+
+    if (rect34.containsPoint(ptIntersection.x,ptIntersection.y))
+    {
+      // Good, this point is also on the line-segment, not just on the line
+    }
+    else
+    {
+      ptIntersection = null;
+    }
+  }
+
+  return ptIntersection;
+}
+
+RPoint getLineLineIntersection(RPoint p1, RPoint p2, RPoint p3, RPoint p4)
+{
+  float denominator = ((p1.x-p2.x)*(p3.y-p4.y)) - ((p1.y-p2.y)*(p3.x-p4.x));
+  if (denominator == 0)
+  {
+    // Lines are parallel.  We will already have any points that may be relevant
+    return null;
+  }
+  else
+  {
+    // Lines are not parallel, therefore there is a single point of intersection to be found,
+    // although it may or may not lie within the line-segments.
+    float xNum = (((p1.x*p2.y)-(p1.y*p2.x))*(p3.x-p4.x)) - ((p1.x-p2.x)*((p3.x*p4.y)-(p3.y*p4.x)));
+    float yNum = (((p1.x*p2.y)-(p1.y*p2.x))*(p3.y-p4.y)) - ((p1.y-p2.y)*((p3.x*p4.y)-(p3.y*p4.x)));
+    
+    return new RPoint(xNum/denominator, yNum/denominator);
+  }
+    
 }
 
 
