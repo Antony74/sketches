@@ -130,7 +130,7 @@ class Part implements Comparable<Part>
       else if (pt != null)
       {
         // We have an intersection, and not one that wouldn't happen if this path was convex, so action is required.
-        println(pt.toString());
+        pt.print();
       }
       
     }
