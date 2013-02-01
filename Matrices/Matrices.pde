@@ -30,12 +30,12 @@ void setup()
 
 Matrix multiply(Matrix A, Matrix B)
 {
-  if (A.m.length != B.m[0].length || A.m[0].length != B.m.length)
+  if (A.m.length != B.m[0].length)
   {
     throw new RuntimeException("Not compatible");
   }
 
-  Matrix C = new Matrix(A.m[0].length, B.m.length);
+  Matrix C = new Matrix(B.m.length, A.m[0].length);
   
   for (int x = 0; x < C.m.length; ++x)
   {
@@ -45,10 +45,10 @@ Matrix multiply(Matrix A, Matrix B)
       
       for (int z = 0; z < A.m.length; ++z)
       {
-        value += A.m[z][x] * B.m[y][z];
+        value += A.m[z][y] * B.m[x][z];
       }
       
-      C.m[y][x] = value;
+      C.m[x][y] = value;
     }
   }
   
