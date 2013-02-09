@@ -1,0 +1,52 @@
+<?xml version="1.0" ?>
+<project name="single-sketch-build" default="build">
+
+  <target name="build" description="Builds a specific sketch">
+    
+    <!-- Some slightly painful stuff to check the processing-java tool exists
+         so we can say something helpful if it doesn't.  Windows makes
+         this particularly yucky by having a different tool name and
+         three possible captialisations of an enviromental variable.
+    -->
+
+    <property environment="env"/>
+    
+    <condition property="tool.name" value="processing-java.exe" else="processing-java">
+      <os family="windows" />
+    </condition>
+
+    <available file="${tool.name}" filepath="${env.path}" property="tool.found" />
+    <available file="${tool.name}" filepath="${env.Path}" property="tool.found" />
+    <available file="${tool.name}" filepath="${env.PATH}" property="tool.found" />
+
+    <fail unless="tool.found" message="${tool.name} not found.${line.separator}
+Please ensure it is on your environmental variable PATH.${line.separator}
+On Windows processing-java.exe can be found in the folder where Processing is${line.separator}
+installed.  Under other Operating Systems I believe it can be installed from${line.separator}
+the Processing IDE -> Tools -> Install -> processing-java"/>
+
+    <!-- Let's get the sketch.dir set up.  Convert any backslashes (not liked by processing-java) to forwardslashes-->
+    
+    <fail unless="sketch.dir" message="sketch.dir not specified"/>
+    <path id="convertme">
+      <pathelement location="${sketch.dir}"/>
+    </path>
+    <pathconvert property="sketch.converted.dir" refid="convertme" dirsep="/" />
+    <delete dir="${sketch.converted.dir}/output"/>
+    <property name="sketch.run" value=""/>
+
+    <!-- Build the sketch.  Run it if required.  It would be nice to be able to perform these operations
+         seperately, but that doesn't seem to be an option.  Anything goes wrong the first thing to try
+         is setting spawn to false -->
+
+    <exec executable="processing-java" spawn="true">
+      <arg value="--sketch=${sketch.converted.dir}"/>
+      <arg value="--output=${sketch.converted.dir}/output"/>
+      <arg value="--build"/>
+      <arg value="${sketch.run}"/>
+    </exec>
+
+  </target>
+  
+</project>      
+
