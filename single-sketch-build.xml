@@ -1,51 +1,71 @@
 <?xml version="1.0" ?>
 <project name="single-sketch-build" default="build">
 
-  <target name="build" description="Builds a specific sketch">
-    
-    <!-- Some slightly painful stuff to check the processing-java tool exists
+  <property environment="env"/>
+  
+  <!-- We should have been passed a sketch.dir property.
+       Convert any back-slashes (not liked by processing-java) to forward-slashes, and
+       put the converted value into property called sketch.converted.dir -->
+  
+  <fail unless="sketch.dir" message="sketch.dir not specified"/>
+  <path id="path.sketch.dir">
+    <pathelement location="${sketch.dir}"/>
+  </path>
+  <pathconvert property="sketch.converted.dir" refid="path.sketch.dir" dirsep="/" />
+
+  <!-- Some slightly painful stuff to check the processing-java tool exists
          so we can say something helpful if it doesn't.  Windows makes
          this particularly yucky by having a different tool name and
          three possible captialisations of an enviromental variable.
     -->
 
-    <property environment="env"/>
-    
-    <condition property="tool.name" value="processing-java.exe" else="processing-java">
-      <os family="windows" />
-    </condition>
+  <condition property="tool.name" value="processing-java.exe" else="processing-java">
+    <os family="windows" />
+  </condition>
 
-    <available file="${tool.name}" filepath="${env.path}" property="tool.found" />
-    <available file="${tool.name}" filepath="${env.Path}" property="tool.found" />
-    <available file="${tool.name}" filepath="${env.PATH}" property="tool.found" />
+  <whichresource resource="${tool.name}" classpath="${env.path}" property="tool.path"/>
+  <whichresource resource="${tool.name}" classpath="${env.Path}" property="tool.path"/>
+  <whichresource resource="${tool.name}" classpath="${env.PATH}" property="tool.path"/>
 
-    <fail unless="tool.found" message="${tool.name} not found.${line.separator}
+  <fail unless="tool.path" message="${tool.name} not found.${line.separator}
 Please ensure it is on your environmental variable PATH.${line.separator}
 On Windows processing-java.exe can be found in the folder where Processing is${line.separator}
 installed.  Under other Operating Systems I believe it can be installed from${line.separator}
 the Processing IDE -> Tools -> Install -> processing-java"/>
 
-    <!-- Let's get the sketch.dir set up.  Convert any backslashes (not liked by processing-java) to forwardslashes-->
+  <!-- build -->
+  <target name="build" description="Builds a specific sketch">
     
-    <fail unless="sketch.dir" message="sketch.dir not specified"/>
-    <path id="convertme">
-      <pathelement location="${sketch.dir}"/>
-    </path>
-    <pathconvert property="sketch.converted.dir" refid="convertme" dirsep="/" />
     <delete dir="${sketch.converted.dir}/output"/>
-    <property name="sketch.run" value=""/>
 
-    <!-- Build the sketch.  Run it if required.  It would be nice to be able to perform these operations
-         seperately, but that doesn't seem to be an option.  Anything goes wrong the first thing to try
-         is setting spawn to false -->
-
-    <exec executable="processing-java" spawn="true">
+    <exec executable="processing-java">
       <arg value="--sketch=${sketch.converted.dir}"/>
       <arg value="--output=${sketch.converted.dir}/output"/>
       <arg value="--build"/>
-      <arg value="${sketch.run}"/>
     </exec>
 
+  </target>
+
+  <!-- run -->
+  <target name="run" depends="build" description="Runs a specific sketch">
+    
+    <!-- Get the name of the sketch -->
+    <basename property="sketch.name" file="${sketch.converted.dir}"/>
+
+    <!-- Get the directory where processing-java lives, which (for Processing-2.0b7 on Windows at least)
+         is also the directory where Processing is installed - which we need in order to locate core.jar 
+         (so I'm more than a little worried this run target wont work on other platforms) -->
+    <dirname property="tool.dir" file="${tool.path}"/>
+    
+    <!-- Make it possible for a build script calling us to add to the classpath-->
+    <property name="extra.classpath" value=""/>
+    
+    <!-- Set the classpath -->
+    <property name="classpath" value="${sketch.converted.dir}/output;${tool.dir}/core/library/core.jar;${extra.classpath}"/>
+
+    <!-- Run the sketch -->
+    <java classname="${sketch.name}" classpath="${classpath}" fork="true" spawn="true"/>
+    
   </target>
   
 </project>      
