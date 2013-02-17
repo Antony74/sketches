@@ -6,6 +6,9 @@
 // 2. Processing.js (evaluating JavaScript natively).
 //
 
+import java.io.FileInputStream;
+import java.util.Scanner;
+
 // Import Rhino - a Java-based implementation of JavaScript
 // http://www.mozilla.org/rhino/
 import org.mozilla.javascript.*;
@@ -14,7 +17,7 @@ import org.mozilla.javascript.*;
 // If you build Processing from source then it can be patched to prevent the need for this.
 // https://github.com/Antony74/Processing/commit/047772019342a879810718feda579c89634a60b8
 
-//String eval(String sCode) {return "";}
+String eval(String sCode) {return "";}
 
 Object context;
 Object scope;

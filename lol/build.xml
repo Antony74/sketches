@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<project name="single-sketch" default="build">
+
+  <property name="sketch.dir" value="${user.dir}"/>
+  
+  <target name="build" description="Builds this sketch">
+    <ant dir=".." antfile="single-sketch-build.xml" target="build"/>
+  </target>
+
+  <target name="run" description="Runs this sketch">
+    <ant dir=".." antfile="single-sketch-build.xml" target="run"/>
+  </target>
+
+</project>
+

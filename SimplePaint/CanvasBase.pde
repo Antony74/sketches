@@ -1,4 +1,6 @@
 
+import java.io.File;
+
 final int maxHistory = 20;
 
 class CanvasBase extends PGraphicsJava2D

@@ -57,14 +57,11 @@ the Processing IDE -> Tools -> Install -> processing-java"/>
          (so I'm more than a little worried this run target wont work on other platforms) -->
     <dirname property="tool.dir" file="${tool.path}"/>
     
-    <!-- Make it possible for a build script calling us to add to the classpath-->
-    <property name="extra.classpath" value=""/>
-    
     <!-- Set the classpath -->
-    <property name="classpath" value="${sketch.converted.dir}/output;${tool.dir}/core/library/core.jar;${extra.classpath}"/>
+    <property name="classpath" value="${sketch.converted.dir}/output;${tool.dir}/core/library/core.jar;${tool.dir}/modes/java/libraries/js/library/js.jar;${tool.dir}/modes/java/libraries/Geomerative/library/Geomerative.jar"/>
 
     <!-- Run the sketch -->
-    <java classname="${sketch.name}" classpath="${classpath}" fork="true" spawn="true"/>
+    <java classname="${sketch.name}" classpath="${classpath}" fork="true" spawn="true" dir="${sketch.converted.dir}"/>
     
   </target>
   
