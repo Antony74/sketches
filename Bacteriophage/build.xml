@@ -1,14 +1,16 @@
-<?xml version="1.0"?>
-<project name="single-sketch" default="build">
+<?xml version="1.0" ?>
+<project name="build-sketch" default="build">
 
-  <property name="sketch.dir" value="${user.dir}"/>
+  <import file="../processing-macros.xml" />
+
+  <basename property="classname" file="${user.dir}"/>
   
-  <target name="build" description="Builds this sketch">
-    <ant dir=".." antfile="single-sketch-build.xml" target="build"/>
+  <target name="build">
+    <processing-java-build sketch.dir="${user.dir}" />
   </target>
 
-  <target name="run" description="Runs this sketch">
-    <ant dir=".." antfile="single-sketch-build.xml" target="run"/>
+  <target name="run">
+    <processing-java-run sketch.dir="${user.dir}" classname="${classname}" />
   </target>
 
 </project>

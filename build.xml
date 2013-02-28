@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<project name="build-sketches" default="build">
+
+  <import file="processing-macros.xml" />
+  
+  <target name="build">
+    <processing-java-build sketch.dir="${user.dir}/Bacteriophage" />
+    <processing-java-build sketch.dir="${user.dir}/ColorWheel" />
+    <processing-java-build sketch.dir="${user.dir}/kaleidoscope" />
+    <processing-java-build sketch.dir="${user.dir}/lol" />
+    <processing-java-build sketch.dir="${user.dir}/Matrices" />
+    <processing-java-build sketch.dir="${user.dir}/ShareAndEnjoy" />
+    <processing-java-build sketch.dir="${user.dir}/SimplePaint" />
+    <processing-java-build sketch.dir="${user.dir}/Spiro2" />
+    <processing-java-build sketch.dir="${user.dir}/YinYang" />
+  </target>
+
+  <target name="run">
+    <processing-java-run sketch.dir="${user.dir}/Bacteriophage" classname="Bacteriophage"/>
+    <processing-java-run sketch.dir="${user.dir}/ColorWheel"    classname="ColorWheel"/>
+    <processing-java-run sketch.dir="${user.dir}/kaleidoscope"  classname="kaleidoscope"/>
+    <processing-java-run sketch.dir="${user.dir}/lol"           classname="lol"/>
+    <processing-java-run sketch.dir="${user.dir}/Matrices"      classname="Matrices"/>
+    <processing-java-run sketch.dir="${user.dir}/ShareAndEnjoy" classname="ShareAndEnjoy"/>
+    <processing-java-run sketch.dir="${user.dir}/SimplePaint"   classname="SimplePaint"/>
+    <processing-java-run sketch.dir="${user.dir}/Spiro2"        classname="Spiro2"/>
+    <processing-java-run sketch.dir="${user.dir}/YinYang"       classname="YinYang"/>
+  </target>
+  
+</project>
+

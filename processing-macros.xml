@@ -1,0 +1,84 @@
+<?xml version="1.0" ?>
+<project name="processing-macros">
+
+  <macrodef name="processing-java-build">
+    <attribute name="sketch.dir"/>
+    <sequential>
+
+      <property environment="env"/>
+
+      <!-- Some slightly painful stuff to check the processing-java tool exists
+         so we can say something helpful if it doesn't.  Windows makes
+         this particularly yucky by having a different tool name and
+         three possible captialisations of an enviromental variable.
+    -->
+
+      <condition property="tool.name" value="processing-java.exe" else="processing-java">
+        <os family="windows" />
+      </condition>
+
+      <whichresource resource="${tool.name}" classpath="${env.path}" property="tool.url"/>
+      <whichresource resource="${tool.name}" classpath="${env.Path}" property="tool.url"/>
+      <whichresource resource="${tool.name}" classpath="${env.PATH}" property="tool.url"/>
+
+      <fail unless="tool.url" message="${tool.name} not found.${line.separator}
+Please ensure it is on your environmental variable PATH.${line.separator}
+On Windows processing-java.exe can be found in the folder where Processing is${line.separator}
+installed.  Under other Operating Systems I believe it can be installed from${line.separator}
+the Processing IDE -> Tools -> Install -> processing-java"/>
+
+      <!-- And it gets worse, because we want a filename not a url, and we have to use Javascript to convert the string, yuck! -->
+      <script language="javascript">
+        <![CDATA[
+        theUrl = project.getProperty("tool.url");
+        theFilename = theUrl.substr(6);
+        project.setProperty("tool.path",theFilename);
+    ]]>
+      </script>
+
+      <!-- Get the directory where processing-java lives, which (for Processing-2.0b7 on Windows at least)
+             is also the directory where Processing is installed - which we need in order to locate core.jar 
+             (so I'm more than a little worried this run target wont work on other platforms) -->
+      <dirname property="tool.dir" file="${tool.path}"/>
+
+      <!-- If they are not already there, add our libraries-->
+      <copy toDir="${tool.dir}/modes/java/libraries">
+        <fileset dir="@{sketch.dir}/../libraries" />
+      </copy>
+      
+      <!-- And finally we're ready to build the sketch -->
+      
+      <delete dir="@{sketch.dir}/output"/>
+
+      <exec executable="processing-java">
+        <arg value="--sketch=@{sketch.dir}"/>
+        <arg value="--output=@{sketch.dir}/output"/>
+        <arg value="--build"/>
+      </exec>
+
+    </sequential>
+  </macrodef>
+
+  <macrodef name="processing-java-run">
+    <attribute name="sketch.dir"/>
+    <attribute name="classname"/>
+    <sequential>
+
+      <processing-java-build sketch.dir="@{sketch.dir}"/>
+
+      <!-- Run the sketch -->
+      <java classname="@{classname}" fork="true" spawn="true" dir="@{sketch.dir}">
+        <classpath>
+          <pathelement location="@{sketch.dir}/output" />
+          <pathelement location="${tool.dir}/core/library/core.jar" />
+          <fileset dir="${tool.dir}/modes/java/libraries">
+            <include name="**/library/*.jar"/>
+          </fileset>
+        </classpath>
+      </java>
+
+    </sequential>
+  </macrodef>
+
+</project>
+
