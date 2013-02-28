@@ -12,8 +12,6 @@ cd ../ShareAndEnjoy
 call ant run
 cd ../SimplePaint
 call ant run
-cd ../Spiro
-call ant run
 cd ../Spiro2
 call ant run
 cd ../YinYang
