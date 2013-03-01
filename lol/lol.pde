@@ -11,7 +11,7 @@ void setup()
 
   RG.init(this);
 
-  font = new RFont( "impact.ttf", 50);
+  font = new RFont( "FreeSansBold.ttf", 50);
 }
 
 void draw()
