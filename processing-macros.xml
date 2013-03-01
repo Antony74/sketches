@@ -39,7 +39,7 @@ the Processing IDE -> Tools -> Install -> processing-java"/>
       <!-- Get the directory where processing-java lives, which (for Processing-2.0b7 on Windows at least)
              is also the directory where Processing is installed - which we need in order to locate core.jar 
              (so I'm more than a little worried this run target wont work on other platforms) -->
-      <dirname property="tool.dir" file="${tool.path}"/>
+      <dirname property="tool.dir" file="/${tool.path}"/>
 
       <!-- If they are not already there, add our libraries-->
       <copy toDir="${tool.dir}/modes/java/libraries">
