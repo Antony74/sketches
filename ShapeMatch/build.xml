@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<project name="build-sketch" default="build">
+
+  <import file="../processing-macros.xml" />
+
+  <basename property="classname" file="${user.dir}"/>
+  
+  <target name="build">
+    <processing-java-build sketch.dir="${user.dir}" />
+  </target>
+
+  <target name="run">
+    <processing-java-run sketch.dir="${user.dir}" classname="${classname}" />
+  </target>
+
+</project>
+
