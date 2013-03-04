@@ -29,23 +29,27 @@ void mouseDragged()
 
 void mouseReleased()
 {
-  RandomSolver<LineSolution> solver = new RandomSolver<LineSolution>();
-  LineProblem problem = new LineProblem();
-  problem.arrTargetPoints = arrPoints; 
-
-  solver.init(problem);
-
-  for (int n = 0; n < 100000; ++n)
+  if (arrPoints.size() > 0)
   {
-    solver.step();
+    SimulatedAnnealing<LineSolution> solver = new SimulatedAnnealing<LineSolution>();
+    LineProblem problem = new LineProblem();
+    problem.arrTargetPoints = arrPoints; 
+  
+    solver.init(problem);
+  
+    for (int n = 200000; n > 0; --n)
+    {
+      solver.setTemperature(n);
+      solver.step();
+    }
+  
+    stroke(0);
+    strokeWeight(1);
+    
+    solver.m_best.m_cmd.draw();
+    
+    arrPoints.clear();
   }
-
-  stroke(0);
-  strokeWeight(1);
-  
-  solver.m_best.m_cmd.draw();
-  
-  arrPoints.clear();
 }
 
 float dist(RPoint A, RPoint B)
@@ -96,49 +100,12 @@ class LineSolution implements Solution
   {
     m_cmd = new RCommand(0,0,0,0);
   }
-  
-  int getVariableCount() {return 4;}
-
-  float getVariable(int nVariable)
-  {
-    switch(nVariable)
-    {
-    case 0:
-      return m_cmd.startPoint.x;
-    case 1:
-      return m_cmd.startPoint.y;
-    case 2:
-      return m_cmd.endPoint.x;
-    case 3:
-      return m_cmd.endPoint.y;
-    default:
-      throw new RuntimeException("Index out of bounds");
-    }
-  }
 
   RCommand m_cmd;
 };
 
 class LineProblem implements Problem<LineSolution>
 {
-  float getMin(int nVariable) {return 0;}
-  float getMax(int nVariable)
-  {
-    switch(nVariable)
-    {
-      case 0:
-      case 2:
-        return width;
-      case 1:
-      case 3:
-        return height;
-      default:
-        throw new RuntimeException("Index out of bounds");
-    }
-  }
-  
-  String getVariableClass(int nVariable) {return "float";}
-
   float assessFitness(LineSolution s)
   {
     float fitness = 0;
@@ -150,12 +117,16 @@ class LineProblem implements Problem<LineSolution>
       
       fitness += (distance * distance);
     }
-    fitness *= 10 / arrTargetPoints.size();
+    fitness /= arrTargetPoints.size();
     
-    float startDistance = dist(s.m_cmd.startPoint, arrTargetPoints.get(0));
-    float endDistance = dist(s.m_cmd.endPoint, arrTargetPoints.get(arrTargetPoints.size() - 1));
+    float targetDistance = dist(arrTargetPoints.get(0), arrTargetPoints.get(arrTargetPoints.size() - 1));
+    float solutionDistance = dist(s.m_cmd.startPoint, s.m_cmd.endPoint);
 
-    fitness += (startDistance * startDistance) + (endDistance * endDistance);
+    if (solutionDistance > targetDistance)
+    {
+      float diff = solutionDistance - targetDistance;
+      fitness += 0.25 * (diff * diff);
+    }
 
     return fitness;
   }
@@ -180,8 +151,8 @@ class LineProblem implements Problem<LineSolution>
     LineSolution ls = new LineSolution();
     ls.m_cmd.startPoint.x = tweak(s.m_cmd.startPoint.x, width);
     ls.m_cmd.startPoint.y = tweak(s.m_cmd.startPoint.y, height);
-    ls.m_cmd.endPoint.x = tweak(s.m_cmd.startPoint.x, width);
-    ls.m_cmd.endPoint.y = tweak(s.m_cmd.startPoint.y, height);
+    ls.m_cmd.endPoint.x = tweak(s.m_cmd.endPoint.x, width);
+    ls.m_cmd.endPoint.y = tweak(s.m_cmd.endPoint.y, height);
     return ls;
   }
 
@@ -190,7 +161,7 @@ class LineProblem implements Problem<LineSolution>
     float f2;
     for(;;)
     {
-      f2 = f1 + (50 * (float)rng.nextGaussian()); 
+      f2 = f1 + (5 * (float)rng.nextGaussian()); 
       
       if (f2 >= 0 && f2 < fMax)
         return f2;
