@@ -1,6 +1,11 @@
 
-class SimulatedAnnealing<SOLUTION extends Solution> implements Solver<SOLUTION>
+class SimulatedAnnealing<SOLUTION> implements Solver<SOLUTION>
 {
+  SimulatedAnnealing(float initialTemperature)
+  {
+    m_temperature = initialTemperature;
+  }
+  
   public void init(Problem<SOLUTION> problem)
   {
     m_problem = problem;
@@ -8,11 +13,6 @@ class SimulatedAnnealing<SOLUTION extends Solution> implements Solver<SOLUTION>
     m_bestFitness = problem.assessFitness(m_best);
     m_candidate = m_best;
     m_candidateFitness = m_bestFitness;
-  }
-
-  void setTemperature(float t)
-  {
-    m_temperature = t;
   }
 
   void step()
@@ -45,6 +45,8 @@ class SimulatedAnnealing<SOLUTION extends Solution> implements Solver<SOLUTION>
       m_best = solution;
       m_bestFitness = fitness;
     }
+
+    --m_temperature;
   }
   
   Problem<SOLUTION> m_problem;

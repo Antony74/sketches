@@ -1,6 +1,6 @@
 // Maximum exploration, no exploitation.  A handy baseline, but not intended for serious use.
 
-class RandomSolver<SOLUTION extends Solution> implements Solver<SOLUTION>
+class RandomSolver<SOLUTION> implements Solver<SOLUTION>
 {
   public void init(Problem<SOLUTION> problem)
   {

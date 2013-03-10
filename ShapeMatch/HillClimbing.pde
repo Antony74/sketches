@@ -1,6 +1,6 @@
 // Maximum exploitation, minimum exploration.  A handy baseline, but not intended for serious use.
 
-class HillClimbing<SOLUTION extends Solution> implements Solver<SOLUTION>
+class HillClimbing<SOLUTION> implements Solver<SOLUTION>
 {
   public void init(Problem<SOLUTION> problem)
   {

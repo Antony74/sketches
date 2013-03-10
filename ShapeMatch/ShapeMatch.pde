@@ -13,9 +13,6 @@ void setup()
   RG.init(this);
   
   arrPoints = new ArrayList<RPoint>();
-  
-  HeartProblem h = new HeartProblem();
-  h.heart.draw();
 }
 
 void draw()
@@ -24,7 +21,7 @@ void draw()
 
 void mouseDragged()
 {
-  stroke(255, 0, 0);
+  stroke(0, 0, 255);
   strokeWeight(2);
   line(pmouseX, pmouseY, mouseX, mouseY);
   arrPoints.add(new RPoint(mouseX, mouseY));
@@ -34,22 +31,27 @@ void mouseReleased()
 {
   if (arrPoints.size() > 0)
   {
-    SimulatedAnnealing<LineSolution> solver = new SimulatedAnnealing<LineSolution>();
-    LineProblem problem = new LineProblem();
-    problem.arrTargetPoints = arrPoints; 
+    int nSteps = 100000;
+//    SimulatedAnnealing<LineSolution> solver = new SimulatedAnnealing<LineSolution>(nSteps);
+//    LineProblem problem = new LineProblem();
+
+    SimulatedAnnealing<HeartSolution> solver = new SimulatedAnnealing<HeartSolution>(nSteps);
+    Problem problem = new HeartProblem();
+    
+    problem.setTargetPoints(arrPoints); 
   
     solver.init(problem);
   
-    for (int n = 200000; n > 0; --n)
+    for (int n = 0; n < nSteps; ++n)
     {
-      solver.setTemperature(n);
       solver.step();
     }
   
-    stroke(0);
-    strokeWeight(1);
+    stroke(255, 0, 0, 128);
+    fill(128, 0, 0, 128);
+    strokeWeight(5);
     
-    solver.m_best.m_cmd.draw();
+    problem.draw(solver.m_best);
     
     arrPoints.clear();
   }

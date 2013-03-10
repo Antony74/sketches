@@ -1,5 +1,5 @@
 
-class LineSolution implements Solution
+class LineSolution
 {
   LineSolution()
   {
@@ -64,6 +64,16 @@ class LineProblem implements Problem<LineSolution>
       if (f2 >= 0 && f2 < fMax)
         return f2;
     }
+  }
+  
+  void setTargetPoints(ArrayList<RPoint> arr)
+  {
+    arrTargetPoints = arr;
+  }
+  
+  void draw(LineSolution s)
+  {
+    s.m_cmd.draw();
   }
   
   ArrayList<RPoint> arrTargetPoints = new ArrayList<RPoint>();
