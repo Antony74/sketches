@@ -8,7 +8,6 @@
     <processing-java-build sketch.dir="${user.dir}/ColorWheel" />
     <processing-java-build sketch.dir="${user.dir}/kaleidoscope" />
     <processing-java-build sketch.dir="${user.dir}/lol" />
-    <processing-java-build sketch.dir="${user.dir}/Matrices" />
     <processing-java-build sketch.dir="${user.dir}/ShapeMatch" />
     <processing-java-build sketch.dir="${user.dir}/ShareAndEnjoy" />
     <processing-java-build sketch.dir="${user.dir}/SimplePaint" />
@@ -21,7 +20,6 @@
     <processing-java-run sketch.dir="${user.dir}/ColorWheel"    classname="ColorWheel"/>
     <processing-java-run sketch.dir="${user.dir}/kaleidoscope"  classname="kaleidoscope"/>
     <processing-java-run sketch.dir="${user.dir}/lol"           classname="lol"/>
-    <processing-java-run sketch.dir="${user.dir}/Matrices"      classname="Matrices"/>
     <processing-java-run sketch.dir="${user.dir}/ShapeMatch"    classname="ShapeMatch"/>
     <processing-java-run sketch.dir="${user.dir}/ShareAndEnjoy" classname="ShareAndEnjoy"/>
     <processing-java-run sketch.dir="${user.dir}/SimplePaint"   classname="SimplePaint"/>
