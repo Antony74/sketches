@@ -41,8 +41,10 @@ the Processing IDE -> Tools -> Install -> processing-java"/>
              (so I'm more than a little worried this run target wont work on other platforms) -->
       <dirname property="tool.dir" file="/${tool.path}"/>
 
-      <!-- If they are not already there, add our libraries-->
-      <copy toDir="${tool.dir}/modes/java/libraries">
+      <!-- If they are not already part of the Processing install, add our libraries
+           (If the sketch directory doesn't have a sibling "libraries" directory,
+            assume it doesn't need any libraries) -->
+      <copy toDir="${tool.dir}/modes/java/libraries" failonerror="false" quiet="true">
         <fileset dir="@{sketch.dir}/../libraries" />
       </copy>
       
