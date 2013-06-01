@@ -68,7 +68,8 @@ class CircleIntersector implements FitnessEvaluator<PVector2D>
     
     pv2.sub(pv1);
     
-    return pv2.magSq();
+    float m = pv2.mag();
+    return m*m;
   }
 
   PVector toCartesian1(PVector pvTarget)
@@ -88,7 +89,7 @@ class CircleIntersector implements FitnessEvaluator<PVector2D>
   float getHeading()
   {
     PVector pv = PVector.sub(circle1.pvCentre, circle2.pvCentre);
-    return pv.heading();
+    return atan2(pv.y, pv.x);
   }
 
   Circle circle1;

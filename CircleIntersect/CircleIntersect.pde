@@ -5,6 +5,7 @@ Circle circle2;
 void setup()
 {
   size(300, 300);
+  smooth();
   ellipseMode(RADIUS);
   rectMode(CENTER);
   
