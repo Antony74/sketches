@@ -1,25 +1,72 @@
+PFont font;
+ColorPanel colorPanel;
 
-class ColorPanel extends PGraphicsJava2D
+void setup()
 {
-  // This would all be abstract if Processing's lack of privacy and several quirks of Java weren't ganging up on me!
+  size(900,600);
+  colorMode(HSB);
+  PGraphics graphics = createGraphics(width, height);
+  colorPanel = new ColorPanel();
+  colorPanel.setup(graphics);
 
-  // We can be interacted with in a fairly familiar fashion  
-  void setup() {throw new RuntimeException("Oops, this was meant to have been overidden");}
-  void draw() {throw new RuntimeException("Oops, this was meant to have been overidden");}
-  boolean mousePressed(float mouseX, float mouseY, int mouseButton) {throw new RuntimeException("Oops, this was meant to have been overidden");}
+  font = createFont("Courier New", 13);
+}
 
-  // The selected color is accessed in this slightly cumbersome fashion to avoid making assumptions about the callers color-space
-  float getRed() {throw new RuntimeException("Oops, this was meant to have been overidden");}
-  float getGreen() {throw new RuntimeException("Oops, this was meant to have been overidden");}
-  float getBlue() {throw new RuntimeException("Oops, this was meant to have been overidden");}
-  float getHue() {throw new RuntimeException("Oops, this was meant to have been overidden");}
-  float getSaturation() {throw new RuntimeException("Oops, this was meant to have been overidden");}
-  float getBrightness() {throw new RuntimeException("Oops, this was meant to have been overidden");}
-  void setHSB(float h, float s, float b) {throw new RuntimeException("Oops, this was meant to have been overidden");}
-};
-
-ColorPanel colorWheel = new ColorPanel()
+void draw()
 {
+  colorPanel.draw();
+  image(colorPanel.m_Graphics, 0, 0);
+  
+  noStroke();
+  fill(colorPanel.getHue(), colorPanel.getSaturation(), colorPanel.getBrightness());
+  rect(0,0,150,400);
+  
+  int h  = round(colorPanel.getHue());
+  int s  = round(colorPanel.getSaturation());
+  int br = round(colorPanel.getBrightness());
+  int r  = round(colorPanel.getRed());
+  int g  = round(colorPanel.getGreen());
+  int bl = round(colorPanel.getBlue());
+  
+  // Yes, I'm breaking the guidelines about how to construct a string efficiently :-)
+  String sInfo = "       Hue: " + pad(h)  + " (0x" + hex(h,2)  + ")\n"
+               + "Saturation: " + pad(s)  + " (0x" + hex(s,2)  + ")\n"
+               + "Brightness: " + pad(br) + " (0x" + hex(br,2) + ")\n\n"
+               + "       Red: " + pad(r)  + " (0x" + hex(r,2)  + ")\n"
+               + "     Green: " + pad(g)  + " (0x" + hex(g,2)  + ")\n"
+               + "      Blue: " + pad(bl) + " (0x" + hex(bl,2) + ")";
+
+  fill(0);
+  textFont(font);
+  text(sInfo, 10, height * 0.75);
+
+}
+
+String pad(int n)
+{
+  String s = str(n);
+  switch (s.length())
+  {
+  case 1:
+    s = "  " + s;
+    break;
+  case 2:
+    s = " " + s;
+    break;
+  }
+
+  return s;
+}
+
+void mousePressed()
+{
+  colorPanel.mousePressed(mouseX, mouseY, mouseButton);
+}
+
+class ColorPanel
+{
+  PGraphics m_Graphics;
+  
   // The selected color is accessed in this slightly cumbersome fashion to avoid making assumptions about the callers color-space
   float getRed() {return red(selectedColor);}
   float getGreen() {return green(selectedColor);}
@@ -123,7 +170,7 @@ ColorPanel colorWheel = new ColorPanel()
     
     void draw()
     {
-      rect(x,y,w,h);
+      m_Graphics.rect(x,y,w,h);
     }
     
     void vExpand(float expandBy)
@@ -133,13 +180,15 @@ ColorPanel colorWheel = new ColorPanel()
     }
   }
   
-  void setup()
+  void setup(PGraphics graphics)
   {
-    beginDraw(); // We're not drawing, but we do need to be able to set up the drawing environment
+    m_Graphics = graphics;
+    
+    m_Graphics.beginDraw(); // We're not drawing, but we do need to be able to set up the drawing environment
 
-    noStroke();
-    smooth();
-    colorMode(HSB);
+    m_Graphics.noStroke();
+    m_Graphics.smooth();
+    m_Graphics.colorMode(HSB);
 
     xWheel = 0.5 * width;
     yWheel = 0.45 * height;
@@ -175,22 +224,22 @@ ColorPanel colorWheel = new ColorPanel()
     greys[0].vExpand(blockSize * 0.5);
     greys[nBlocks-1].vExpand(blockSize * 0.5);
 
-    endDraw();
+    m_Graphics.endDraw();
   }
   
   void draw()
   {
-    beginDraw();
+    m_Graphics.beginDraw();
 
-    background(128);
+    m_Graphics.background(128);
   
     for (int nSegment = 0; nSegment < nSegments; ++nSegment)
     {
       Segment segment = segments[nSegment];
   
-      fill(segment.segmentColor);
+      m_Graphics.fill(segment.segmentColor);
       
-      arc(xWheel, yWheel, wheelDiameter, wheelDiameter, segment.arcStart, segment.arcStop);
+      m_Graphics.arc(xWheel, yWheel, wheelDiameter, wheelDiameter, segment.arcStart, segment.arcStop);
       
       if (segment.segmentColor == selectedColor)
       {
@@ -198,63 +247,65 @@ ColorPanel colorWheel = new ColorPanel()
       }
     }
   
-    fill(128);
-    ellipse(xWheel, yWheel, wheelInnerDiameter, wheelInnerDiameter);
+    m_Graphics.fill(128);
+    m_Graphics.ellipse(xWheel, yWheel, wheelInnerDiameter, wheelInnerDiameter);
   
     if (selectedSegment != null)
     {
       Segment segComplimentary = segments[(selectedSegment.index + (nSegments/2)) % nSegments];
   
-      pushMatrix();
-      translate(xWheel, yWheel);
-      rotate(selectedSegment.middle() - (0.25*PI));
+      m_Graphics.pushMatrix();
+      m_Graphics.translate(xWheel, yWheel);
+      m_Graphics.rotate(selectedSegment.middle() - (0.25*PI));
       drawHueTriangle(hue(selectedSegment.segmentColor), -sliceRadius, -sliceRadius, 2*sliceRadius, segComplimentary.segmentColor); 
-      popMatrix();
+      m_Graphics.popMatrix();
   
       if (selectedColor == selectedSegment.segmentColor)
       {
-        noFill();
-        stroke(segComplimentary.segmentColor);
-        strokeWeight(wheelThickness/20);
+        m_Graphics.noFill();
+        m_Graphics.stroke(segComplimentary.segmentColor);
+        m_Graphics.strokeWeight(wheelThickness/20);
         
-        arc(xWheel, yWheel, wheelDiameter, wheelDiameter, selectedSegment.arcStart, selectedSegment.arcStop);
-        arc(xWheel, yWheel, wheelInnerDiameter, wheelInnerDiameter, selectedSegment.arcStart, selectedSegment.arcStop);
+        m_Graphics.arc(xWheel, yWheel, wheelDiameter, wheelDiameter, selectedSegment.arcStart, selectedSegment.arcStop);
+        m_Graphics.arc(xWheel, yWheel, wheelInnerDiameter, wheelInnerDiameter, selectedSegment.arcStart, selectedSegment.arcStop);
         
-        line(xWheel + (0.5 * wheelDiameter*cos(selectedSegment.arcStart)),
+        m_Graphics.line(
+             xWheel + (0.5 * wheelDiameter*cos(selectedSegment.arcStart)),
              yWheel + (0.5 * wheelDiameter*sin(selectedSegment.arcStart)),
              xWheel + (0.5 * wheelInnerDiameter*cos(selectedSegment.arcStart)),
              yWheel + (0.5 * wheelInnerDiameter*sin(selectedSegment.arcStart)));
              
-        line(xWheel + (0.5 * wheelDiameter*cos(selectedSegment.arcStop)),
+        m_Graphics.line(
+             xWheel + (0.5 * wheelDiameter*cos(selectedSegment.arcStop)),
              yWheel + (0.5 * wheelDiameter*sin(selectedSegment.arcStop)),
              xWheel + (0.5 * wheelInnerDiameter*cos(selectedSegment.arcStop)),
              yWheel + (0.5 * wheelInnerDiameter*sin(selectedSegment.arcStop)));
     
-        noStroke();
+        m_Graphics.noStroke();
       }
     }
   
-    noSmooth();
+    m_Graphics.noSmooth();
     for (int nBlock = 0; nBlock < nBlocks; ++nBlock)
     {
-      fill(greys[nBlock].m_color);
+      m_Graphics.fill(greys[nBlock].m_color);
       greys[nBlock].draw();
       
       if (bColorSelected == true && selectedColor == greys[nBlock].m_color)
       {
-        noFill();
+        m_Graphics.noFill();
         if (selectedSegment != null)
-          stroke(segments[(selectedSegment.index + (nSegments/2)) % nSegments].segmentColor);
+          m_Graphics.stroke(segments[(selectedSegment.index + (nSegments/2)) % nSegments].segmentColor);
         else
-          stroke(255,255,255);
-        strokeWeight(5);
+          m_Graphics.stroke(255,255,255);
+        m_Graphics.strokeWeight(5);
         greys[nBlock].draw();
-        noStroke();
+        m_Graphics.noStroke();
       }
     }
-    smooth();
+    m_Graphics.smooth();
     
-    endDraw();
+    m_Graphics.endDraw();
   }
   
   boolean mousePressed(float mouseX, float mouseY, int mouseButton)
@@ -346,8 +397,8 @@ ColorPanel colorWheel = new ColorPanel()
         float nBrightness = 255 * ((float)yIndex/(nBlocks-1));
         float yBlock = (nSize*yIndex/nBlocks) + y;
         
-        fill(nHue, nSaturation, nBrightness);
-        rect(xBlock, yBlock, blockSize, blockSize);
+        m_Graphics.fill(nHue, nSaturation, nBrightness);
+        m_Graphics.rect(xBlock, yBlock, blockSize, blockSize);
       }
     }
   
@@ -377,8 +428,8 @@ ColorPanel colorWheel = new ColorPanel()
         float xBlockPos = (nSize*xIndex/nBlocks) + x;
         xBlockPos += xAdjust;
         
-        fill(nHue, nSaturation, nBrightness);
-        rect(xBlockPos, yBlockPos, blockSize, blockSize);
+        m_Graphics.fill(nHue, nSaturation, nBrightness);
+        m_Graphics.rect(xBlockPos, yBlockPos, blockSize, blockSize);
         
         if (xIndex + nBlocks - nBlocksInThisRow == xBlock && yIndex == yBlock)
         {
@@ -387,13 +438,13 @@ ColorPanel colorWheel = new ColorPanel()
         
         if (color(nHue, nSaturation, nBrightness) == selectedColor)
         {
-          stroke(complementaryColor);
-          strokeWeight(5);
-          noFill();
+          m_Graphics.stroke(complementaryColor);
+          m_Graphics.strokeWeight(5);
+          m_Graphics.noFill();
   
-          rect(xBlockPos, yBlockPos, blockSize, blockSize);
+          m_Graphics.rect(xBlockPos, yBlockPos, blockSize, blockSize);
           
-          noStroke();
+          m_Graphics.noStroke();
           
         }
       }
