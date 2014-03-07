@@ -40,8 +40,8 @@ void drawCrescent()
 
   stroke(0);
   noFill();
-  pvArc(ptStart, ptEnd, ptArc1);
-  pvArc(ptStart, ptEnd, ptArc2);
+  arc_pv(ptStart, ptEnd, ptArc1);
+  arc_pv(ptStart, ptEnd, ptArc2);
   
   noStroke();
   fill(255, 0, 0, 128);
@@ -53,7 +53,14 @@ void drawCrescent()
   }
 }
 
-void pvArc(PVector ptStart, PVector ptEnd, PVector ptArc)
+float getHeading(PVector pt1, PVector pt2)
+{
+  PVector pv = pt1.get();
+  pv.sub(pt2);
+  return pv.heading2D();
+}
+
+void arc_pv(PVector ptStart, PVector ptEnd, PVector ptArc)
 {
   PVector ptRadial1 = new PVector();
   PVector ptRadial2 = new PVector();
@@ -63,14 +70,14 @@ void pvArc(PVector ptStart, PVector ptEnd, PVector ptArc)
   bisect(ptStart, ptEnd, ptRadial1, ptRadial2);  
   bisect(ptStart, ptArc, ptRadial3, ptRadial4);  
 
-  PVector ptCentre = intersect(ptRadial1, ptRadial2, ptRadial3, ptRadial4);
+  PVector ptCentre = intersect_pv(ptRadial1, ptRadial2, ptRadial3, ptRadial4);
 
   if (ptCentre != null)
   {
     float radius = PVector.dist(ptCentre, ptStart);
-    float headingStart = PVector.sub(ptStart, ptCentre).heading();
-    float headingArc = PVector.sub(ptArc, ptCentre).heading();
-    float headingEnd = PVector.sub(ptEnd, ptCentre).heading();
+    float headingStart = getHeading(ptStart, ptCentre);
+    float headingArc = getHeading(ptArc, ptCentre);
+    float headingEnd = getHeading(ptEnd, ptCentre);
     
     if (headingStart <= headingArc && headingArc <= headingEnd)
     {
@@ -132,14 +139,15 @@ void mouseDragged()
 
 void bisect(PVector pt1, PVector pt2, PVector pt3, PVector pt4)
 {
-  PVector pv12 = PVector.sub(pt2, pt1);
+  PVector pv12 = pt2.get();
+  pv12.sub(pt1);
   PVector pv34 = new PVector(-pv12.y, pv12.x);
   pv12.mult(0.5);
   pt3.set(PVector.add(pt1, pv12));
   pt4.set(PVector.add(pt3, pv34));
 }
 
-PVector intersect(PVector pt1, PVector pt2, PVector pt3, PVector pt4)
+PVector intersect_pv(PVector pt1, PVector pt2, PVector pt3, PVector pt4)
 {
   return intersect(pt1.x, pt1.y, pt2.x, pt2.y, pt3.x, pt3.y, pt4.x, pt4.y);
 }
