@@ -2,14 +2,17 @@
 float nDistance = 1000;
 float nRotation = 0;
 
-PVector ptA = new PVector(0,   0,   0);
-PVector ptB = new PVector(500, 0,   0);
-PVector ptC = new PVector(0,   0, 400);
-PVector ptD = new PVector(0,  300,  0);
+PVector ptA;
+
+PVector getRandomPoint()
+{
+  return new PVector(random(-400, 400),   random(-400, 400),   random(-400, 400)); 
+}
 
 void setup()
 {
   size(900, 600, P3D);
+  ptA = getRandomPoint();
 }
 
 void draw()
@@ -22,64 +25,53 @@ void draw()
          0, 1, 0);
 
   fill(255, 0, 0, 128);
+  noStroke();
+  doVertex(new PVector(0, 0, 0));
   doVertex(ptA);
 
-  fill(0, 255, 0, 128);
-  doVertex(ptB);
+  float theta = atan2(ptA.y, ptA.x);
+  float xyHypotenuse = sqrt( (ptA.x * ptA.x) + (ptA.y * ptA.y) );
+  float phi = atan2(ptA.z, xyHypotenuse);
 
-  fill(255, 0, 0, 128);
-  doVertex(ptC);
-
-  fill(255, 0, 0, 128);
-  doVertex(ptD);
-  
-  PVector pvAB = ptB.get();
-  pvAB.sub(ptA);
-
-  PVector pvAC = ptC.get();
-  pvAC.sub(ptA);
-
-  PVector pvAD = ptD.get();
-  pvAD.sub(ptA);
-
-  PVector pvThirdDimension = pvAB.cross(pvAC);  // Find the perpendicular to the plane ABC
-  PVector pvSecondDimension = pvAB.cross(pvThirdDimension); // And the perpendicular to that and AB
-  // And the box's first dimension is just the vector AB
-  
-  pvThirdDimension.normalize();
-  pvSecondDimension.normalize();
-
-  float nFirstDimension = pvAB.mag();
-  float nSecondDimension = abs(pvAC.dot(pvSecondDimension));
-  float nThirdDimension = abs(pvAD.dot(pvThirdDimension));
+  noFill();
+  stroke(0);
 
   pushMatrix();
-  stroke(0);
-  noFill();
 
-  translate(ptA.x, ptA.y, ptA.z);
-  rotateZ(atan2(pvAB.y, pvAB.x));
-  rotateX(atan2(pvAB.y, pvAB.z));
+//  doBox(ptA);
 
-  drawAxes();
+  rotateZ(theta);
 
-  translate(0.5 * nFirstDimension, 0.5 * nThirdDimension, 0.5 * nSecondDimension);
-  box(nFirstDimension, nThirdDimension, nSecondDimension);
+//  doBox(ptA);
+
+  rotateY(-phi);
+
+  doBox(ptA);
+
   popMatrix();
 }
 
 void doVertex(PVector pt)
 {
-  pushStyle();
   pushMatrix();
-
-  noStroke();
-  
+ 
   translate(pt.x, pt.y, pt.z);
   box(50);
 
   popMatrix();
-  popStyle();
+
+//  if (pt.z != 0)
+//  {
+//    doVertex(new PVector(pt.x, pt.y, 0));
+//  }
+}
+
+void doBox(PVector pt)
+{
+  pushMatrix();
+  translate( pt.mag()/2, pt.mag()/2, pt.mag()/2);
+  box(pt.mag());
+  popMatrix();
 }
 
 void keyPressed()
@@ -96,29 +88,10 @@ void keyPressed()
 
   if (key == ' ')
   {
-    ptA = new PVector(random(-400, 400),   random(-400, 400),   random(-400, 400));
-    ptB = new PVector(random(-400, 400),   random(-400, 400),   random(-400, 400));
-    ptC = new PVector(random(-400, 400),   random(-400, 400),   random(-400, 400));
-    ptD = new PVector(random(-400, 400),   random(-400, 400),   random(-400, 400));
+    ptA = getRandomPoint();
   } 
 
   loop();
-}
-
-void drawAxes()
-{
-  pushStyle();
-
-  strokeWeight(5);
-
-  stroke(255,0,0);
-  line(0, 0, 0, 100, 0, 0);
-  stroke(0,255,0);
-  line(0, 0, 0, 0, 100, 0);
-  stroke(0,0,255);
-  line(0, 0, 0, 0, 0, 100);
-
-  popStyle();
 }
 
 
