@@ -80,10 +80,7 @@ class Box
   {
     pushMatrix();
 
-    applyMatrix(mx.m00, mx.m01, mx.m02, mx.m03,
-                mx.m10, mx.m11, mx.m12, mx.m13,
-                mx.m20, mx.m21, mx.m22, mx.m23,
-                mx.m30, mx.m31, mx.m32, mx.m33);
+    applyMatrix(mx);
 
     box(xMag, yMag, zMag);
     
