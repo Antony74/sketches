@@ -55,7 +55,7 @@ void keyPressed()
 
 void draw()
 {
-  background(0,0,128);
+  background(128,128,255);
   lights();
 
   camera(nDistance * cos(nRotation), -nElevation, nDistance * sin(nRotation),
@@ -79,6 +79,10 @@ void drawRoom()
   float nDoorHeight =   -1970.0;
   float zWallToDoor =    1030.0;
   float nMargin     =     100.0;
+  float nWindowWidth =    760.0;
+  float nWindowHeight =   765.0;
+  float xWindowOffset =   980.0;
+  float yWindowOffset =   100.0;
   
   float yEavesToCeiling = abs(yCeiling) - abs(yEaves);
   float nEavesLength = sqrt(2) * yEavesToCeiling;
@@ -146,14 +150,49 @@ void drawRoom()
   translate(0, yEaves, 0);
   rotateX(0.75 * PI);  
 
-  beginShape();
-  vertex( xStart,          0.0, zWall); 
-  vertex(   xEnd,          0.0, zWall); 
-  vertex(   xEnd, nEavesLength, zWall); 
-  vertex( xStart, nEavesLength, zWall); 
-  endShape(CLOSE);
+  drawWallWithWindow(xStart, 0.0, xEnd, nEavesLength, xWindowOffset, yWindowOffset, nWindowWidth, nWindowHeight);
+
   popMatrix();
 }
 
+void drawWallWithWindow(float xStart, float yStart, float xEnd, float yEnd, float xWindowOffset, float yWindowOffset, float nWindowWidth, float nWindowHeight)
+{
+  pushStyle();
+  noStroke();
+
+  beginShape();
+  vertex(xStart, yStart, 0);
+  vertex(xStart, yEnd,   0);
+  vertex(xStart + xWindowOffset, yEnd - yWindowOffset, 0);
+  vertex(xStart + xWindowOffset + nWindowWidth, yEnd - yWindowOffset, 0);
+  vertex(xStart + xWindowOffset + nWindowWidth, yEnd - yWindowOffset - nWindowHeight, 0);
+  vertex(xStart + xWindowOffset, yEnd - yWindowOffset - nWindowHeight, 0);
+  vertex(xStart + xWindowOffset, yEnd - yWindowOffset, 0);
+  vertex(xStart, yEnd,   0);
+  vertex(xEnd,   yEnd,   0);
+  vertex(xEnd,   yStart, 0);
+  endShape(CLOSE);
+
+  popStyle();
+
+  pushStyle();
+  noFill();
+  
+  beginShape();
+  vertex(xStart, yStart, 0);
+  vertex(xStart, yEnd,   0);
+  vertex(xEnd,   yEnd,   0);
+  vertex(xEnd,   yStart, 0);
+  endShape(CLOSE);
+
+  beginShape();
+  vertex(xStart + xWindowOffset, yEnd - yWindowOffset, 0);
+  vertex(xStart + xWindowOffset + nWindowWidth, yEnd - yWindowOffset, 0);
+  vertex(xStart + xWindowOffset + nWindowWidth, yEnd - yWindowOffset - nWindowHeight, 0);
+  vertex(xStart + xWindowOffset, yEnd - yWindowOffset - nWindowHeight, 0);
+  endShape(CLOSE);
+
+  popStyle();
+}
 
 
