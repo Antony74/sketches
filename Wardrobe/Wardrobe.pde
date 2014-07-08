@@ -106,7 +106,42 @@ void drawRoom()
   vertex( xEnd, yFloor,   yEavesToCeiling);
   endShape(CLOSE);
 
-  // Draw the left-hand wall leaving a space for the bathroom door
+  // Fill the left-hand wall leaving a space for the bathroom door
+  pushStyle();
+  noStroke();
+
+  beginShape();
+  vertex( xStart, yFloor,      zWall);
+  vertex( xStart, yEaves,      zWall);
+  vertex( xStart, nDoorHeight, zWallToDoor);
+  vertex( xStart, yFloor,      zWallToDoor);
+  endShape(CLOSE);
+
+  beginShape();
+  vertex( xStart, yEaves,      zWall);
+  vertex( xStart, nDoorHeight, zWallToDoor);
+  vertex( xStart, yCeiling,    yEavesToCeiling);
+  endShape(CLOSE);
+
+  beginShape();
+  vertex( xStart, yCeiling,    yEavesToCeiling);
+  vertex( xStart, yCeiling, zWallToDoor + nDoorWidth + nMargin);
+  vertex( xStart, nDoorHeight, zWallToDoor + nDoorWidth);
+  vertex( xStart, nDoorHeight, zWallToDoor);
+  endShape(CLOSE);
+
+  beginShape();  
+  vertex( xStart, yFloor, zWallToDoor + nDoorWidth + nMargin);
+  vertex( xStart, yFloor, zWallToDoor + nDoorWidth);
+  vertex( xStart, nDoorHeight, zWallToDoor + nDoorWidth);
+  vertex( xStart, yCeiling, zWallToDoor + nDoorWidth + nMargin);
+  endShape(CLOSE);
+
+  popStyle();
+  
+  // Draw outline of the left-hand wall leaving a space for the bathroom door
+  pushStyle();
+  noFill();
   beginShape();
   vertex( xStart, yFloor,      zWall);
   vertex( xStart, yEaves,      zWall);
@@ -118,6 +153,7 @@ void drawRoom()
   vertex( xStart, nDoorHeight, zWallToDoor);
   vertex( xStart, yFloor,      zWallToDoor);
   endShape(CLOSE);
+  popStyle();
 
   // Move the bathroom door
   nDoorRotation += nDoorRotationPerFrame;
@@ -164,13 +200,19 @@ void drawWallWithWindow(float xStart, float yStart, float xEnd, float yEnd, floa
   vertex(xStart, yStart, 0);
   vertex(xStart, yEnd,   0);
   vertex(xStart + xWindowOffset, yEnd - yWindowOffset, 0);
+  vertex(xStart + xWindowOffset, yEnd - yWindowOffset, 0);
+  vertex(xStart + xWindowOffset, yEnd - yWindowOffset - nWindowHeight, 0);
+  vertex(xStart + xWindowOffset + nWindowWidth, yEnd - yWindowOffset - nWindowHeight, 0);
+  vertex(xEnd,   yStart, 0);
+  endShape(CLOSE);
+
+  beginShape();
+  vertex(xEnd,   yEnd,   0);
+  vertex(xStart, yEnd,   0);
+  vertex(xStart + xWindowOffset, yEnd - yWindowOffset, 0);
   vertex(xStart + xWindowOffset + nWindowWidth, yEnd - yWindowOffset, 0);
   vertex(xStart + xWindowOffset + nWindowWidth, yEnd - yWindowOffset - nWindowHeight, 0);
-  vertex(xStart + xWindowOffset, yEnd - yWindowOffset - nWindowHeight, 0);
-  vertex(xStart + xWindowOffset, yEnd - yWindowOffset, 0);
-  vertex(xStart, yEnd,   0);
-  vertex(xEnd,   yEnd,   0);
-  vertex(xEnd,   yStart, 0);
+  vertex(xEnd,   yStart,   0);
   endShape(CLOSE);
 
   popStyle();
