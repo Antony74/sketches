@@ -2,15 +2,13 @@
 
 class Vertex
 {
-  Vertex(String sIdentifier, float x, float y, float z, String sDescription)
+  Vertex(String sIdentifier, float x, float y, float z)
   {
-    this.cIdentifier = sIdentifier.charAt(0);
-    this.sDescription = sDescription;
+    this.cIdentifier = sIdentifier.charAt(0); // For some reason passing a char in as a parameter doesn't work in JavaScript mode
     pv = new PVector(x, y, z);
   }
   
   char cIdentifier;
-  String sDescription;
   PVector pv;
 };
 
