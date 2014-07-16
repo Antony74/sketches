@@ -106,54 +106,7 @@ void drawRoom()
   vertex( xEnd, yFloor,   yEavesToCeiling);
   endShape(CLOSE);
 
-  // Fill the left-hand wall leaving a space for the bathroom door
-  pushStyle();
-  noStroke();
-
-  beginShape();
-  vertex( xStart, yFloor,      zWall);
-  vertex( xStart, yEaves,      zWall);
-  vertex( xStart, nDoorHeight, zWallToDoor);
-  vertex( xStart, yFloor,      zWallToDoor);
-  endShape(CLOSE);
-
-  beginShape();
-  vertex( xStart, yEaves,      zWall);
-  vertex( xStart, nDoorHeight, zWallToDoor);
-  vertex( xStart, yCeiling,    yEavesToCeiling);
-  endShape(CLOSE);
-
-  beginShape();
-  vertex( xStart, yCeiling,    yEavesToCeiling);
-  vertex( xStart, yCeiling, zWallToDoor + nDoorWidth + nMargin);
-  vertex( xStart, nDoorHeight, zWallToDoor + nDoorWidth);
-  vertex( xStart, nDoorHeight, zWallToDoor);
-  endShape(CLOSE);
-
-  beginShape();  
-  vertex( xStart, yFloor, zWallToDoor + nDoorWidth + nMargin);
-  vertex( xStart, yFloor, zWallToDoor + nDoorWidth);
-  vertex( xStart, nDoorHeight, zWallToDoor + nDoorWidth);
-  vertex( xStart, yCeiling, zWallToDoor + nDoorWidth + nMargin);
-  endShape(CLOSE);
-
-  popStyle();
-  
-  // Draw outline of the left-hand wall leaving a space for the bathroom door
-  pushStyle();
-  noFill();
-  beginShape();
-  vertex( xStart, yFloor,      zWall);
-  vertex( xStart, yEaves,      zWall);
-  vertex( xStart, yCeiling,    yEavesToCeiling);
-  vertex( xStart, yCeiling, zWallToDoor + nDoorWidth + nMargin);
-  vertex( xStart, yFloor, zWallToDoor + nDoorWidth + nMargin);
-  vertex( xStart, yFloor, zWallToDoor + nDoorWidth);
-  vertex( xStart, nDoorHeight, zWallToDoor + nDoorWidth);
-  vertex( xStart, nDoorHeight, zWallToDoor);
-  vertex( xStart, yFloor,      zWallToDoor);
-  endShape(CLOSE);
-  popStyle();
+  leftWall.draw();
 
   // Move the bathroom door
   nDoorRotation += nDoorRotationPerFrame;
@@ -189,6 +142,7 @@ void drawRoom()
   drawWallWithWindow(xStart, 0.0, xEnd, nEavesLength, xWindowOffset, yWindowOffset, nWindowWidth, nWindowHeight);
 
   popMatrix();
+
 }
 
 void drawWallWithWindow(float xStart, float yStart, float xEnd, float yEnd, float xWindowOffset, float yWindowOffset, float nWindowWidth, float nWindowHeight)
