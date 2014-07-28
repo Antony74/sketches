@@ -62,7 +62,11 @@ void draw()
          0, 0, 0,
          0, 1, 0);
 
+  fill(255, 255, 255, 128);
+
   drawRoom();
+
+  dombas.draw();
 }
 
 void drawRoom()

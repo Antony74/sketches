@@ -18,13 +18,22 @@ class Vertices
 
   void draw(int nEndShapeMode)
   {
-    beginShape();
-    for (int n = 0; n < arrVertices.length; ++n)
+    if (arrVertices.length == 2)
     {
-      PVector pv = arrVertices[n].pv;
-      vertex(pv.x, pv.y, pv.z);
+      PVector pv1 = arrVertices[0].pv;
+      PVector pv2 = arrVertices[1].pv;
+      line(pv1.x, pv1.y, pv1.z, pv2.x, pv2.y, pv2.z);
     }
-    endShape(nEndShapeMode);
+    else
+    {
+      beginShape();
+      for (int n = 0; n < arrVertices.length; ++n)
+      {
+        PVector pv = arrVertices[n].pv;
+        vertex(pv.x, pv.y, pv.z);
+      }
+      endShape(nEndShapeMode);
+    }
   }
 };
 
