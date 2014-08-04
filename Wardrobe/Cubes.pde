@@ -24,11 +24,16 @@ CompositeShape cube(PVector pvPosition, PVector pvSize)
                           .fill("DAEH");
 }
 
-float dombasWidth =  1400.0;
-float dombasDepth =   510.0;
+float dombasWidth  = 1400.0;
+float dombasDepth  =  510.0;
 float dombasHeight = 1810.0;
 
-CompositeShape dombas = cube(new PVector(500.0, 0.0, 0.0), new PVector(dombasWidth, -dombasHeight, dombasDepth)); 
+CompositeShape dombas = cube(new PVector(500.0, 0.0, 350.0), new PVector(dombasWidth, -dombasHeight, dombasDepth)); 
 
+float paxWidth  = 1500.0;
+float paxDepth  =  660.0;
+float paxHeight = 2012.0;
+
+CompositeShape pax = cube(new PVector(500.0, 0.0, 400.0), new PVector(paxWidth, -paxHeight, paxDepth)); 
 
 

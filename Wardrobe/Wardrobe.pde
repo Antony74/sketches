@@ -66,7 +66,8 @@ void draw()
 
   drawRoom();
 
-  dombas.draw();
+//  dombas.draw();
+  pax.draw();
 }
 
 void drawRoom()
