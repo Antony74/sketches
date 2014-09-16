@@ -20,7 +20,7 @@ HexNode nodeBlue;
 
 void markRed(HexNode node)
 {
-  if (nodeRed == null)
+  if (nodeRed == null)  
   {
     nodeRed = node;
   }
@@ -44,9 +44,9 @@ void markBlue(HexNode node)
 
 void setup()
 {
-  size(600,600);
+  size(800, 800);
   
-  nSpacing = min(width, height) / 13;
+  nSpacing = min(width, height) / 18;
   arrUnitVectors = new PVector[DIRECTION_COUNT];
   arrUnitVectors[DIR_RIGHT] = new PVector(nSpacing, 0);
   
@@ -57,7 +57,7 @@ void setup()
   }
 
   HexNode nodeRoot = new HexNode();
-  nodeRoot.m_pt = new PVector( (width/2) - (nSpacing*3), 1.5 * nSpacing);
+  nodeRoot.m_pt = new PVector( (width/2) - (nSpacing*3), (height/2) - (nSpacing*5));
   listAllNodes = new ArrayList<HexNode>();
   listAllNodes.add(nodeRoot);
   
@@ -78,6 +78,9 @@ void setup()
   
   renumber();
   solution = assembleSolution();
+  assembleConstraints();
+  
+  textFont(createFont("Courier New", 16));
 }
 
 void draw()
@@ -124,6 +127,12 @@ void draw()
     
     fill(0);
     text(solution.get(n).toString(), node.m_pt.x - (nSpacing * 0.3), node.m_pt.y + (nSpacing * 0.1));
+  }
+
+  for (int n = 0; n < listConstraints.size(); ++n)
+  {
+    Constraint constraint = listConstraints.get(n);
+    constraint.draw();
   }
 
   noLoop();
