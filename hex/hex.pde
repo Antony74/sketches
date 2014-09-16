@@ -10,21 +10,39 @@ final int DIRECTION_COUNT = 6;
 float nSpacing;
 PVector[] arrUnitVectors;
 
-ArrayList<HexNode> listAllNodes;
+ArrayList<HexNode> listAllNodes; // Note there will be 127 nodes in total
 
-HexNode nodeError;
+HexNode nodeRed;
+HexNode nodeGreen;
+HexNode nodeBlue;
 
-void error(HexNode node)
+void markRed(HexNode node)
 {
-  if (nodeError == null)
+  if (nodeRed == null)
   {
-    nodeError = node;
+    nodeRed = node;
+  }
+}
+
+void markGreen(HexNode node)
+{
+  if (nodeGreen == null)
+  {
+    nodeGreen = node;
+  }
+}
+
+void markBlue(HexNode node)
+{
+  if (nodeBlue == null)
+  {
+    nodeBlue = node;
   }
 }
 
 void setup()
 {
-  size(400,400);
+  size(600,600);
   
   nSpacing = min(width, height) / 13;
   arrUnitVectors = new PVector[DIRECTION_COUNT];
@@ -55,6 +73,8 @@ void setup()
       }     
     }
   }
+  
+  renumber();
 }
 
 void draw()
@@ -80,9 +100,17 @@ void draw()
   {
     HexNode node = listAllNodes.get(n);
     
-    if (node == nodeError)
+    if (node == nodeRed)
     {
       fill(255, 0, 0);
+    }
+    else if (node == nodeGreen)
+    {
+      fill(0, 255, 0);
+    }
+    else if (node == nodeBlue)
+    {
+      fill(0, 0, 255);
     }
     else
     {
@@ -154,6 +182,16 @@ class HexNode
       return;
     }
 
+    if (node2.m_arrNeighbours[DIR_LEFT] != null)
+    {
+      HexNode node = node2.m_arrNeighbours[DIR_LEFT];
+      m_arrNeighbours[DIR_UP_RIGHT] = node;
+      node.m_arrNeighbours[DIR_DOWN_LEFT] = this;
+      node1.m_arrNeighbours[DIR_UP_LEFT] = node;
+      node.m_arrNeighbours[DIR_DOWN_RIGHT] = node1;
+      return;
+    }
+    
     if (node1.m_arrNeighbours[DIR_UP_LEFT] == null)
     {
       HexNode node = create(DIR_UP_RIGHT);
@@ -167,5 +205,32 @@ class HexNode
   }
   
 };
+
+void renumber()
+{
+  HexNode nodeLeft = listAllNodes.get(0);
+  HexNode nodeCurrent = nodeLeft;
+
+  listAllNodes = new ArrayList<HexNode>();
+
+  while (nodeCurrent != null)
+  {
+    listAllNodes.add(nodeCurrent);
+    
+    nodeCurrent = nodeCurrent.m_arrNeighbours[DIR_RIGHT];
+    
+    if (nodeCurrent == null)
+    {
+      nodeCurrent = nodeLeft.m_arrNeighbours[DIR_DOWN_LEFT];
+      
+      if (nodeCurrent == null)
+      {
+        nodeCurrent = nodeLeft.m_arrNeighbours[DIR_DOWN_RIGHT]; 
+      }
+
+      nodeLeft = nodeCurrent;
+    }
+  }  
+}
 
 
