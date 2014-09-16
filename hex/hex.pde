@@ -12,6 +12,8 @@ PVector[] arrUnitVectors;
 
 ArrayList<HexNode> listAllNodes; // Note there will be 127 nodes in total
 
+Text solution;
+
 HexNode nodeRed;
 HexNode nodeGreen;
 HexNode nodeBlue;
@@ -75,6 +77,7 @@ void setup()
   }
   
   renumber();
+  solution = assembleSolution();
 }
 
 void draw()
@@ -120,7 +123,7 @@ void draw()
     ellipse(node.m_pt.x, node.m_pt.y, nSize, nSize);
     
     fill(0);
-    text(new Integer(n).toString(), node.m_pt.x - (nSpacing * 0.3), node.m_pt.y + (nSpacing * 0.1));
+    text(solution.get(n).toString(), node.m_pt.x - (nSpacing * 0.3), node.m_pt.y + (nSpacing * 0.1));
   }
 
   noLoop();
