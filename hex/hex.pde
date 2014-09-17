@@ -80,6 +80,11 @@ void setup()
   solution = assembleSolution();
   assembleConstraints();
   
+  for (Constraint constraint: listConstraints)
+  {
+    checkConstraint(constraint);
+  }
+  
   textFont(createFont("Courier New", 16));
 }
 
@@ -105,6 +110,7 @@ void draw()
   for (int n = 0; n < listAllNodes.size(); ++n)
   {
     HexNode node = listAllNodes.get(n);
+    String sContent = solution.get(n).toString();
     
     if (node == nodeRed)
     {
@@ -118,6 +124,10 @@ void draw()
     {
       fill(0, 0, 255);
     }
+    else if (sContent.equals(" "))
+    {
+      fill(255, 255, 0);
+    }
     else
     {
       fill(255);
@@ -126,7 +136,7 @@ void draw()
     ellipse(node.m_pt.x, node.m_pt.y, nSize, nSize);
     
     fill(0);
-    text(solution.get(n).toString(), node.m_pt.x - (nSpacing * 0.3), node.m_pt.y + (nSpacing * 0.1));
+    text(sContent, node.m_pt.x - (nSpacing * 0.3), node.m_pt.y + (nSpacing * 0.1));
   }
 
   for (int n = 0; n < listConstraints.size(); ++n)
@@ -142,6 +152,7 @@ class HexNode
 {
   HexNode[] m_arrNeighbours;
   PVector m_pt;
+  int m_nIndex;
   
   HexNode()
   {
@@ -242,7 +253,13 @@ void renumber()
 
       nodeLeft = nodeCurrent;
     }
-  }  
+  }
+  
+  for (int n = 0; n < listAllNodes.size(); ++n)
+  {
+    HexNode node = listAllNodes.get(n);
+    node.m_nIndex = n;
+  }
 }
 
 
