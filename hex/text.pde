@@ -1,4 +1,6 @@
 
+Text solution;
+
 class Text
 {
   Text c(char nextChar)
@@ -15,7 +17,7 @@ class Text
   ArrayList<Character> list = new ArrayList<Character>();
 };
 
-Text assembleSolution()
+void assembleSolution()
 {
   Text t = new Text();
 
@@ -33,8 +35,6 @@ Text assembleSolution()
                       .c(' ').c(' ').c(' ').c(' ').c(' ').c(' ').c(' ').c(' ')
                          .c(' ').c(' ').c(' ').c(' ').c(' ').c(' ').c(' ');
    
-   println(t.list.size());
-   
-   return t;
+   solution = t;
 }
 
