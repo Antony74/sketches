@@ -44,9 +44,9 @@ void markBlue(HexNode node)
 
 void setup()
 {
-  size(800, 800);
+  size(900, 900);
   
-  nSpacing = min(width, height) / 18;
+  nSpacing = min(width, height) / 20;
   arrUnitVectors = new PVector[DIRECTION_COUNT];
   arrUnitVectors[DIR_RIGHT] = new PVector(nSpacing, 0);
   
@@ -57,7 +57,7 @@ void setup()
   }
 
   HexNode nodeRoot = new HexNode();
-  nodeRoot.m_pt = new PVector( (width/2) - (nSpacing*3), (height/2) - (nSpacing*5));
+  nodeRoot.m_pt = new PVector( (width/2) - (nSpacing*3), (height/2) - (nSpacing*5.5));
   listAllNodes = new ArrayList<HexNode>();
   listAllNodes.add(nodeRoot);
   
