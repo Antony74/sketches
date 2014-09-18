@@ -14,6 +14,11 @@ class Text
     return list.get(n);
   }
   
+  void set(int nIndex, char ch)
+  {
+    list.set(nIndex, ch);
+  }
+  
   ArrayList<Character> list = new ArrayList<Character>();
 };
 

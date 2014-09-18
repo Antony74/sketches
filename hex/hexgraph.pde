@@ -12,7 +12,7 @@ ArrayList<HexNode> listAllNodes; // Note there will be 127 nodes in total
 class HexNode
 {
   HexNode[] m_arrNeighbours;
-  PVector m_pt;
+  PVector m_pt;  
   int m_nIndex;
   
   HexNode()

@@ -18,7 +18,7 @@ void assembleConstraints()
   
   list.add(new Constraint(all.get(  0), DIR_DOWN_LEFT, "(ND|ET|IN)[^X]*"));
   list.add(new Constraint(all.get(  1), DIR_DOWN_LEFT, "[CHMNOR]*I[CHMNOR]*"));
-  list.add(new Constraint(all.get(  2), DIR_DOWN_LEFT, "P+(..)\\1.*"));
+  list.add(new ConstraintWithGrouping(all.get(  2), DIR_DOWN_LEFT, "P+(..)\\1.*"));
   list.add(new Constraint(all.get(  3), DIR_DOWN_LEFT, "(E|CR|MN)*"));
   list.add(new Constraint(all.get(  4), DIR_DOWN_LEFT, "([^MC]|MM|CC)*"));
   list.add(new Constraint(all.get(  5), DIR_DOWN_LEFT, "[AM]*CM(RC)*R?"));
@@ -37,7 +37,7 @@ void assembleConstraints()
   list.add(new Constraint(all.get( 34), DIR_RIGHT, ".*"));
   list.add(new Constraint(all.get( 45), DIR_RIGHT, "C*MC(CCC|MM)*"));
   list.add(new Constraint(all.get( 57), DIR_RIGHT, "[^C]*[^R]*III.*"));
-  list.add(new Constraint(all.get( 70), DIR_RIGHT, "(...?)\\1*"));
+  list.add(new ConstraintWithGrouping(all.get( 70), DIR_RIGHT, "(...?)\\1*"));
   list.add(new Constraint(all.get( 82), DIR_RIGHT, "([^X]|XCC)*"));
   list.add(new Constraint(all.get( 93), DIR_RIGHT, "(RR|HHH)*.?"));
   list.add(new Constraint(all.get(103), DIR_RIGHT, "N.*X.X.X.*E"));
@@ -49,14 +49,22 @@ void assembleConstraints()
   list.add(new Constraint(all.get(122), DIR_UP_LEFT, ".*XEXM*"));
   list.add(new Constraint(all.get(123), DIR_UP_LEFT, ".*DD.*CCM.*"));
   list.add(new Constraint(all.get(124), DIR_UP_LEFT, ".*XHCR.*X.*"));
-  list.add(new Constraint(all.get(125), DIR_UP_LEFT, ".*(.)(.)(.)(.)\\4\\3\\2\\1.*"));
+  list.add(new ConstraintWithGrouping(all.get(125), DIR_UP_LEFT, ".*(.)(.)(.)(.)\\4\\3\\2\\1.*"));
   list.add(new Constraint(all.get(126), DIR_UP_LEFT, ".*(IN|SE|HI)"));
   list.add(new Constraint(all.get(119), DIR_UP_LEFT, "[^C]*MMM[^C]*"));
-  list.add(new Constraint(all.get(111), DIR_UP_LEFT, ".*(.)C\\1X\\1.*"));
+  list.add(new ConstraintWithGrouping(all.get(111), DIR_UP_LEFT, ".*(.)C\\1X\\1.*"));
   list.add(new Constraint(all.get(102), DIR_UP_LEFT, "[CEIMU]*OH[AEMOR]*"));
   list.add(new Constraint(all.get( 92), DIR_UP_LEFT, "(RX|[^R])*"));
   list.add(new Constraint(all.get( 81), DIR_UP_LEFT, "[^M]*M[^M]*"));
   list.add(new Constraint(all.get( 69), DIR_UP_LEFT, "(S|MM|HHH)*"));
+}
+
+void checkConstraints()
+{
+  for (Constraint constraint: listConstraints)
+  {
+    constraint.checkConstraint();
+  }
 }
 
 class Constraint
@@ -65,7 +73,7 @@ class Constraint
   HexNode m_nodeStart;
   int m_nDirection;
   Automaton m_automaton;
-  boolean m_bValid;
+  int m_nValid; // +1 valid, -1 invalid, 0 unknown
   
   Constraint(HexNode nodeStart, int nDirection, String sRegExp)
   {
@@ -79,13 +87,17 @@ class Constraint
   
   void draw()
   {
-    if (m_bValid)
+    if (m_nValid > 0)
     {
       fill(0, 128, 0);
     }
-    else
+    else if (m_nValid < 0)
     {
       fill(255, 0, 0);
+    }
+    else
+    {
+      fill(0);
     }
     
     stroke(0);
@@ -118,10 +130,10 @@ class Constraint
 
   void checkConstraint()
   {
-    checkConstraint(getStringToMatch());
+    m_nValid = checkConstraint(getStringToMatch());
   }
   
-  void checkConstraint(String str)
+  int checkConstraint(String str)
   {
     TreeSet<State> states = new TreeSet<State>();
     states.add(m_automaton.getInitialState());
@@ -154,8 +166,7 @@ class Constraint
       
       if (allNext.size() == 0)
       {
-        m_bValid = false;
-        return;
+        return -1;
       }
       
       states = allNext;
@@ -165,15 +176,38 @@ class Constraint
     
     if (states.size() == 0)
     {
-      m_bValid = false;
+      return -1;
     }
     else
     {
-      m_bValid = true;
+      return +1;
     }
   }
 };
 
+class ConstraintWithGrouping extends Constraint
+{
+  ConstraintWithGrouping(HexNode nodeStart, int nDirection, String sRegExp)
+  {
+    super(nodeStart, nDirection, sRegExp);
+  }
+  
+  int checkConstraint(String str)
+  {
+    if (str.indexOf(' ') != -1)
+    {
+      return 0;
+    }
+    else if (str.matches(m_sRegExp))
+    {
+      return +1;
+    }
+    else
+    {
+      return -1;
+    }
+  }
+};
 
 
 
