@@ -1,0 +1,71 @@
+<?xml version="1.0" ?>
+<project name="build-sketch" default="build">
+
+  <target name="build">
+    <!--processing-java-build sketch.dir="${user.dir}" /-->
+
+    <property environment="env"/>
+
+    <!-- Some slightly painful stuff to check the processing-java tool exists
+        so we can say something helpful if it doesn't.  Windows makes
+        this particularly yucky by having a different tool name and
+        three possible captialisations of an enviromental variable.
+  -->
+
+    <condition property="tool.name" value="processing-java.exe" else="processing-java">
+      <os family="windows" />
+    </condition>
+
+    <whichresource resource="${tool.name}" classpath="${env.path}" property="tool.url"/>
+    <whichresource resource="${tool.name}" classpath="${env.Path}" property="tool.url"/>
+    <whichresource resource="${tool.name}" classpath="${env.PATH}" property="tool.url"/>
+
+    <fail unless="tool.url" message="${tool.name} not found.${line.separator}
+Please ensure it is on your environmental variable PATH.${line.separator}
+On Windows processing-java.exe can be found in the folder where Processing is${line.separator}
+installed."/>
+
+    <!-- And it gets worse, because we want a filename not a url, and we have to use Javascript to convert the string, yuck! -->
+    <script language="javascript">
+      <![CDATA[
+      theUrl = project.getProperty("tool.url");
+      theFilename = theUrl.substr(6);
+      project.setProperty("tool.path",theFilename);
+  ]]>
+    </script>
+
+    <!-- Get the directory where processing-java lives, which (for Processing-2.0b7 on Windows at least)
+            is also the directory where Processing is installed - which we need in order to locate core.jar 
+            (so I'm more than a little worried this run target wont work on other platforms) -->
+    <dirname property="tool.dir" file="/${tool.path}"/>
+
+    <!-- If they are not already part of the Processing install, add our libraries
+          (If the sketch directory doesn't have a sibling "libraries" directory,
+          assume it doesn't need any libraries) -->
+    <!--copy toDir="${tool.dir}/modes/java/libraries" failonerror="false" quiet="true">
+      <fileset dir="@{user.dir}/../libraries" />
+    </copy-->
+      
+    <!-- And finally we're ready to build the sketch -->
+      
+    <delete dir="${user.dir}/output"/>
+
+    <exec executable="processing-java">
+      <arg value="--sketch=${user.dir}"/>
+      <arg value="--output=${user.dir}/output"/>
+      <arg value="--build"/>
+    </exec>
+
+    <unzip src="${tool.dir}/core/library/core.jar" dest="${user.dir}/output"/>
+    <unzip src="${user.dir}/../../libraries/automaton/library/automaton.jar" dest="${user.dir}/output"/>
+
+    <jar destfile="${user.dir}/RegExpPuzzle.jar" basedir="${user.dir}/output">
+      <manifest>
+        <attribute name="Main-Class" value="hex"/>
+      </manifest>
+    </jar>
+
+  </target>
+
+</project>
+
