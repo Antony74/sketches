@@ -1,12 +1,11 @@
 
 PImage img1;
 PVector sizeCaption = new PVector(300, 150);
-int nZoom = 3;
+int nZoom = 1;
 
 void setup()
 {
-  size(1800, 900);
-  rectMode(CENTER);
+  size(800, 850);
   
   img1 = loadImage("sketch1.png");
 }
@@ -19,31 +18,22 @@ void copy(PImage imgSrc, PImage imgDest, float sx, float sy, float sw, float sh,
 void draw()
 {
   background(255);
-  noSmooth();
 
   PGraphics pgFreeSpeech = freeSpeech();
 
+  translate(-800, 0);
+  image(img1, 0, 0);
+
   pushMatrix();
-  scale(3);
-  freeSpeechfreeHand(g);
-  image(pgFreeSpeech, 0, 0);
-  popMatrix();
+  rotate(0.1);
   
-  pushMatrix();
-  scale(3);
-  translate(0, sizeCaption.y);
-  freeSpeechfreeHand(g);
-  popMatrix();
+  noStroke();
+  fill(255);
+  PVector pvPos = new PVector(1160, 250);
+  rect(pvPos.x + 30, pvPos.y, pgFreeSpeech.width - 80, pgFreeSpeech.height);
+  
+  image(pgFreeSpeech, pvPos.x, pvPos.y);
 
-  pushMatrix();
-  scale(3);
-  translate(sizeCaption.x, 0);
-  image(pgFreeSpeech, 0, 0);
-  popMatrix();
-
-  pushMatrix();
-  translate(sizeCaption.x * (nZoom + 1), sizeCaption.y * (nZoom + 1));
-  image(pgFreeSpeech, 0, 0);
   popMatrix();
 
   noLoop();

@@ -9,9 +9,12 @@ class Vertex
   
   void draw()
   {
+    pushStyle();
+    rectMode(CENTER);
     noStroke();
     fill(255, 0, 0, 128);
     rect(pv.x, pv.y, 5, 5);
+    popStyle();
   }
   
   char cIdentifier;
