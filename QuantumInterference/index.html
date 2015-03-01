@@ -1,0 +1,42 @@
+<html>
+<head>
+    <title>Quantum Interference</title>
+    <script src="math.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js"></script>
+    <script src="jquery-1.11.1.min.js"></script>
+    <script src="processing.js"></script>
+    <script src="plot.js"></script>
+    <script src="main.js"></script>
+    <style>
+        input
+        {
+            font-family: 'Courier New';
+        }
+        .MathJax_Display
+        {
+            text-align: left !important;
+        }
+        .FormulaBox
+        {
+            background-color: #DDDDDD;
+            padding: 10px;
+            width: 640px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border: 1px solid;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Quantum Interference</h1>
+
+<p>Define the function for a normal distribution.  This is all about how two functions are combined, so the content of this function is almost irrelevant.</p>
+
+<input id="NormFn" class="FormulaBox" value="Norm(x) = 1/(sigma sqrt(2*PI)) e^(-(x-mu)^2/(2*sigma^2)" />
+<div id="prettyNormFn" class="FormulaBox"></div>
+<canvas id="canvasPlot"></canvas>
+
+</body>
+</html>
