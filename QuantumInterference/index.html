@@ -34,9 +34,14 @@
 
 <p>Define the function for a normal distribution.  This is all about how two functions are combined, so the content of this function is almost irrelevant.</p>
 
-<input id="NormFn" class="FormulaBox" value="Norm(x) = 1/(sigma sqrt(2*PI)) e^(-(x-mu)^2/(2*sigma^2)" />
+<input id="NormFn" class="FormulaBox" value="Norm(x,mu,sigma) = 1/(sigma sqrt(2*PI)) e^(-(x-mu)^2/(2*sigma^2))" />
 <div id="prettyNormFn" class="FormulaBox"></div>
-<canvas id="canvasPlot"></canvas>
+
+<p>Use this to define the functions for our left and right slit</p>
+
+<input id="LeftFn"  class="FormulaBox" value="LeftSlit(x) = Norm(x, -1, 1)" /><BR/>
+<input id="RightFn" class="FormulaBox" value="RightSlit(x) = Norm(x,  1, 1)" />
+<p><canvas id="canvasPlot"></canvas></p>
 
 </body>
 </html>
