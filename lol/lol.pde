@@ -7,7 +7,7 @@ RFont font;
 
 void setup()
 {
-  size(640, 480);
+  size(480, 640);
 
   RG.init(this);
 
@@ -16,7 +16,7 @@ void setup()
 
 void draw()
 {
-  PImage img = loadImage("shandy.jpg");
+  PImage img = loadImage("brenin.jpg");
   
   image(img, 0, 0, width, height);
   
@@ -25,15 +25,28 @@ void draw()
   fill(255);
   noSmooth();
 
-  translate(25,75);
-  font.draw("No you can't");
+  pushMatrix();
+  translate(45, 75);
+  font.draw("Brand  \u2192");
+  translate(0, 40);
+  font.draw("new cat");
+  translate(0, 40);
+  font.draw("bed");
+  popMatrix();
   
-  translate(0,75);
-  font.draw("haz remote");
+  translate(176, 418);
+  font.draw("\u2190Cat");
 
   save("noremote.jpg");
 
   noLoop();
 }
+
+void mouseClicked()
+{
+  println(mouseX + ", " + mouseY);
+}
+
+
 
 
