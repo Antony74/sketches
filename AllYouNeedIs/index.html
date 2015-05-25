@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Displaying mathematics with JavaScript</title>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/1.6.0/math.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.8/processing.min.js"></script>
+    <style>
+        input
+        {
+            font-family: 'Courier New';
+        }
+        .FormulaBox
+        {
+            display: table-cell;
+            vertical-align: middle;
+            background-color : #DDDDDD;
+            width            : 200px;
+            height           : 200px;
+            box-sizing       : border-box; 
+        }
+        td
+        {
+            vertical-align: central;
+        }
+        h1
+        {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<table>
+    <tr>
+        <td colspan="2">
+            <h1>All you need is</h1>
+        </td>
+    </tr>
+    <tr>
+        <td><div id="formula1" class="FormulaBox"></div></td>
+        <td><canvas id="canvas1"></canvas></td>
+    </tr>
+    <tr>
+        <td><div id="formula2" class="FormulaBox"></div></td>
+        <td><canvas id="canvas2"></canvas></td>
+    </tr>
+    <tr>
+        <td><div id="formula3" class="FormulaBox"></div></td>
+        <td><canvas id="canvas3"></canvas></td>
+    </tr>
+    <tr>
+        <td><div id="formula4" class="FormulaBox"></div></td>
+        <td><canvas id="canvas4"></canvas></td>
+    </tr>
+</table>
+
+<script>
+
+var arrGraphs = 
+[
+    {
+        sCanvasID  : 'canvas1',
+        sFormulaID : 'formula1',
+        sFormula   : 'f(x) = 1/x',
+        xMargin    : 30,
+        xmin       : -1,
+        ymin       : -1,
+        xmax       :  6,
+        ymax       :  6
+    },
+    {
+        sCanvasID  : 'canvas2',
+        sFormulaID : 'formula2',
+        sFormula   : 'f(x) = sqrt(1 - x^2)',
+        xmin       : -1.5,
+        ymin       : -1.5,
+        xmax       :  1.5,
+        ymax       :  1.5
+    },
+    {
+        sCanvasID  : 'canvas3',
+        sFormulaID : 'formula3',
+        sFormula   : 'f(x) = abs(2x)',
+        xmin       : -4,
+        ymin       : -1,
+        xmax       :  4,
+        ymax       :  6
+    },
+    {
+        sCanvasID  : 'canvas4',
+        sFormulaID : 'formula4',
+        sFormula   : 'f(y) = -3abs(sin(y))',
+        sPlotting  : 'y',
+        xMargin    : 28,
+        xmin       : -1,
+        ymin       : -4,
+        xmax       :  2*Math.PI,
+        ymax       :  1
+    },
+
+];
+
+$(document).ready(function()
+{
+    for (var n = 0; n < arrGraphs.length; ++n)
+    {
+        var oGraph = arrGraphs[n];
+
+        $('#' + oGraph.sFormulaID).html('$$' + math.parse(oGraph.sFormula).toTex() + '$$');
+
+        oGraph.width  = 200;
+        oGraph.height = 200;
+
+        var graph = createGraph(oGraph);
+
+        var fnTrace = math.eval(oGraph.sFormula);
+
+        graph.plot(fnTrace);
+
+        if (n == 1)
+        {
+            graph.plot(function(x) {return -fnTrace(x);});
+        }
+    }
+});
+
+function createGraph(config)
+{
+    var canvas = document.getElementById(config.sCanvasID);
+
+    var processing = new Processing(canvas, function(processing)
+    {
+        processing.setup = function()
+        {
+            processing.size(config.width, config.height);
+
+            processing.noFill();
+        }
+    });
+
+    var getXplot = function(xPixel)
+    {
+        return processing.map(xPixel, 0, processing.width, config.xmin, config.xmax);
+    }
+
+    var getYplot = function(yPixel)
+    {
+        return processing.map(yPixel, processing.height, 0, config.ymin, config.ymax);
+    }
+
+    var getXpixel = function(xPlot)
+    {
+        return processing.map(xPlot, config.xmin, config.xmax, 0, processing.width);
+    }
+
+    var getYpixel = function(yPlot)
+    {
+        return processing.map(yPlot, config.ymin, config.ymax, processing.height, 0);
+    }
+
+    processing.background(0xDD);
+
+    if (config.sPlotting == 'y')
+    {
+        processing.translate(processing.width,0);
+        processing.rotate(processing.HALF_PI);
+    }
+
+    // Draw the x and y axis
+    processing.line(getXpixel(0), getYpixel(config.ymin), getXpixel(0), getYpixel(config.ymax));
+    processing.line(getXpixel(config.xmin), getYpixel(0), getXpixel(config.xmax), getYpixel(0));
+
+    // Set a default stroke for plotting with
+    processing.stroke(0, 0, 255);
+    processing.strokeWeight(5);
+
+    // Currently only the ploting of continuous functions is supported
+    processing.plot = function(fnToPlot)
+    {
+        processing.beginShape();
+
+        var xMargin = config.xMargin ? config.xMargin : 0;
+
+        for (var xPixel = xMargin; xPixel < processing.width; xPixel += 0.1)
+        {
+            var yPlot = fnToPlot(getXplot(xPixel));
+            yPixel = getYpixel(yPlot);
+            processing.vertex(xPixel, yPixel);
+        }
+
+        processing.endShape();
+        processing.noLoop();
+    }
+
+    return processing;
+}
+
+</script>
+
+</body>
+</html>
