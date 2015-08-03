@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Share and Enjoy</title>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_SVG.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.8/processing.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+    <p>$$h$$</p>
+
+    <canvas id="myCanvas"></canvas>
+
+    <script>
+
+        MathJax.Hub.Queue(function()
+        {
+            var canvas = document.getElementById('myCanvas');
+
+            var processing = new Processing(canvas, function(processing)
+            {
+                processing.setup = function()
+                {
+                    var html = '<svg>' + $('svg').html() + '</svg>';
+                    var xml = processing.loadXML(html);
+
+                    processing.size(200, 200);
+                    processing.background(128, 255, 128);
+                    var myShape = new processing.PShapeSVG(xml);
+
+                    processing.translate(75, 100);
+                    processing.scale(0.1, -0.1);
+                    processing.shape(myShape, 10, 10, 80, 80);
+                }
+            });
+        });
+
+    </script>
+
+</body>
+</html>
+
