@@ -23,15 +23,111 @@
                 {
                     var html = '<svg>' + $('svg').html() + '</svg>';
                     var xml = processing.loadXML(html);
-
-                    processing.size(200, 200);
-                    processing.background(128, 255, 128);
                     var myShape = new processing.PShapeSVG(xml);
 
-                    processing.translate(75, 100);
-                    processing.scale(0.1, -0.1);
-                    processing.shape(myShape, 10, 10, 80, 80);
+                    processing.size(800, 800);
+                    processing.background(128, 255, 128);
+                    processing.translate(75, 700);
+                    processing.scale(0.8, -0.8);
+                    processing.rectMode(processing.CENTER);
+    
+                    prepareShape(myShape);
+
+//                    processing.shape(myShape);
                 }
+
+                function prepareShape(shape)
+                {
+                    for (var n = 0; n < shape.getChildCount(); ++n)
+                    {
+                        prepareShape(shape.getChild(n));
+                    }
+
+                    if (shape.vertices.length)
+                    {
+                        var arr = convexify(shape.vertices);
+                        for (var n = 0; n < arr.length; ++n)
+                        {
+                            drawPolygon(arr[n]);
+                        }
+                        drawVertices(shape.vertices);
+                    }
+                }
+
+                function drawVertices(vertices)
+                {
+                    for (var n = 0; n < vertices.length; ++n)
+                    {
+                        var x = vertices[n][0];
+                        var y = vertices[n][1];
+
+                        drawVertex(x, y);
+                    }
+                }
+
+                function drawVertex(x, y)
+                {
+                    processing.pushStyle();
+                    processing.noStroke();
+                    processing.fill(255, 0, 0, 128);
+                    processing.rect(x, y, 30, 30);
+                    processing.popStyle();
+                }
+
+                function drawPolygon(vertices)
+                {
+                    processing.beginShape();
+                    for (var n = 0; n < vertices.length; ++n)
+                    {
+                        var vertex = vertices[n];
+                        var x = vertex[0];
+                        var y = vertex[1];
+
+                        processing.vertex(x,y);
+                    }
+                    processing.endShape(processing.CLOSE);
+                }
+
+                function convexify(concaveVertices)
+                {
+                    var convexVertices = [];
+
+                    for (var n = 0; n < concaveVertices.length; ++n)
+                    {
+                        var vertex = concaveVertices[n];
+
+                        if (convexVertices.length < 2)
+                        {
+                            convexVertices.push(vertex);
+                        }
+                        else
+                        {
+                            var p1 = convexVertices[convexVertices.length - 2];
+                            var p2 = convexVertices[convexVertices.length - 1];
+                            var p3 = vertex;
+
+                            var retval = ccw(p1[0], p1[1], p2[0], p2[1], p3[0], p3[1]);
+
+                            if (retval <= 0)
+                            {
+                                convexVertices.push(vertex);
+                            }
+                        }
+                    }
+
+                    return [convexVertices];
+                }
+
+                //
+                // ccw - the counter-clockwise function
+                //
+                // Also see https://en.wikipedia.org/wiki/Graham_scan
+                //
+                function ccw(x1, y1, x2, y2, x3, y3)
+                {
+                    return ((x2 - x1)*(y3 - y1)) - ((y2 - y1)*(x3 - x1));
+                }
+
             });
         });
 
