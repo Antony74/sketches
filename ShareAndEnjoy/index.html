@@ -13,11 +13,15 @@
 
     <script>
 
+        ///<reference path='..\..\DefinitelyTyped\mathjax\mathjax.d.ts' />
+        ///<reference path='..\..\DefinitelyTyped\jquery\jquery.d.ts' />
+        ///<reference path='..\processing.d.ts' />
+
         MathJax.Hub.Queue(function()
         {
             var canvas = document.getElementById('myCanvas');
 
-            var processing = new Processing(canvas, function(processing)
+            new Processing(canvas, function(processing)
             {
                 processing.setup = function()
                 {
