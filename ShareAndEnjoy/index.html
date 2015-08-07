@@ -70,7 +70,7 @@
                     processing.pushStyle();
                     processing.noStroke();
                     processing.fill(255, 0, 0, 128);
-                    processing.rect(x, y, 30, 30);
+                    processing.rect(x, y, 15, 15);
                     processing.popStyle();
                 }
 
@@ -90,30 +90,33 @@
 
                 function convexify(concaveVertices)
                 {
-                    var convexVertices = [];
+					var convexVertices = [];
 
-                    for (var n = 0; n < concaveVertices.length; ++n)
-                    {
-                        var vertex = concaveVertices[n];
+					for (var n = 0; n < concaveVertices.length; ++n)
+					{
+						var vertex = concaveVertices[n];
+						convexVertices.push(vertex);
 
-                        if (convexVertices.length < 2)
-                        {
-                            convexVertices.push(vertex);
-                        }
-                        else
-                        {
-                            var p1 = convexVertices[convexVertices.length - 2];
-                            var p2 = convexVertices[convexVertices.length - 1];
-                            var p3 = vertex;
+						if (convexVertices.length >= 3)
+						{
+							var p0 = convexVertices[0];
+							var p1 = convexVertices[convexVertices.length - 3];
+							var p2 = convexVertices[convexVertices.length - 2];
+							var p3 = convexVertices[convexVertices.length - 1];
 
-                            var retval = ccw(p1[0], p1[1], p2[0], p2[1], p3[0], p3[1]);
+							var retval1 = ccw(p1[0], p1[1], p2[0], p2[1], p3[0], p3[1]);
+							var retval2 = ccw(p2[0], p2[1], p3[0], p3[1], p0[0], p0[1]);
 
-                            if (retval <= 0)
-                            {
-                                convexVertices.push(vertex);
-                            }
-                        }
-                    }
+							if (retval1 > 0)
+							{
+								convexVertices.pop();
+							}
+							else if (retval2 > 0)
+							{
+								convexVertices.shift();
+							}
+						}
+					}
 
                     return [convexVertices];
                 }
