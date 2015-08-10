@@ -17,7 +17,7 @@
         {
             var canvas = document.getElementById('myCanvas');
 
-            var processing = new Processing(canvas, function(processing)
+            new Processing(canvas, function(processing)
             {
                 processing.setup = function()
                 {
@@ -25,15 +25,13 @@
                     var xml = processing.loadXML(html);
                     var myShape = new processing.PShapeSVG(xml);
 
-                    processing.size(800, 800);
+                    processing.size(600, 600);
                     processing.background(128, 255, 128);
-                    processing.translate(75, 700);
-                    processing.scale(0.8, -0.8);
+                    processing.translate(75, 550);
+                    processing.scale(0.70, -0.70);
                     processing.rectMode(processing.CENTER);
     
                     prepareShape(myShape);
-
-//                    processing.shape(myShape);
                 }
 
                 function prepareShape(shape)
@@ -45,11 +43,27 @@
 
                     if (shape.vertices.length)
                     {
-                        var arr = convexify(shape.vertices);
-                        for (var n = 0; n < arr.length; ++n)
+                        var arrRemains = [shape.vertices];
+                        var arrConvex = [];
+
+                        while (arrRemains.length)
                         {
-                            drawPolygon(arr[n]);
+                            var concavePolygon = arrRemains.pop();
+
+                            var convexPolygon = getConvexComponentPolygon(concavePolygon);
+                            arrConvex.push(convexPolygon);
+
+                            var oRemains = polygonSubtract(concavePolygon, convexPolygon);
+
+                            arrRemains = arrRemains.concat(oRemains['arrRemains']);
+                            arrConvex = arrConvex.concat(oRemains['arrSimpleRemains']);
                         }
+
+                        for (var n = 0; n < arrConvex.length; ++n)
+                        {
+                            drawPolygon(arrConvex[n]);
+                        }
+
                         drawVertices(shape.vertices);
                     }
                 }
@@ -88,7 +102,7 @@
                     processing.endShape(processing.CLOSE);
                 }
 
-                function convexify(concaveVertices)
+                function getConvexComponentPolygon(concaveVertices)
                 {
 					var convexVertices = [];
 
@@ -118,7 +132,7 @@
 						}
 					}
 
-                    return [convexVertices];
+                    return convexVertices;
                 }
 
                 //
@@ -129,6 +143,70 @@
                 function ccw(x1, y1, x2, y2, x3, y3)
                 {
                     return ((x2 - x1)*(y3 - y1)) - ((y2 - y1)*(x3 - x1));
+                }
+
+                function polygonSubtract(polyOriginal, polySubtract)
+                {
+                    var arrRemains = [];
+                    var arrSimpleRemains = [];
+
+                    if (polySubtract.length == 0)
+                    {
+                        return arrRemains; // There's no work here that needs doing
+                    }
+
+                    // Clone polySubtract so we don't modify the object we were originally passed
+                    polySubtract = JSON.parse(JSON.stringify(polySubtract));
+
+                    // Close it
+                    polySubtract.push(polySubtract[0]);
+
+                    var nOrig = 0;
+                    var nPass = 0;
+
+                    var arrVertices = [];
+
+                    for (var nSub = 0; nSub < polySubtract.length; ++nSub)
+                    {
+                        var arrVertices = [];
+
+                        while (!verticesEqual(polyOriginal[nOrig], polySubtract[nSub]))
+                        {
+                            arrVertices.push(polyOriginal[nOrig]);
+                            ++nOrig;
+
+                            if (nOrig >= polyOriginal.length)
+                            {
+                                nOrig = 0;
+                                ++nPass;
+                                if (nPass > 1)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (arrVertices.length > 1 && nSub > 0)
+                        {
+                            var polyRemains = [polySubtract[nSub]].concat(arrVertices);
+                            if (polyRemains.length > 3)
+                            {
+                                arrRemains.push(polyRemains);
+                            }
+                            else
+                            {
+                                // Polygons with only three vertices are automatically convex
+                                arrSimpleRemains.push(polyRemains);
+                            }
+                        }
+                    }
+
+                    return {'arrRemains': arrRemains, 'arrSimpleRemains':arrSimpleRemains};
+                }
+
+                function verticesEqual(v1, v2)
+                {
+                    return (v1[0] == v2[0]) && (v1[1] == v2[1]);
                 }
 
             });
