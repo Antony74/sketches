@@ -55,8 +55,17 @@
 
                             var oRemains = polygonSubtract(concavePolygon, convexPolygon);
 
-                            arrRemains = arrRemains.concat(oRemains['arrRemains']);
-                            arrConvex = arrConvex.concat(oRemains['arrSimpleRemains']);
+                            if (oRemains['arrRemains'].length == 1
+                            &&  concavePolygon.length == oRemains['arrRemains'][0].length)
+                            {
+                                // uh-oh, polygonSubtract did nothing, so don't process
+                                // its output or we'll be stuck in an infinite loop
+                            }
+                            else
+                            {
+                                arrRemains = arrRemains.concat(oRemains['arrRemains']);
+                                arrConvex = arrConvex.concat(oRemains['arrSimpleRemains']);
+                            }
                         }
 
                         for (var n = 0; n < arrConvex.length; ++n)
