@@ -5,9 +5,10 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_SVG.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.8/processing.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="./Box2dWeb-2_1_a_3.js"></script>
 </head>
 <body>
-    <p>$$h$$</p>
+    <p style="visibility:hidden">$$ShareAndEnjoy$$</p>
 
     <canvas id="myCanvas"></canvas>
 
@@ -23,21 +24,62 @@
 
             new Processing(canvas, function(processing)
             {
+                var world = null;
+                var nScale = 30;
+                var nCurrentLetter = 0;
+                var arrLetters = [];
+
                 processing.setup = function()
                 {
                     var html = '<svg>' + $('svg').html() + '</svg>';
                     var xml = processing.loadXML(html);
                     var myShape = new processing.PShapeSVG(xml);
 
-                    processing.size(800, 800);
+                    processing.size(600, 600);
                     processing.background(128, 255, 128);
-                    processing.translate(75, 700);
-                    processing.scale(0.8, -0.8);
+                    processing.translate(75, 550);
+                    processing.scale(0.70, -0.70);
                     processing.rectMode(processing.CENTER);
+                    processing.ellipseMode(processing.RADIUS);
     
                     prepareShape(myShape);
 
-//                    processing.shape(myShape);
+                    world = worldInit(processing.height, processing.width, nScale);
+                    world.addLetter(arrLetters[nCurrentLetter]);
+                    nCurrentLetter = (nCurrentLetter + 1) % arrLetters.length;
+                }
+
+                processing.draw = function()
+                {
+                    processing.background(128);
+
+                    if (processing.frameCount % 500 == 0)
+                    {
+                        world.addLetter(arrLetters[nCurrentLetter]);
+                        nCurrentLetter = (nCurrentLetter + 1) % arrLetters.length;
+                    }
+
+                    world.Step(
+                             1 / 10,  // frame-rate
+                             8,       // velocity iterations
+                             3);      // position iterations
+
+                    world.ClearForces();
+
+                    var body = world.GetBodyList();
+
+                    while (body)
+                    {
+                        if (body.GetUserData() > 0)
+                        {
+                            var x = body.GetPosition().x;
+                            var y = body.GetPosition().y;
+                            var nRadius = body.GetUserData() * nScale;
+
+                            processing.ellipse(x * nScale, y * nScale, nRadius, nRadius);
+                        }
+                        body = body.GetNext();
+                    }
                 }
 
                 function prepareShape(shape)
@@ -49,11 +91,36 @@
 
                     if (shape.vertices.length)
                     {
-                        var arr = convexify(shape.vertices);
-                        for (var n = 0; n < arr.length; ++n)
+                        var arrRemains = [shape.vertices];
+                        var arrConvex = [];
+
+                        while (arrRemains.length)
                         {
-                            drawPolygon(arr[n]);
+                            var concavePolygon = arrRemains.pop();
+
+                            var convexPolygon = getConvexComponentPolygon(concavePolygon);
+                            arrConvex.push(convexPolygon);
+
+                            var oRemains = polygonSubtract(concavePolygon, convexPolygon);
+
+                            if (oRemains['arrRemains'].length == 1
+                            &&  concavePolygon.length == oRemains['arrRemains'][0].length)
+                            {
+                                // uh-oh, polygonSubtract did nothing, so don't process
+                                // its output or we'll be stuck in an infinite loop
+                            }
+                            else
+                            {
+                                arrRemains = arrRemains.concat(oRemains['arrRemains']);
+                                arrConvex = arrConvex.concat(oRemains['arrSimpleRemains']);
+                            }
                         }
+
+                        for (var n = 0; n < arrConvex.length; ++n)
+                        {
+                            drawPolygon(arrConvex[n]);
+                        }
+
                         drawVertices(shape.vertices);
                     }
                 }
@@ -92,7 +159,7 @@
                     processing.endShape(processing.CLOSE);
                 }
 
-                function convexify(concaveVertices)
+                function getConvexComponentPolygon(concaveVertices)
                 {
 					var convexVertices = [];
 
@@ -122,7 +189,7 @@
 						}
 					}
 
-                    return [convexVertices];
+                    return convexVertices;
                 }
 
                 //
@@ -133,6 +200,130 @@
                 function ccw(x1, y1, x2, y2, x3, y3)
                 {
                     return ((x2 - x1)*(y3 - y1)) - ((y2 - y1)*(x3 - x1));
+                }
+
+                function polygonSubtract(polyOriginal, polySubtract)
+                {
+                    var arrRemains = [];
+                    var arrSimpleRemains = [];
+
+                    if (polySubtract.length == 0)
+                    {
+                        return arrRemains; // There's no work here that needs doing
+                    }
+
+                    // Clone polySubtract so we don't modify the object we were originally passed
+                    polySubtract = JSON.parse(JSON.stringify(polySubtract));
+
+                    // Close it
+                    polySubtract.push(polySubtract[0]);
+
+                    var nOrig = 0;
+                    var nPass = 0;
+
+                    var arrVertices = [];
+
+                    for (var nSub = 0; nSub < polySubtract.length; ++nSub)
+                    {
+                        var arrVertices = [];
+
+                        while (!verticesEqual(polyOriginal[nOrig], polySubtract[nSub]))
+                        {
+                            arrVertices.push(polyOriginal[nOrig]);
+                            ++nOrig;
+
+                            if (nOrig >= polyOriginal.length)
+                            {
+                                nOrig = 0;
+                                ++nPass;
+                                if (nPass > 1)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (arrVertices.length > 1 && nSub > 0)
+                        {
+                            var polyRemains = [polySubtract[nSub]].concat(arrVertices);
+                            if (polyRemains.length > 3)
+                            {
+                                arrRemains.push(polyRemains);
+                            }
+                            else
+                            {
+                                // Polygons with only three vertices are automatically convex
+                                arrSimpleRemains.push(polyRemains);
+                            }
+                        }
+                    }
+
+                    return {'arrRemains': arrRemains, 'arrSimpleRemains':arrSimpleRemains};
+                }
+
+                function verticesEqual(v1, v2)
+                {
+                    return (v1[0] == v2[0]) && (v1[1] == v2[1]);
+                }
+
+                //
+                // worldInit - initialises our Box2DWeb world
+                //
+                function worldInit(width, height, nScale)
+                {
+                  world = new Box2D.Dynamics.b2World(
+                                 new Box2D.Common.Math.b2Vec2(0, 0.3),  // Gravity
+                                 true);                                 // Allow bodies to sleep
+
+                   var fixDef = new Box2D.Dynamics.b2FixtureDef();
+                   fixDef.density = 10.0;
+                   fixDef.friction = 1.0;
+                   fixDef.restitution = 0.35;
+
+                   var bodyDef = new Box2D.Dynamics.b2BodyDef();
+  
+                   // Create a box around the visible extents of our 2D world
+
+                   bodyDef.type = Box2D.Dynamics.b2Body.b2_staticBody;
+   
+                   fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
+   
+                   bodyDef.position.x = width / 2 / nScale;
+                   bodyDef.position.y = height / nScale;
+                   fixDef.shape.SetAsBox((width / nScale), (10/nScale) / 2);
+                   world.CreateBody(bodyDef).CreateFixture(fixDef);
+
+                   bodyDef.position.y = 0;
+//                   world.CreateBody(bodyDef).CreateFixture(fixDef);
+
+                   bodyDef.position.x = 0;
+                   bodyDef.position.y = height / nScale;
+                   fixDef.shape.SetAsBox((10/nScale) / 2, height);
+                   world.CreateBody(bodyDef).CreateFixture(fixDef);
+
+                   bodyDef.position.x = width / nScale;
+                   world.CreateBody(bodyDef).CreateFixture(fixDef);
+
+                   // Create some circular bodies
+                   world.addLetter = function()
+                   {
+                       bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
+
+                        var dRadius = (Math.random() * 1.0) + 1.0;
+                        fixDef.shape = new Box2D.Collision.Shapes.b2CircleShape(dRadius);
+
+                        bodyDef.position.x =  0.5 * width  / nScale;
+                        bodyDef.position.y = -0.1 * height / nScale;
+//                        bodyDef.linearVelocity.x = (Math.random() - 0.5) * 5.0;
+//                        bodyDef.linearVelocity.y = (Math.random() - 0.5) * 5.0;
+//                        bodyDef.angle = Math.random() * 2.0 * Math.PI;
+                        bodyDef.angularVelocity = (Math.random() - 0.5) * 2.5;
+                        var body = world.CreateBody(bodyDef);
+                        body.CreateFixture(fixDef);
+                        body.SetUserData(dRadius);
+                  }
+
+                  return world;
                 }
 
             });
