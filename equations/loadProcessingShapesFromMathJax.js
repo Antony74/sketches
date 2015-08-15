@@ -8,38 +8,12 @@ function loadProcessingShapesFromMathJax(fnCallback)
 {
     processing = new Processing()
     {
-        MathJax.Hub.Queue(function()
+        MathJax.Hub.Queue(function() // Let MathJax do its thing
         {
             var arrShapes = [];
 
-            // Processing.js doesn't understand the <use> tag, so replace it with the thing being used
-            $('use').each(function()
-            {
-                var id = $(this).attr('href');
-
-                if ($(id).length == 1)
-                {
-                    var clone = $(id).clone();
-
-                    if ($(this).attr('x') && $(this).attr('y'))
-                    {
-                        var x = $(this).attr('x');
-                        var y = $(this).attr('y');
-                        clone.wrap('<g transform="translate(' + x + ',' + y + ')"></g>');
-                        clone = clone.parent();
-                    }
-
-                    if ($(this).attr('transform'))
-                    {
-    //                    console.log('has transform');
-                    }
-
-                    clone.wrap('<div>');
-                    clone = clone.parent();
-
-                    $(this).replaceWith(clone.html());
-                }
-            });
+            // The first chunk of SVG that MathJax creates is its cache of glyphs, which we skip.
+            // The other chunks are the equations we want, so we iterate through them.
 
             var bFirst = true;
 
@@ -47,12 +21,48 @@ function loadProcessingShapesFromMathJax(fnCallback)
             {
                 if (bFirst == false)
                 {
-                    var clone = $(this).clone();
-                    clone.wrap('<div>');
-                    clone = clone.parent();
-                    var html = clone.html();
+                    // Clone this chunk of SVG
+                    var svg = $(this).clone();
+
+                    // Processing.js doesn't support the <use> tag, so replace it with the thing being used
+                    svg.find('use').each(function()
+                    {
+                        var id = $(this).attr('href');
+
+                        if ($(id).length == 1)
+                        {
+                            // Clone the glyph
+                            var glyph = $(id).clone();
+
+                            // If the <use> tag had x and y attributes, place the glyph within a group which mimics these
+                            if ($(this).attr('x') && $(this).attr('y'))
+                            {
+                                var x = $(this).attr('x');
+                                var y = $(this).attr('y');
+                                glyph = createParent(glyph, '<g transform="translate(' + x + ',' + y + ')"></g>');
+                            }
+
+                            // If the <use> tag had a transform attribute, place the glyph within a group which mimics these
+                            if ($(this).attr('transform'))
+                            {
+                                glyph = createParent(glyph, '<g transform="' + $(this).attr('transform') + '"></g>');
+                            }
+
+                            // Now replace the <use> tag with our (properly wrapped) glyph
+                            glyph = createParent(glyph, '<div>');
+                            $(this).replaceWith(glyph.html());
+                        }
+                    });
+
+                    // Get the text of this SVG
+                    svg = createParent(svg, '<div>');
+                    var html = svg.html();
+
+                    // Load it into Processing, first as XML, then as a shape
                     var xml = processing.loadXML(html);
                     var myShape = new processing.PShapeSVG(xml);
+
+                    // And add it to the array of shapes we are creating
                     arrShapes.push(myShape);
                 }
                 
@@ -62,5 +72,11 @@ function loadProcessingShapesFromMathJax(fnCallback)
             fnCallback(arrShapes);
         });
     }
+}
+
+function createParent(element, wrapper)
+{
+    element.wrap(wrapper);
+    return element.parent();
 }
 
