@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Equations</title>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_SVG.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.8/processing.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="./loadProcessingShapesFromMathJax.js"></script>
+</head>
+<body>
+
+    <p style="visibility:visible">$$a^2 = b^2 + c^2$$</p>
+
+    <canvas id="myCanvas"></canvas>
+
+    <script>
+
+        var canvas = document.getElementById('myCanvas');
+
+        loadProcessingShapesFromMathJax(function(arrShapes)
+        {
+            new Processing(canvas, function(processing)
+            {
+                processing.setup = function()
+                {
+                    processing.size(500, 500);
+                    processing.translate(100, 200);
+                    processing.scale(0.05, 0.05);
+
+                    for (var n = 0; n < arrShapes.length; ++n)
+                    {
+                        processing.shape(arrShapes[n]);
+                    }
+                }
+            });
+        });
+
+    </script>
+
+</body>
+</html>
+
