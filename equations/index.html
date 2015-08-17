@@ -5,37 +5,61 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_SVG.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.8/processing.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="./loadProcessingShapesFromMathJax.js"></script>
+    <script src="./LoadShapesFromMathJaxToProcessing.js"></script>
 </head>
 <body>
 
-    <p style="visibility:visible">$$a^2 = b^2 + c^2$$</p>
+    <p style="visibility:collapse">
 
-    <canvas id="myCanvas"></canvas>
+        <!-- Pythagoras       -->
+        $$ a^2 = b^2 + c^2                  $$ 
 
-    <script>
+        <!-- Bayes            -->
+        $$ P(A|B) = \frac{P(B|A)P(A)}{P(B)} $$
 
-        var canvas = document.getElementById('myCanvas');
+        <!-- Newton's Gravity -->
+        $$ F = G \frac{m_1m_2}{r^2}         $$
 
-        loadProcessingShapesFromMathJax(function(arrShapes)
+    </p>
+
+    <script type="application/processing" data-processing-target="mySketch">
+
+        void setup()
         {
-            new Processing(canvas, function(processing)
-            {
-                processing.setup = function()
-                {
-                    processing.size(500, 500);
-                    processing.translate(100, 200);
-                    processing.scale(0.05, 0.05);
+            size(800, 800);
+        }
 
-                    for (var n = 0; n < arrShapes.length; ++n)
-                    {
-                        processing.shape(arrShapes[n]);
-                    }
-                }
-            });
-        });
+        void draw()
+        {
+            fill(200, 200, 200, 30);
+            noStroke();
+            rect(0, 0, width, height);
+
+            pushMatrix();
+            translate(width/2, height/2);
+            rotate(frameCount / 300);
+
+            for (int n = 0; n < shapesFromMathJax.size(); ++n)
+            {
+                PShape sh = shapesFromMathJax.get(n);
+
+                pushMatrix();
+                translate(0, 200 + (50 * sin(frameCount/122)));
+                rotate(PI);
+                translate(0, 0.5*sh.getWidth());
+
+                shape(sh, 0, 0, 40, 40);
+                popMatrix();
+
+                rotate(TWO_PI / shapesFromMathJax.size());
+            }
+
+            popMatrix();
+        }
 
     </script>
+
+    <canvas id="mySketch"> </canvas>
 
 </body>
 </html>
