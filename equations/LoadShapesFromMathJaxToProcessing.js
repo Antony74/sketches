@@ -1,8 +1,15 @@
 //
 // LoadShapesFromMathJaxToProcessing
 //
-// Requires Processing.js, MathJax and JQuery.  MathJax should be set up to render as SVG.
+// Requires Processing.js, MathJax and JQuery.
+// MathJax should be set up to render as SVG.
 //
+
+/*********************************************************************/
+/***	This software is in the public domain, furnished "as is",  ***/
+/***	without technical support, and with no warranty, express   ***/
+/***	or implied, as to its usefulness for any purpose.		   ***/
+/*********************************************************************/
 
 var shapesFromMathJax = {size: function() {return 0;} };
 
@@ -54,6 +61,11 @@ MathJax.Hub.Queue(function() // Let MathJax do its thing
                 }
             });
 
+			// Reduce by a factor of 60 and Processing draws things about the same size
+			// as rendered on the page by MathJax
+			var nScale = 1/60;
+			svg.html('<g transform="scale(' + nScale + ')">' + svg.html() + '</g>');
+
             // Get the text of this SVG
             svg = createParent(svg, '<div>');
             var html = svg.html();
@@ -62,11 +74,9 @@ MathJax.Hub.Queue(function() // Let MathJax do its thing
             var xml = processing.loadXML(html);
             var myShape = new processing.PShapeSVG(xml);
 
-            // Set the height and width to something meaningful
-            var min = eachVertex(myShape, Math.min, Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
-            var max = eachVertex(myShape, Math.max, Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
-            myShape.width =  max[0] - min[0];
-            myShape.height = max[1] - min[1];
+            // Set the height and width to about the right values
+            myShape.width *= 7;
+            myShape.height *= -7;
 
             // And add it to the array of shapes we are creating
             shapesFromMathJax.add(myShape);
@@ -81,23 +91,6 @@ MathJax.Hub.Queue(function() // Let MathJax do its thing
         return element.parent();
     }
 
-    function eachVertex(shape, fn, x, y)
-    {
-        for (var n = 0; n < shape.getChildCount(); ++n)
-        {
-            var value = eachVertex(shape.getChild(n), fn, x, y);
-            x = value[0];
-            y = value[1];
-        }
-
-        for (var n = 0; n < shape.vertices.length; ++n)
-        {
-            x = fn(shape.vertices[n][0], x);
-            y = fn(shape.vertices[n][1], y);
-        }
-
-        return [x, y];
-    }
 });
 
 

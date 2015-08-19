@@ -9,7 +9,9 @@
 </head>
 <body>
 
-    <p style="visibility:collapse">
+	<!-- Add some equations to the page in TeX format, which can be read by MathJax -->
+
+    <p style="display: none">
 
         <!-- Pythagoras       -->
         $$ a^2 = b^2 + c^2                  $$ 
@@ -26,31 +28,39 @@
 
         void setup()
         {
-            size(800, 800);
+            size(500, 500);
+			background(200);
         }
 
         void draw()
         {
-            fill(200, 200, 200, 30);
+			// Partially clear the screen - but leave a little to preserve the impression of
+			// motion, even on screen-shots
+            fill(200, 200, 200, 20);
             noStroke();
             rect(0, 0, width, height);
 
+			// Rotate around the centre of the canvas
             pushMatrix();
             translate(width/2, height/2);
             rotate(frameCount / 300);
 
+			// The 'shapesFromMathJax' variable isn't a regular part of Processing, it
+			// has been added by the LoadShapesFromMathJaxToProcessing.js script
             for (int n = 0; n < shapesFromMathJax.size(); ++n)
             {
                 PShape sh = shapesFromMathJax.get(n);
 
                 pushMatrix();
-                translate(0, 200 + (50 * sin(frameCount/122)));
-                rotate(PI);
-                translate(0, 0.5*sh.getWidth());
+                translate(0, height * 0.25); // A radius about a quarter the height of the canvas works nicely
+                rotate(PI);					 // This way up seems more intuitive
 
-                shape(sh, 0, 0, 40, 40);
+				// Draw each equation double-sized and centred horizantally
+                shape(sh, -sh.getWidth(), 0, sh.getWidth() * 2, sh.getHeight() * 2);
+
                 popMatrix();
 
+				// Move round ready to draw the next equation
                 rotate(TWO_PI / shapesFromMathJax.size());
             }
 
@@ -59,7 +69,7 @@
 
     </script>
 
-    <canvas id="mySketch"> </canvas>
+    <canvas id="mySketch"></canvas>
 
 </body>
 </html>
