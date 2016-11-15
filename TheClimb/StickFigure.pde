@@ -17,6 +17,18 @@ class Vertex {
     children.add(child);
   }
 
+  void normalize(float size) {
+    pv = PVector.sub(pv, parent.pv).setMag(size);
+    pv.add(parent.pv);
+  }
+
+  float getAngle() {
+    PVector relative = PVector.sub(pv, parent.pv);
+    return relative.heading();
+}
+
+  // We have defined a tree model.  Now define some recursive functions which take advantage of it 
+
   void relativeToAbsolute() {
     for (int n = 0; n < children.size(); ++n) {
       Vertex child = children.get(n);
@@ -35,6 +47,21 @@ class Vertex {
     }
     
   }
+
+  void rotate(PVector pivot, float angle, boolean bSkip) {
+
+    if (bSkip == false) {
+      pv = PVector.sub(pv, pivot);
+      pv.rotate(angle);
+      pv.add(pivot);
+    }
+
+    for (int n = 0; n < children.size(); ++n) {
+
+      Vertex child = children.get(n);
+      child.rotate(pivot, angle, false);
+  }
+}
 
 };
 
@@ -187,26 +214,15 @@ class StickFigure {
           vertices.get(n).pv.add(delta);
         }
       } else {
-        vertices.get(currentDrag).pv.set(mouseX, mouseY);
-        normalize();
+        Vertex v = vertices.get(currentDrag);
+        float angleBefore = v.getAngle();
+        v.pv.set(mouseX, mouseY);
+        v.normalize(size);
+        float angleAfter = v.getAngle();
+        
+        v.rotate(v.parent.pv, angleAfter - angleBefore, true);
       }
     }
-  }
-
-  void normalize() {
-/*
-    leftKnee = normalizeWrt(leftKnee, pelvis);
-    rightKnee = normalizeWrt(rightKnee, pelvis);
-    leftFoot = normalizeWrt(leftFoot, leftKnee);
-    rightFoot = normalizeWrt(rightFoot, rightKnee);
-    chest = normalizeWrt(chest, pelvis);
-    neck = normalizeWrt(neck, chest);
-*/
-}
-    
-  PVector normalizeWrt(PVector target, PVector origin) {
-    PVector pv = PVector.sub(target, origin).setMag(size);
-    return PVector.add(pv, origin);
   }
 
 };
