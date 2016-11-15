@@ -145,10 +145,35 @@ class StickFigure {
   }
 
   void mouseDragged() {
+
     if (currentDrag >= 0) {
-      PVector pv = getVector(currentDrag);
-      pv.add(mouseX - pmouseX, mouseY - pmouseY);
+
+      if (currentDrag == 0) {
+        PVector mouse = new PVector(mouseX, mouseY);
+        PVector delta = PVector.sub(mouse, pelvis);
+
+        for (int n = 0; n < getVectorCount(); ++n) {
+          getVector(n).add(delta);
+        }
+      } else {
+        getVector(currentDrag).set(mouseX, mouseY);
+        normalize();
+      }
     }
+  }
+
+  void normalize() {
+    leftKnee = normalizeWrt(leftKnee, pelvis);
+    rightKnee = normalizeWrt(rightKnee, pelvis);
+    leftFoot = normalizeWrt(leftFoot, leftKnee);
+    rightFoot = normalizeWrt(rightFoot, rightKnee);
+    chest = normalizeWrt(chest, pelvis);
+    neck = normalizeWrt(neck, chest);
+}
+    
+  PVector normalizeWrt(PVector target, PVector origin) {
+    PVector pv = PVector.sub(target, origin).setMag(size);
+    return PVector.add(pv, origin);
   }
 
 };
