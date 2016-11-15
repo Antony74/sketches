@@ -1,5 +1,5 @@
 
-StickMan stickMan;
+StickFigure stickFigure;
 PImage background;
 
 void setup() {
@@ -9,23 +9,23 @@ void setup() {
   fill(0);
 
   background = loadImage(sketchPath("background.png"));
-  stickMan = new StickMan();
+  stickFigure = new StickFigure();
 }
 
 void draw() {
   image(background, 0, 0);
-  stickMan.draw();
-  stickMan.drawPoints();
+  stickFigure.draw();
+  stickFigure.drawPoints();
 }
 
 void mousePressed() {
-  stickMan.mousePressed();
+  stickFigure.mousePressed();
 }
 
 void mouseReleased() {
-  stickMan.mouseReleased();
+  stickFigure.mouseReleased();
 }
 
 void mouseDragged() {
-  stickMan.mouseDragged();
+  stickFigure.mouseDragged();
 }

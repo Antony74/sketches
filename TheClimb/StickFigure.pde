@@ -1,5 +1,5 @@
 
-class StickMan {
+class StickFigure {
   
   float size = 60;
   float pointSize = 10;
@@ -42,7 +42,7 @@ class StickMan {
     return 12;
   }
   
-  StickMan() {
+  StickFigure() {
     reset();
   }
   
