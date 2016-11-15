@@ -48,22 +48,38 @@ class StickMan {
   
   void reset() {
 
-    float SIXTH_PI = PI/6;
+    float EIGHTH_PI = PI/8;
     
     pelvis = new PVector(width/2, height/2);
     leftKnee = new PVector(0, size);
     rightKnee = new PVector(0, size);
-    leftKnee.rotate(SIXTH_PI);
-    rightKnee.rotate(-SIXTH_PI);
+    leftKnee.rotate(EIGHTH_PI);
+    rightKnee.rotate(-EIGHTH_PI);
     leftFoot = leftKnee.copy();
     rightFoot = rightKnee.copy();
+    chest = new PVector(0, -size);
+    neck = new PVector(0, -size);
+    head = new PVector(0, -size);
+    leftElbow = new PVector(-size, 0);
+    leftElbow.rotate(-QUARTER_PI);
+    rightElbow = new PVector(size, 0);
+    rightElbow.rotate(QUARTER_PI);
+    leftHand = new PVector(0, size);
+    rightHand = new PVector(0, size);
     
     // Convert relative coordinates to absolute
     leftKnee = PVector.add(leftKnee, pelvis);
     rightKnee = PVector.add(rightKnee, pelvis);
     leftFoot = PVector.add(leftFoot, leftKnee);
     rightFoot = PVector.add(rightFoot, rightKnee);
-  }
+    chest = PVector.add(chest, pelvis);
+    neck = PVector.add(neck, chest);
+    head = PVector.add(head, neck);
+    leftElbow = PVector.add(leftElbow, neck);
+    rightElbow = PVector.add(rightElbow, neck);
+    leftHand = PVector.add(leftHand, leftElbow);
+    rightHand = PVector.add(rightHand, rightElbow);
+}
 
   void draw() {
   
@@ -71,6 +87,20 @@ class StickMan {
     pv_line(pelvis, rightKnee);
     pv_line(leftKnee, leftFoot);
     pv_line(rightKnee, rightFoot);
+    pv_line(pelvis, chest);
+    pv_line(chest, neck);
+    pv_line(neck, leftElbow);
+    pv_line(neck, rightElbow);
+    pv_line(leftElbow, leftHand);
+    pv_line(rightElbow, rightHand);
+
+    PVector center = PVector.div(PVector.add(neck, head),2);
+    float radius = neck.dist(head);
+
+    pushStyle();
+    ellipseMode(RADIUS);
+    ellipse(center.x, center.y, radius, radius);
+    popStyle();
 }
 
   void drawPoints() {
@@ -80,9 +110,9 @@ class StickMan {
     noStroke();
     fill(255,0,0,128);
     
-    drawPoint(pelvis);
-    drawPoint(leftKnee);
-    drawPoint(rightKnee);
+    for (int n = 0; n < getVectorCount(); ++n) {
+      drawPoint(getVector(n));
+    }
     
     popStyle();
   }
@@ -99,8 +129,8 @@ class StickMan {
     for (int n = 0; n < getVectorCount(); ++n) {
 
       PVector pv = getVector(n);
-       
-      if ( (abs(pv.x - mouseX) <= pointSize) || abs(pv.y - mouseY) <= pointSize) {
+      
+      if ( (abs(pv.x - mouseX) <= pointSize) && abs(pv.y - mouseY) <= pointSize) {
         currentDrag = n;
         break;
       }
