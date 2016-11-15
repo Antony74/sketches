@@ -1,46 +1,80 @@
 
+class Vertex {
+
+  int index;
+  Vertex parent;
+  ArrayList<Vertex> children;
+  PVector pv;
+
+  Vertex(int _index) {
+    index = _index;
+    pv = new PVector();
+    children = new ArrayList<Vertex>();
+  }
+
+  void addChild(Vertex child) {
+    child.parent = this;
+    children.add(child);
+  }
+
+  void relativeToAbsolute() {
+    for (int n = 0; n < children.size(); ++n) {
+      Vertex child = children.get(n);
+      child.pv.add(pv);
+      child.relativeToAbsolute();
+    }
+  }
+
+  void draw() {
+
+    for (int n = 0; n < children.size(); ++n) {
+
+      Vertex child = children.get(n);
+      line(pv.x, pv.y, child.pv.x, child.pv.y);
+      child.draw();
+    }
+    
+  }
+
+};
+
+//
+// StickFigure
+//
 class StickFigure {
   
   float size = 60;
   float pointSize = 10;
   int currentDrag = -1;
 
-  PVector pelvis;
-  PVector leftKnee;
-  PVector rightKnee;
-  PVector leftFoot;
-  PVector rightFoot;
-  PVector chest;
-  PVector neck;
-  PVector head;
-  PVector leftElbow;
-  PVector rightElbow;
-  PVector leftHand;
-  PVector rightHand;
+  ArrayList<Vertex> vertices;
 
+  final int PELVIS = 0;
+  final int LEFT_KNEE = 1;
+  final int RIGHT_KNEE = 2;
+  final int LEFT_FOOT = 3;
+  final int RIGHT_FOOT = 4;
+  final int CHEST = 5;
+  final int NECK = 6;
+  final int HEAD = 7;
+  final int LEFT_ELBOW = 8;
+  final int RIGHT_ELBOW = 9;
+  final int LEFT_HAND = 10;
+  final int RIGHT_HAND = 11;
+  final int VERTEX_COUNT = 12;
 
-  PVector getVector(int n) {
-    switch(n) {
-    case  0: return pelvis;
-    case  1: return leftKnee;
-    case  2: return rightKnee;
-    case  3: return leftFoot;
-    case  4: return rightFoot;
-    case  5: return chest;
-    case  6: return neck;
-    case  7: return head;
-    case  8: return leftElbow;
-    case  9: return rightElbow;
-    case 10: return leftHand;
-    case 11: return rightHand;
-  }
-    
-    return null;
-  }
-  
-  int getVectorCount() {
-    return 12;
-  }
+  PVector pelvis()     { return vertices.get(PELVIS).pv;      }
+  PVector leftKnee()   { return vertices.get(LEFT_KNEE).pv;   }
+  PVector rightKnee()  { return vertices.get(RIGHT_KNEE).pv;  }
+  PVector leftFoot()   { return vertices.get(LEFT_FOOT).pv;   }
+  PVector rightFoot()  { return vertices.get(RIGHT_FOOT).pv;  }
+  PVector chest()      { return vertices.get(CHEST).pv;       }
+  PVector neck()       { return vertices.get(NECK).pv;        }
+  PVector head()       { return vertices.get(HEAD).pv;        }
+  PVector leftElbow()  { return vertices.get(LEFT_ELBOW).pv;  }
+  PVector rightElbow() { return vertices.get(RIGHT_ELBOW).pv; }
+  PVector leftHand()   { return vertices.get(LEFT_HAND).pv;   }
+  PVector rightHand()  { return vertices.get(RIGHT_HAND).pv;  }
   
   StickFigure() {
     reset();
@@ -48,57 +82,58 @@ class StickFigure {
   
   void reset() {
 
+    vertices = new ArrayList<Vertex>();
+    
+    for (int n = 0; n < VERTEX_COUNT; ++n) {
+      vertices.add(new Vertex(n));
+    }
+
+    addChild(LEFT_KNEE, PELVIS);
+    addChild(RIGHT_KNEE, PELVIS);
+    addChild(LEFT_FOOT, LEFT_KNEE);
+    addChild(RIGHT_FOOT, RIGHT_KNEE);
+    addChild(CHEST, PELVIS);
+    addChild(NECK, CHEST);
+    addChild(HEAD, NECK);
+    addChild(LEFT_ELBOW, NECK);
+    addChild(RIGHT_ELBOW, NECK);
+    addChild(LEFT_HAND, LEFT_ELBOW);
+    addChild(RIGHT_HAND, RIGHT_ELBOW);
+    
     float EIGHTH_PI = PI/8;
+
+    pelvis().set(width/2, height/2);
+    leftKnee().set(0, size);
+    rightKnee().set(0, size);
+    leftKnee().rotate(EIGHTH_PI);
+    rightKnee().rotate(-EIGHTH_PI);
+    leftFoot().set(leftKnee());
+    rightFoot().set(rightKnee());
+    chest().set(0, -size);
+    neck().set(0, -size);
+    head().set(0, -size);
+    leftElbow().set(-size, 0);
+    leftElbow().rotate(-QUARTER_PI);
+    rightElbow().set(size, 0);
+    rightElbow().rotate(QUARTER_PI);
+    leftHand().set(0, size);
+    leftHand().rotate(EIGHTH_PI);
+    rightHand().set(0, size);
+    rightHand().rotate(-EIGHTH_PI);
     
-    pelvis = new PVector(width/2, height/2);
-    leftKnee = new PVector(0, size);
-    rightKnee = new PVector(0, size);
-    leftKnee.rotate(EIGHTH_PI);
-    rightKnee.rotate(-EIGHTH_PI);
-    leftFoot = leftKnee.copy();
-    rightFoot = rightKnee.copy();
-    chest = new PVector(0, -size);
-    neck = new PVector(0, -size);
-    head = new PVector(0, -size);
-    leftElbow = new PVector(-size, 0);
-    leftElbow.rotate(-QUARTER_PI);
-    rightElbow = new PVector(size, 0);
-    rightElbow.rotate(QUARTER_PI);
-    leftHand = new PVector(0, size);
-    leftHand.rotate(EIGHTH_PI);
-    rightHand = new PVector(0, size);
-    rightHand.rotate(-EIGHTH_PI);
-    
-    // Convert relative coordinates to absolute
-    leftKnee = PVector.add(leftKnee, pelvis);
-    rightKnee = PVector.add(rightKnee, pelvis);
-    leftFoot = PVector.add(leftFoot, leftKnee);
-    rightFoot = PVector.add(rightFoot, rightKnee);
-    chest = PVector.add(chest, pelvis);
-    neck = PVector.add(neck, chest);
-    head = PVector.add(head, neck);
-    leftElbow = PVector.add(leftElbow, neck);
-    rightElbow = PVector.add(rightElbow, neck);
-    leftHand = PVector.add(leftHand, leftElbow);
-    rightHand = PVector.add(rightHand, rightElbow);
+    vertices.get(PELVIS).relativeToAbsolute();
 }
+
+  void addChild(int nVertex, int nParent) {
+    vertices.get(nParent).addChild(vertices.get(nVertex));
+  }
 
   void draw() {
   
-    pv_line(pelvis, leftKnee);
-    pv_line(pelvis, rightKnee);
-    pv_line(leftKnee, leftFoot);
-    pv_line(rightKnee, rightFoot);
-    pv_line(pelvis, chest);
-    pv_line(chest, neck);
-    pv_line(neck, head);
-    pv_line(neck, leftElbow);
-    pv_line(neck, rightElbow);
-    pv_line(leftElbow, leftHand);
-    pv_line(rightElbow, rightHand);
+    vertices.get(PELVIS).draw();
 
-    PVector center = PVector.div( PVector.add( PVector.mult(neck, 1), PVector.mult(head, 2) ), 3);
-    float radius = neck.dist(head) * 0.5;
+    PVector center = PVector.div( PVector.add( PVector.mult(neck(), 1), PVector.mult(head(), 2) ), 3);
+    float radius = neck().dist(head()) * 0.5;
 
     pushStyle();
     ellipseMode(RADIUS);
@@ -113,8 +148,8 @@ class StickFigure {
     noStroke();
     fill(255,0,0,128);
     
-    for (int n = 0; n < getVectorCount(); ++n) {
-      drawPoint(getVector(n));
+    for (int n = 0; n < VERTEX_COUNT; ++n) {
+      drawPoint(vertices.get(n).pv);
     }
     
     popStyle();
@@ -124,14 +159,10 @@ class StickFigure {
     rect(pv.x, pv.y, pointSize, pointSize);
   }
 
-  void pv_line(PVector pv1, PVector pv2) {
-    line(pv1.x, pv1.y, pv2.x, pv2.y);
-  }
-
   void mousePressed() {
-    for (int n = 0; n < getVectorCount(); ++n) {
+    for (int n = 0; n < VERTEX_COUNT; ++n) {
 
-      PVector pv = getVector(n);
+      PVector pv = vertices.get(n).pv;
       
       if ( (abs(pv.x - mouseX) <= pointSize) && abs(pv.y - mouseY) <= pointSize) {
         currentDrag = n;
@@ -150,25 +181,27 @@ class StickFigure {
 
       if (currentDrag == 0) {
         PVector mouse = new PVector(mouseX, mouseY);
-        PVector delta = PVector.sub(mouse, pelvis);
+        PVector delta = PVector.sub(mouse, pelvis());
 
-        for (int n = 0; n < getVectorCount(); ++n) {
-          getVector(n).add(delta);
+        for (int n = 0; n < VERTEX_COUNT; ++n) {
+          vertices.get(n).pv.add(delta);
         }
       } else {
-        getVector(currentDrag).set(mouseX, mouseY);
+        vertices.get(currentDrag).pv.set(mouseX, mouseY);
         normalize();
       }
     }
   }
 
   void normalize() {
+/*
     leftKnee = normalizeWrt(leftKnee, pelvis);
     rightKnee = normalizeWrt(rightKnee, pelvis);
     leftFoot = normalizeWrt(leftFoot, leftKnee);
     rightFoot = normalizeWrt(rightFoot, rightKnee);
     chest = normalizeWrt(chest, pelvis);
     neck = normalizeWrt(neck, chest);
+*/
 }
     
   PVector normalizeWrt(PVector target, PVector origin) {
