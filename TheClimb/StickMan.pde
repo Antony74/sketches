@@ -65,7 +65,9 @@ class StickMan {
     rightElbow = new PVector(size, 0);
     rightElbow.rotate(QUARTER_PI);
     leftHand = new PVector(0, size);
+    leftHand.rotate(EIGHTH_PI);
     rightHand = new PVector(0, size);
+    rightHand.rotate(-EIGHTH_PI);
     
     // Convert relative coordinates to absolute
     leftKnee = PVector.add(leftKnee, pelvis);
@@ -89,13 +91,14 @@ class StickMan {
     pv_line(rightKnee, rightFoot);
     pv_line(pelvis, chest);
     pv_line(chest, neck);
+    pv_line(neck, head);
     pv_line(neck, leftElbow);
     pv_line(neck, rightElbow);
     pv_line(leftElbow, leftHand);
     pv_line(rightElbow, rightHand);
 
-    PVector center = PVector.div(PVector.add(neck, head),2);
-    float radius = neck.dist(head);
+    PVector center = PVector.div( PVector.add( PVector.mult(neck, 1), PVector.mult(head, 2) ), 3);
+    float radius = neck.dist(head) * 0.5;
 
     pushStyle();
     ellipseMode(RADIUS);
