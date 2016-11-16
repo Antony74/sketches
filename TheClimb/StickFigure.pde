@@ -258,6 +258,17 @@ class StickFigure {
     }
   }
 
+  void moveTo(float x, float y) {
+    PVector moveTo = new PVector(x, y);
+    PVector moveBy = PVector.sub(moveTo, pelvis());
+
+    for (int n = 0; n < VERTEX_COUNT; ++n) {
+
+      PVector pv = vertices.get(n).pv;
+      pv.add(moveBy);
+  }
+}
+
   StickFigure copy() {
     return new StickFigure(
                   size,
