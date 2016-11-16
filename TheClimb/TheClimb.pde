@@ -8,7 +8,7 @@ void setup() {
   stroke(0);
   fill(0);
 
-  background = loadImage(sketchPath("background.png"));
+  background = loadImage("background.png");
   stickFigure = new StickFigure();
 }
 

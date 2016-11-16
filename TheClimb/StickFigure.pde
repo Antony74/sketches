@@ -18,7 +18,8 @@ class Vertex {
   }
 
   void normalize(float size) {
-    pv = PVector.sub(pv, parent.pv).setMag(size);
+    pv = PVector.sub(pv, parent.pv);
+    pv.setMag(size);
     pv.add(parent.pv);
   }
 
@@ -225,7 +226,7 @@ class StickFigure {
     vertices.get(PELVIS).draw();
 
     PVector center = PVector.div( PVector.add( PVector.mult(neck(), 1), PVector.mult(head(), 2) ), 3);
-    float radius = neck().dist(head()) * 0.5;
+    float radius = dist(head().x, head().y, neck().x, neck().y) * 0.5;
 
     pushStyle();
     ellipseMode(RADIUS);
