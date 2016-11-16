@@ -1,5 +1,7 @@
 
+Poses poses = new Poses();
 StickFigure stickFigure;
+StickFigure onionSkin;
 PImage background;
 
 void setup() {
@@ -9,7 +11,8 @@ void setup() {
   fill(0);
 
   background = loadImage("background.png");
-  stickFigure = new StickFigure();
+
+  setCurrentPose(poses.walk.size() - 1);
 }
 
 void draw() {
@@ -38,5 +41,16 @@ void keyPressed() {
   case 'p':
     stickFigure.print();
     break;
+  }
+}
+
+void setCurrentPose(int nPose) {
+
+  if (nPose < poses.walk.size()) {
+    stickFigure = poses.walk.get(nPose);
+  }
+
+  if (nPose < poses.walk.size() - 1) {
+    onionSkin = poses.walk.get(nPose - 1);
   }
 }

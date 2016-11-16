@@ -71,7 +71,7 @@ class Vertex {
 //
 class StickFigure {
   
-  float size = 60;
+  float size;
   float pointSize = 10;
   int currentDrag = -1;
 
@@ -104,9 +104,10 @@ class StickFigure {
   PVector leftHand()   { return vertices.get(LEFT_HAND).pv;   }
   PVector rightHand()  { return vertices.get(RIGHT_HAND).pv;  }
   
-  StickFigure() {
+  StickFigure(float _size) {
+    size = _size;
     reset();
-  }
+}
   
   StickFigure(
           float _size,
@@ -139,40 +140,6 @@ class StickFigure {
     rightHand().set(rightHand);
   }
 
-  void printlnWithComment(String line, String comment) {
-
-    while (line.length() < 40) {
-      line = line + " ";
-    }
-    
-    println(line + "// " + comment);
-  }
-  
-  void printVector(PVector pv, String lineEnding, String comment) {
-    String line = "    new PVector(" + pv.x + ", " + pv.y + ")" + lineEnding;
-    printlnWithComment(line, comment);
-  }
-  
-  void print() {
-    println("new StickFigure(");
-    printlnWithComment("    " + size + ",", "Size");
-
-    printVector(pelvis(),     ",",  "Pelvis");
-    printVector(leftKnee(),   ",",  "Left knee");
-    printVector(rightKnee(),  ",",  "Right knee");
-    printVector(leftFoot(),   ",",  "Left foot");
-    printVector(rightFoot(),  ",",  "Right foot");
-    printVector(chest(),      ",",  "Chest");
-    printVector(neck(),       ",",  "Neck");
-    printVector(head(),       ",",  "Head");
-    printVector(leftElbow(),  ",",  "Left elbow");
-    printVector(rightElbow(), ",",  "Right elbow");
-    printVector(leftHand(),   ",",  "Left hand");
-    printVector(rightHand(),  ");", "Right hand");
-
-    println("");
-}
-  
   void reset() {
 
     vertices = new ArrayList<Vertex>();
@@ -215,7 +182,7 @@ class StickFigure {
     rightHand().rotate(-EIGHTH_PI);
     
     vertices.get(PELVIS).relativeToAbsolute();
-}
+  }
 
   void addChild(int nVertex, int nParent) {
     vertices.get(nParent).addChild(vertices.get(nVertex));
@@ -289,6 +256,57 @@ class StickFigure {
         v.rotate(v.parent.pv, angleAfter - angleBefore, true);
       }
     }
+  }
+
+  StickFigure copy() {
+    return new StickFigure(
+                  size,
+                  pelvis(),
+                  leftKnee(),
+                  rightKnee(),
+                  leftFoot(),
+                  rightFoot(),
+                  chest(),
+                  neck(),
+                  head(),
+                  leftElbow(),
+                  rightElbow(),
+                  leftHand(),
+                  rightHand());
+  }
+
+  void printlnWithComment(String line, String comment) {
+
+    while (line.length() < 40) {
+      line = line + " ";
+    }
+    
+    println(line + "// " + comment);
+  }
+  
+  void printVector(PVector pv, String lineEnding, String comment) {
+    String line = "    new PVector(" + pv.x + ", " + pv.y + ")" + lineEnding;
+    printlnWithComment(line, comment);
+  }
+  
+  void print() {
+    println("new StickFigure(");
+    printlnWithComment("    " + size + ",", "Size");
+
+    printVector(pelvis(),     ",",  "Pelvis");
+    printVector(leftKnee(),   ",",  "Left knee");
+    printVector(rightKnee(),  ",",  "Right knee");
+    printVector(leftFoot(),   ",",  "Left foot");
+    printVector(rightFoot(),  ",",  "Right foot");
+    printVector(chest(),      ",",  "Chest");
+    printVector(neck(),       ",",  "Neck");
+    printVector(head(),       ",",  "Head");
+    printVector(leftElbow(),  ",",  "Left elbow");
+    printVector(rightElbow(), ",",  "Right elbow");
+    printVector(leftHand(),   ",",  "Left hand");
+    printVector(rightHand(),  ");", "Right hand");
+
+    println("");
   }
 
 };
