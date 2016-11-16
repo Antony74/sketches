@@ -107,6 +107,71 @@ class StickFigure {
     reset();
   }
   
+  StickFigure(
+          float _size,
+          PVector pelvis,
+          PVector leftKnee,
+          PVector rightKnee,
+          PVector leftFoot,
+          PVector rightFoot,
+          PVector chest,
+          PVector neck,
+          PVector head,
+          PVector leftElbow,
+          PVector rightElbow,
+          PVector leftHand,
+          PVector rightHand) {
+
+    reset();
+    size = _size;
+    pelvis().set(pelvis);
+    leftKnee().set(leftKnee);
+    rightKnee().set(rightKnee);
+    leftFoot().set(leftFoot);
+    rightFoot().set(rightFoot);
+    chest().set(chest);
+    neck().set(neck);
+    head().set(head);
+    leftElbow().set(leftElbow);
+    rightElbow().set(rightElbow);
+    leftHand().set(leftHand);
+    rightHand().set(rightHand);
+  }
+
+  void printlnWithComment(String line, String comment) {
+
+    while (line.length() < 40) {
+      line = line + " ";
+    }
+    
+    println(line + "// " + comment);
+  }
+  
+  void printVector(PVector pv, String lineEnding, String comment) {
+    String line = "    new PVector(" + pv.x + ", " + pv.y + ")" + lineEnding;
+    printlnWithComment(line, comment);
+  }
+  
+  void print() {
+    println("new StickFigure(");
+    printlnWithComment("    " + size + ",", "Size");
+
+    printVector(pelvis(),     ",",  "Pelvis");
+    printVector(leftKnee(),   ",",  "Left knee");
+    printVector(rightKnee(),  ",",  "Right knee");
+    printVector(leftFoot(),   ",",  "Left foot");
+    printVector(rightFoot(),  ",",  "Right foot");
+    printVector(chest(),      ",",  "Chest");
+    printVector(neck(),       ",",  "Neck");
+    printVector(head(),       ",",  "Head");
+    printVector(leftElbow(),  ",",  "Left elbow");
+    printVector(rightElbow(), ",",  "Right elbow");
+    printVector(leftHand(),   ",",  "Left hand");
+    printVector(rightHand(),  ");", "Right hand");
+
+    println("");
+}
+  
   void reset() {
 
     vertices = new ArrayList<Vertex>();

@@ -29,3 +29,14 @@ void mouseReleased() {
 void mouseDragged() {
   stickFigure.mouseDragged();
 }
+
+void keyPressed() {
+
+  char key = Character.toLowerCase((char)keyCode);
+
+  switch(key) {
+  case 'p':
+    stickFigure.print();
+    break;
+  }
+}
