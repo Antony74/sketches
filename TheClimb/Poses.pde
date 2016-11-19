@@ -4,7 +4,9 @@ class Poses {
   
   Poses() {
 
-    walk.add(new StickFigure(
+    ArrayList<StickFigure> sequence = walk;
+    
+    sequence.add(new StickFigure(
         50.0,                               // Size
         new PVector(99.0, 360.0),           // Pelvis
         new PVector(89.785576, 409.14362),  // Left knee
@@ -19,7 +21,7 @@ class Poses {
         new PVector(68.11563, 353.08893),   // Left hand
         new PVector(131.19186, 352.64478)));// Right hand
   
-    walk.add(new StickFigure(
+    sequence.add(new StickFigure(
         50.0,                               // Size
         new PVector(104.0, 361.0),          // Pelvis
         new PVector(94.785576, 410.14362),  // Left knee
@@ -34,7 +36,7 @@ class Poses {
         new PVector(73.11563, 354.08893),   // Left hand
         new PVector(136.19186, 353.64478)));// Right hand
 
-    walk.add(new StickFigure(
+    sequence.add(new StickFigure(
         50.0,                               // Size
         new PVector(111.0, 362.0),          // Pelvis
         new PVector(101.785576, 411.14362), // Left knee
@@ -49,7 +51,7 @@ class Poses {
         new PVector(80.11563, 355.08893),   // Left hand
         new PVector(143.19186, 354.64478)));// Right hand
 
-    walk.add(new StickFigure(
+    sequence.add(new StickFigure(
         50.0,                               // Size
         new PVector(124.0, 363.0),          // Pelvis
         new PVector(121.43926, 412.9344),   // Left knee
@@ -64,7 +66,7 @@ class Poses {
         new PVector(93.11563, 356.08893),   // Left hand
         new PVector(156.19186, 355.64478)));// Right hand
 
-    walk.add(new StickFigure(
+    sequence.add(new StickFigure(
         50.0,                               // Size
         new PVector(136.0, 362.0),          // Pelvis
         new PVector(143.68535, 411.40582),  // Left knee
@@ -79,7 +81,7 @@ class Poses {
         new PVector(105.11562, 355.08887),  // Left hand
         new PVector(168.19191, 354.64474)));// Right hand
 
-    walk.add(new StickFigure(
+    sequence.add(new StickFigure(
         50.0,                               // Size
         new PVector(136.0, 362.0),          // Pelvis
         new PVector(154.72314, 408.3621),   // Left knee
@@ -94,7 +96,7 @@ class Poses {
         new PVector(105.11562, 355.08887),  // Left hand
         new PVector(168.19191, 354.64474)));// Right hand
 
-    walk.add(new StickFigure(
+    sequence.add(new StickFigure(
         50.0,                               // Size
         new PVector(145.0, 363.0),          // Pelvis
         new PVector(138.0902, 412.52023),   // Left knee
@@ -111,13 +113,3 @@ class Poses {
     }
 
 };
-
-StickFigure createPose(String sName) {
-
-  if (sName.equals("walk1")) {
-    return null;
-  } else {
-    println("Pose " + sName + " not found");
-    return null;
-  }
-}

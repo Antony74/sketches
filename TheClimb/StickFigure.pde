@@ -288,7 +288,7 @@ class StickFigure {
 
   void printlnWithComment(String line, String comment) {
 
-    while (line.length() < 40) {
+    while (line.length() < 41) {
       line = line + " ";
     }
     
@@ -301,7 +301,7 @@ class StickFigure {
   }
   
   void print() {
-    println("new StickFigure(");
+    println("sequence.add(new StickFigure(");
     printlnWithComment("    " + size + ",", "Size");
 
     printVector(pelvis(),     ",",  "Pelvis");
@@ -315,7 +315,7 @@ class StickFigure {
     printVector(leftElbow(),  ",",  "Left elbow");
     printVector(rightElbow(), ",",  "Right elbow");
     printVector(leftHand(),   ",",  "Left hand");
-    printVector(rightHand(),  ");", "Right hand");
+    printVector(rightHand(),  "));", "Right hand");
 
     println("");
   }
