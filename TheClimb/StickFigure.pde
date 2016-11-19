@@ -46,7 +46,6 @@ class Vertex {
       line(pv.x, pv.y, child.pv.x, child.pv.y);
       child.draw();
     }
-    
   }
 
   void rotate(PVector pivot, float angle, boolean bSkip) {
@@ -199,6 +198,14 @@ class StickFigure {
     ellipseMode(RADIUS);
     ellipse(center.x, center.y, radius, radius);
     popStyle();
+
+    // Use this kind of trick if you need to be able to tell one limb from the other
+    if (alpha(g.strokeColor) == 255) {
+      pushStyle();
+      stroke(0, 255, 255);
+      vertices.get(LEFT_KNEE).draw();
+      popStyle();
+    }
 }
 
   void drawPoints() {

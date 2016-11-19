@@ -29,7 +29,7 @@ void draw() {
   if (bAnimate == true) {
     stroke(0, 255);
     fill(0, 255);
-    fig1.draw(frameCount % 70);
+    fig1.draw(frameCount % (sequence.size() * 10));
 } else {
 
     if (onionSkin != null) {
