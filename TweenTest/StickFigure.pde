@@ -146,33 +146,33 @@ class StickFigure {
   
   StickFigure(
           float _size,
-          PVector pelvis,
-          PVector leftKnee,
-          PVector rightKnee,
-          PVector leftFoot,
-          PVector rightFoot,
-          PVector chest,
-          PVector neck,
-          PVector head,
-          PVector leftElbow,
-          PVector rightElbow,
-          PVector leftHand,
-          PVector rightHand) {
+          PVector pelvis,     float h1,
+          PVector leftKnee,   float h2,
+          PVector rightKnee,  float h3,
+          PVector leftFoot,   float h4,
+          PVector rightFoot,  float h5,
+          PVector chest,      float h6,
+          PVector neck,       float h7,
+          PVector head,       float h8,
+          PVector leftElbow,  float h9,
+          PVector rightElbow, float h10,
+          PVector leftHand,   float h11,
+          PVector rightHand,  float h12) {
 
     reset();
     size = _size;
-    pelvis().set(pelvis);
-    leftKnee().set(leftKnee);
-    rightKnee().set(rightKnee);
-    leftFoot().set(leftFoot);
-    rightFoot().set(rightFoot);
-    chest().set(chest);
-    neck().set(neck);
-    head().set(head);
-    leftElbow().set(leftElbow);
-    rightElbow().set(rightElbow);
-    leftHand().set(leftHand);
-    rightHand().set(rightHand);
+    pelvis().set(pelvis);         vertices.get(PELVIS).heading      = h1;
+    leftKnee().set(leftKnee);     vertices.get(LEFT_KNEE).heading   = h2;
+    rightKnee().set(rightKnee);   vertices.get(RIGHT_KNEE).heading  = h3;
+    leftFoot().set(leftFoot);     vertices.get(LEFT_FOOT).heading   = h4;
+    rightFoot().set(rightFoot);   vertices.get(RIGHT_FOOT).heading  = h5;
+    chest().set(chest);           vertices.get(CHEST).heading       = h6;
+    neck().set(neck);             vertices.get(NECK).heading        = h7;
+    head().set(head);             vertices.get(HEAD).heading        = h8;
+    leftElbow().set(leftElbow);   vertices.get(LEFT_ELBOW).heading  = h9;
+    rightElbow().set(rightElbow); vertices.get(RIGHT_ELBOW).heading = h10;
+    leftHand().set(leftHand);     vertices.get(LEFT_HAND).heading   = h11;
+    rightHand().set(rightHand);   vertices.get(RIGHT_HAND).heading  = h12;
   }
 
   void reset() {
@@ -256,7 +256,6 @@ class StickFigure {
     pushStyle();
     rectMode(RADIUS);
     noStroke();
-    fill(255,0,0,128);
     
     for (int n = 0; n < VERTEX_COUNT; ++n) {
       drawPoint(vertices.get(n).pv);
@@ -341,20 +340,21 @@ class StickFigure {
   }
 
   StickFigure copy() {
+    
     return new StickFigure(
                   size,
-                  pelvis(),
-                  leftKnee(),
-                  rightKnee(),
-                  leftFoot(),
-                  rightFoot(),
-                  chest(),
-                  neck(),
-                  head(),
-                  leftElbow(),
-                  rightElbow(),
-                  leftHand(),
-                  rightHand());
+                  pelvis(),     vertices.get(PELVIS).heading,
+                  leftKnee(),   vertices.get(LEFT_KNEE).heading,
+                  rightKnee(),  vertices.get(RIGHT_KNEE).heading,
+                  leftFoot(),   vertices.get(LEFT_FOOT).heading,
+                  rightFoot(),  vertices.get(RIGHT_FOOT).heading,
+                  chest(),      vertices.get(CHEST).heading,
+                  neck(),       vertices.get(NECK).heading,
+                  head(),       vertices.get(HEAD).heading,
+                  leftElbow(),  vertices.get(LEFT_ELBOW).heading,
+                  rightElbow(), vertices.get(RIGHT_ELBOW).heading,
+                  leftHand(),   vertices.get(LEFT_HAND).heading,
+                  rightHand(),  vertices.get(RIGHT_HAND).heading); 
   }
 
   void printlnWithComment(String line, String comment) {
