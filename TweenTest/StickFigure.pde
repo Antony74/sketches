@@ -64,6 +64,7 @@ class Vertex {
   }
 
   void tween(float t, Vertex parentA, Vertex parentB) {
+
     if (children.size() != parentA.children.size() || children.size() != parentB.children.size()) {
       println("Can't tween, trees differ");
       return;
@@ -74,14 +75,30 @@ class Vertex {
       Vertex b = parentB.children.get(n);
       Vertex c = children.get(n);
       
-      float headingA = a.pv.heading();
-      float headingB = b.pv.heading();
-      float headingC = c.pv.heading();
+      float headingA = PVector.sub(a.pv, parentA.pv).heading();
+      float headingB = PVector.sub(b.pv, parentB.pv).heading();
+      float headingC = PVector.sub(c.pv, pv).heading();
+
+      // headingB - headingA should always be small (less than PI) in real tweening situations, and that allows us to pick the correct solution
+      // the demo ain't gonna work without additional information, though.
 
       float heading = map(t, 0, 1, headingA, headingB);
       
-      c.rotate(pv, heading - headingC, false);
+      float angle = heading - headingC;
+
+      // There are two solutions
+      if (angle > PI) {
+        angle -= PI;
+      } else if (angle < -PI) {
+        
+      }
+
+      println(angle);
+     
+      c.rotate(pv, angle, false);
+//      c.tween(t, a, b);
     }
+
   }
 
 };
@@ -221,12 +238,14 @@ class StickFigure {
     popStyle();
 
     // Use this kind of trick if you need to be able to tell one limb from the other
+ /*
     if (alpha(g.strokeColor) == 255) {
       pushStyle();
       stroke(0, 255, 255);
       vertices.get(LEFT_KNEE).draw();
       popStyle();
     }
+*/
 }
 
   void drawPoints() {
@@ -247,23 +266,30 @@ class StickFigure {
     rect(pv.x, pv.y, pointSize, pointSize);
   }
 
-  void mousePressed() {
+  boolean mousePressed() {
     for (int n = 0; n < VERTEX_COUNT; ++n) {
 
       PVector pv = vertices.get(n).pv;
       
       if ( (abs(pv.x - mouseX) <= pointSize) && abs(pv.y - mouseY) <= pointSize) {
         currentDrag = n;
-        break;
+        return true;
       }
+    }
+    
+    return false;
+  }
+
+  boolean mouseReleased() {
+    if (currentDrag == -1) {
+      return false;
+    } else {
+      currentDrag = -1;
+      return true;
     }
   }
 
-  void mouseReleased() {
-    currentDrag = -1;
-  }
-
-  void mouseDragged() {
+  boolean mouseDragged() {
 
     if (currentDrag >= 0) {
 
@@ -283,6 +309,10 @@ class StickFigure {
         
         v.rotate(v.parent.pv, angleAfter - angleBefore, true);
       }
+      
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -298,13 +328,13 @@ class StickFigure {
   }
 
   void tween(float t, StickFigure a, StickFigure b) {
-    StickFigure c = new StickFigure(map(t, 0, 1, a.size, b.size));
 
     float x = map(t, 0, 1, a.pelvis().x, b.pelvis().x);
     float y = map(t, 0, 1, a.pelvis().y, b.pelvis().y);
-    pelvis().set(x, y);
+    moveTo(x, y);
 
-    c.vertices.get(PELVIS).tween(t, a.vertices.get(PELVIS), b.vertices.get(PELVIS));
+    vertices.get(PELVIS).tween(t, a.vertices.get(PELVIS), b.vertices.get(PELVIS));
+
   }
 
   StickFigure copy() {

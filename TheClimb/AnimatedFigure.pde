@@ -20,7 +20,7 @@ class AnimatedFigure {
   void resetFig1() {
     keyFrames.clear();
 
-    println(poses.walk.size());
+//    println(poses.walk.size());
     
     for (int n = 0; n < poses.walk.size(); ++n) {
       keyFrames.add(new KeyFrame( n * 10, poses.walk.get(n), 100 + (n * 10), 360));
