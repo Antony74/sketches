@@ -1,10 +1,15 @@
 
 class Vertex {
 
+  // Generic tree-vertex member variables
   int index;
   Vertex parent;
   ArrayList<Vertex> children;
+
+  // StickFigure specific member variables
   PVector pv;
+  float heading; // We need to be able to track the heading in order to be able to tween in the correct direction
+  // (bisecting an angle has two solutions)
 
   Vertex(int _index) {
     index = _index;
@@ -50,6 +55,15 @@ class Vertex {
 
   void rotate(PVector pivot, float angle, boolean bSkip) {
 
+    // Update heading - to do this the angle needs to be expressed within the range -PI to PI
+    angle = angle - TWO_PI * floor( angle / TWO_PI );      
+    
+    if (angle > PI)
+      angle -= TWO_PI;
+    
+    heading += angle;
+    // Done updating heading
+    
     if (bSkip == false) {
       pv = PVector.sub(pv, pivot);
       pv.rotate(angle);
@@ -75,16 +89,12 @@ class Vertex {
       Vertex b = parentB.children.get(n);
       Vertex c = children.get(n);
       
-      float headingA = PVector.sub(a.pv, parentA.pv).heading();
-      float headingB = PVector.sub(b.pv, parentB.pv).heading();
-      float headingC = PVector.sub(c.pv, pv).heading();
-
-      float heading = map(t, 0, 1, headingA, headingB);
+      float heading = map(t, 0, 1, a.heading, b.heading);
       
-      float angle = heading - headingC;
+      float angle = heading - c.heading;
     
       c.rotate(pv, angle, false);
-//      c.tween(t, a, b);
+      c.tween(t, a, b);
     }
 
   }
@@ -207,6 +217,11 @@ class StickFigure {
     rightHand().rotate(-EIGHTH_PI);
     
     vertices.get(PELVIS).relativeToAbsolute();
+    
+    for (int n = 0; n < vertices.size(); ++n) {
+      Vertex v = vertices.get(n);
+      v.heading = v.pv.heading();
+    }
   }
 
   void addChild(int nVertex, int nParent) {
