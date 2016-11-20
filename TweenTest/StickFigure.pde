@@ -79,22 +79,10 @@ class Vertex {
       float headingB = PVector.sub(b.pv, parentB.pv).heading();
       float headingC = PVector.sub(c.pv, pv).heading();
 
-      // headingB - headingA should always be small (less than PI) in real tweening situations, and that allows us to pick the correct solution
-      // the demo ain't gonna work without additional information, though.
-
       float heading = map(t, 0, 1, headingA, headingB);
       
       float angle = heading - headingC;
-
-      // There are two solutions
-      if (angle > PI) {
-        angle -= PI;
-      } else if (angle < -PI) {
-        
-      }
-
-      println(angle);
-     
+    
       c.rotate(pv, angle, false);
 //      c.tween(t, a, b);
     }
