@@ -1,11 +1,11 @@
 
 class KeyFrame {
   int nFrame;
-  StickFigure pose;
+  StickFigure_old pose;
   float x;
   float y;
 
-  KeyFrame(int _nFrame, StickFigure _pose, float _x, float _y) {
+  KeyFrame(int _nFrame, StickFigure_old _pose, float _x, float _y) {
     nFrame = _nFrame;
     pose = _pose;
     x = _x;
@@ -35,7 +35,7 @@ class AnimatedFigure {
       KeyFrame keyFrame = keyFrames.get(n);
       if (nFrame < keyFrame.nFrame || n == keyFrames.size() - 1) {
 
-        StickFigure fig = keyFrame.pose.copy();
+        StickFigure_old fig = keyFrame.pose.copy();
         fig.moveTo(keyFrame.x, keyFrame.y);
         fig.draw();
         break;

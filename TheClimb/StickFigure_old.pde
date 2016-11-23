@@ -1,18 +1,18 @@
 
-class Vertex {
+class Vertex_old {
 
   int index;
-  Vertex parent;
-  ArrayList<Vertex> children;
+  Vertex_old parent;
+  ArrayList<Vertex_old> children;
   PVector pv;
 
-  Vertex(int _index) {
+  Vertex_old(int _index) {
     index = _index;
     pv = new PVector();
-    children = new ArrayList<Vertex>();
+    children = new ArrayList<Vertex_old>();
   }
 
-  void addChild(Vertex child) {
+  void addChild(Vertex_old child) {
     child.parent = this;
     children.add(child);
   }
@@ -32,7 +32,7 @@ class Vertex {
 
   void relativeToAbsolute() {
     for (int n = 0; n < children.size(); ++n) {
-      Vertex child = children.get(n);
+      Vertex_old child = children.get(n);
       child.pv.add(pv);
       child.relativeToAbsolute();
     }
@@ -42,7 +42,7 @@ class Vertex {
 
     for (int n = 0; n < children.size(); ++n) {
 
-      Vertex child = children.get(n);
+      Vertex_old child = children.get(n);
       line(pv.x, pv.y, child.pv.x, child.pv.y);
       child.draw();
     }
@@ -58,21 +58,21 @@ class Vertex {
 
     for (int n = 0; n < children.size(); ++n) {
 
-      Vertex child = children.get(n);
+      Vertex_old child = children.get(n);
       child.rotate(pivot, angle, false);
     }
   }
 
-  void tween(float t, Vertex parentA, Vertex parentB) {
+  void tween(float t, Vertex_old parentA, Vertex_old parentB) {
     if (children.size() != parentA.children.size() || children.size() != parentB.children.size()) {
       println("Can't tween, trees differ");
       return;
     }
 
     for (int n = 0; n < children.size(); ++n) {
-      Vertex a = parentA.children.get(n);
-      Vertex b = parentB.children.get(n);
-      Vertex c = children.get(n);
+      Vertex_old a = parentA.children.get(n);
+      Vertex_old b = parentB.children.get(n);
+      Vertex_old c = children.get(n);
       
       float headingA = a.pv.heading();
       float headingB = b.pv.heading();
@@ -87,15 +87,15 @@ class Vertex {
 };
 
 //
-// StickFigure
+// StickFigure_old
 //
-class StickFigure {
+class StickFigure_old {
   
   float size;
   float pointSize = 10;
   int currentDrag = -1;
 
-  ArrayList<Vertex> vertices;
+  ArrayList<Vertex_old> vertices;
 
   static final int PELVIS = 0;
   static final int LEFT_KNEE = 1;
@@ -124,12 +124,12 @@ class StickFigure {
   PVector leftHand()   { return vertices.get(LEFT_HAND).pv;   }
   PVector rightHand()  { return vertices.get(RIGHT_HAND).pv;  }
   
-  StickFigure(float _size) {
+  StickFigure_old(float _size) {
     size = _size;
     reset();
 }
   
-  StickFigure(
+  StickFigure_old(
           float _size,
           PVector pelvis,
           PVector leftKnee,
@@ -162,10 +162,10 @@ class StickFigure {
 
   void reset() {
 
-    vertices = new ArrayList<Vertex>();
+    vertices = new ArrayList<Vertex_old>();
     
     for (int n = 0; n < VERTEX_COUNT; ++n) {
-      vertices.add(new Vertex(n));
+      vertices.add(new Vertex_old(n));
     }
 
     addChild(LEFT_KNEE, PELVIS);
@@ -275,7 +275,7 @@ class StickFigure {
           vertices.get(n).pv.add(delta);
         }
       } else {
-        Vertex v = vertices.get(currentDrag);
+        Vertex_old v = vertices.get(currentDrag);
         float angleBefore = v.getAngle();
         v.pv.set(mouseX, mouseY);
         v.normalize(size);
@@ -297,8 +297,8 @@ class StickFigure {
     }
   }
 
-  void tween(float t, StickFigure a, StickFigure b) {
-    StickFigure c = new StickFigure(map(t, 0, 1, a.size, b.size));
+  void tween(float t, StickFigure_old a, StickFigure_old b) {
+    StickFigure_old c = new StickFigure_old(map(t, 0, 1, a.size, b.size));
 
     float x = map(t, 0, 1, a.pelvis().x, b.pelvis().x);
     float y = map(t, 0, 1, a.pelvis().y, b.pelvis().y);
@@ -307,8 +307,8 @@ class StickFigure {
     c.vertices.get(PELVIS).tween(t, a.vertices.get(PELVIS), b.vertices.get(PELVIS));
   }
 
-  StickFigure copy() {
-    return new StickFigure(
+  StickFigure_old copy() {
+    return new StickFigure_old(
                   size,
                   pelvis(),
                   leftKnee(),

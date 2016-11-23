@@ -1,13 +1,13 @@
 
 PImage background;
 Poses poses;
-ArrayList<StickFigure> sequence;
+ArrayList<StickFigure_old> sequence;
 AnimatedFigure fig1;
 boolean bAnimate = true;
 
 int nCurrentPose;
-StickFigure stickFigure;
-StickFigure onionSkin;
+StickFigure_old stickFigure;
+StickFigure_old onionSkin;
 
 void setup() {
   size(800, 600);
