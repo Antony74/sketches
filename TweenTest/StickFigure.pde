@@ -211,7 +211,6 @@ class StickFigure {
   StickFigure(
           float _size,
           PVector _pv,
-          float pelvisHeading,
           float leftKneeHeading,
           float rightKneeHeading,
           float leftFootHeading,
@@ -230,7 +229,6 @@ class StickFigure {
     
     pv = _pv;
     
-    pelvis().heading     = pelvisHeading;
     leftKnee().heading   = leftKneeHeading;
     rightKnee().heading  = rightKneeHeading;
     leftFoot().heading   = leftFootHeading;
@@ -378,7 +376,6 @@ class StickFigure {
     return new StickFigure(
                   size,
                   pv,
-                  vertices.get(PELVIS).heading,
                   vertices.get(LEFT_KNEE).heading,
                   vertices.get(RIGHT_KNEE).heading,
                   vertices.get(LEFT_FOOT).heading,
