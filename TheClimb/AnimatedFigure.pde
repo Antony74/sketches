@@ -23,7 +23,7 @@ class AnimatedFigure {
 //    println(poses.walk.size());
     
     for (int n = 0; n < poses.walk.size(); ++n) {
-      keyFrames.add(new KeyFrame( n * 10, poses.walk.get(n), 100 + (n * 10), 360));
+      keyFrames.add(new KeyFrame( n * 10, poses.walk_old.get(n), 100 + (n * 10), 360));
     }
     
   }

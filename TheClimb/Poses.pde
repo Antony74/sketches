@@ -1,12 +1,13 @@
 
 class Poses {
-  ArrayList<StickFigure_old> walk = new ArrayList<StickFigure_old>();
+  ArrayList<StickFigure_old> walk_old = new ArrayList<StickFigure_old>();
+  ArrayList<StickFigure> walk = new ArrayList<StickFigure>();
   
   Poses() {
 
-    ArrayList<StickFigure_old> sequence = walk;
+    ArrayList<StickFigure_old> seq = walk_old;
     
-    sequence.add(new StickFigure_old(
+    seq.add(new StickFigure_old(
         50.0,                               // Size
         new PVector(99.0, 360.0),           // Pelvis
         new PVector(89.785576, 409.14362),  // Left knee
@@ -21,7 +22,7 @@ class Poses {
         new PVector(68.11563, 353.08893),   // Left hand
         new PVector(131.19186, 352.64478)));// Right hand
   
-    sequence.add(new StickFigure_old(
+    seq.add(new StickFigure_old(
         50.0,                               // Size
         new PVector(104.0, 361.0),          // Pelvis
         new PVector(94.785576, 410.14362),  // Left knee
@@ -36,7 +37,7 @@ class Poses {
         new PVector(73.11563, 354.08893),   // Left hand
         new PVector(136.19186, 353.64478)));// Right hand
 
-    sequence.add(new StickFigure_old(
+    seq.add(new StickFigure_old(
         50.0,                               // Size
         new PVector(111.0, 362.0),          // Pelvis
         new PVector(101.785576, 411.14362), // Left knee
@@ -51,7 +52,7 @@ class Poses {
         new PVector(80.11563, 355.08893),   // Left hand
         new PVector(143.19186, 354.64478)));// Right hand
 
-    sequence.add(new StickFigure_old(
+    seq.add(new StickFigure_old(
         50.0,                               // Size
         new PVector(124.0, 363.0),          // Pelvis
         new PVector(121.43926, 412.9344),   // Left knee
@@ -66,7 +67,7 @@ class Poses {
         new PVector(93.11563, 356.08893),   // Left hand
         new PVector(156.19186, 355.64478)));// Right hand
 
-    sequence.add(new StickFigure_old(
+    seq.add(new StickFigure_old(
         50.0,                               // Size
         new PVector(136.0, 362.0),          // Pelvis
         new PVector(143.68535, 411.40582),  // Left knee
@@ -81,7 +82,7 @@ class Poses {
         new PVector(105.11562, 355.08887),  // Left hand
         new PVector(168.19191, 354.64474)));// Right hand
 
-    sequence.add(new StickFigure_old(
+    seq.add(new StickFigure_old(
         50.0,                               // Size
         new PVector(136.0, 362.0),          // Pelvis
         new PVector(154.72314, 408.3621),   // Left knee
@@ -96,7 +97,7 @@ class Poses {
         new PVector(105.11562, 355.08887),  // Left hand
         new PVector(168.19191, 354.64474)));// Right hand
 
-    sequence.add(new StickFigure_old(
+    seq.add(new StickFigure_old(
         50.0,                                // Size
         new PVector(147.0, 363.0),           // Pelvis
         new PVector(177.89108, 402.31592),   // Left knee
@@ -111,7 +112,7 @@ class Poses {
         new PVector(116.11562, 356.08887),   // Left hand
         new PVector(179.19191, 355.64474))); // Right hand
 
-    sequence.add(new StickFigure_old(
+    seq.add(new StickFigure_old(
         50.0,                                // Size
         new PVector(164.0, 363.0),           // Pelvis
         new PVector(202.41107, 395.00922),   // Left knee
@@ -126,7 +127,7 @@ class Poses {
         new PVector(133.11563, 356.08887),   // Left hand
         new PVector(196.19191, 355.64474))); // Right hand
     
-    sequence.add(new StickFigure_old(
+    seq.add(new StickFigure_old(
         50.0,                                // Size
         new PVector(174.0, 364.0),           // Pelvis
         new PVector(205.23476, 403.04346),   // Left knee
@@ -141,7 +142,7 @@ class Poses {
         new PVector(143.11563, 357.08887),   // Left hand
         new PVector(206.19191, 356.64474))); // Right hand
 
-    sequence.add(new StickFigure_old(
+    seq.add(new StickFigure_old(
         50.0,                                // Size
         new PVector(191.0, 365.0),           // Pelvis
         new PVector(215.43018, 408.6253),    // Left knee
@@ -155,6 +156,40 @@ class Poses {
         new PVector(216.31, 308.12073),      // Right elbow
         new PVector(160.11563, 358.08887),   // Left hand
         new PVector(223.19191, 357.64474))); // Right hand
+
+    // End of walk sequence
+
+    ArrayList<StickFigure> sequence = walk;
+
+    sequence.add(new StickFigure(
+        50.0,                                // Size
+        new PVector(99.0, 359.0),            // Position
+        -1.3843094,                          // Left knee
+        -1.8545908,                          // Right knee
+        -1.2047883,                          // Left foot
+        -1.5490602,                          // Right foot
+        -4.712389,                           // Chest
+        -4.712389,                           // Neck
+        -4.712389,                           // Head
+        -1.07145,                            // Left elbow
+        -2.098871,                           // Right elbow
+        -1.4641491,                          // Left hand
+        -1.7061719));                        // Right hand
+
+    sequence.add(new StickFigure(
+        50.0,                                // Size
+        new PVector(104.0, 361.0),           // Position
+        -1.3796121,                          // Left knee
+        -2.1401095,                          // Right knee
+        -1.200091,                           // Left foot
+        -1.5382018,                          // Right foot
+        -4.712389,                           // Chest
+        -4.712389,                           // Neck
+        -4.712389,                           // Head
+        -1.07145,                            // Left elbow
+        -2.098871,                           // Right elbow
+        -1.4641491,                          // Left hand
+        -1.7061719));                        // Right hand
 
     // End of walk sequence
   }

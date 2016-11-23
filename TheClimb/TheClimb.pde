@@ -1,12 +1,13 @@
 
 PImage background;
 Poses poses;
-ArrayList<StickFigure_old> sequence;
+ArrayList<StickFigure_old> sequence_old;
+ArrayList<StickFigure> sequence;
 AnimatedFigure fig1;
-boolean bAnimate = true;
+boolean bAnimate = false;
 
 int nCurrentPose;
-StickFigure_old stickFigure;
+StickFigure stickFigure;
 StickFigure_old onionSkin;
 
 void setup() {
@@ -16,7 +17,14 @@ void setup() {
   background = loadImage("background.png");
   poses = new Poses();
 
+  sequence_old = poses.walk_old;  // We set this to the sequence we're currently working on
   sequence = poses.walk;  // We set this to the sequence we're currently working on
+  
+  while (sequence.size() < sequence_old.size()) {
+    StickFigure prev = sequence.get(sequence.size() - 1);
+    sequence.add(prev);
+  }
+  
   setCurrentPose(sequence.size() - 1); // And we usually want to start with the last frame
 
   fig1 = new AnimatedFigure();
@@ -30,7 +38,7 @@ void draw() {
     stroke(0, 255);
     fill(0, 255);
     fig1.draw(frameCount % (sequence.size() * 10));
-} else {
+  } else {
 
     if (onionSkin != null) {
       stroke(0, 128);
@@ -105,13 +113,15 @@ void setCurrentPose(int nPose) {
   
   if (nPose >= 0 && nPose < sequence.size()) {
     stickFigure = sequence.get(nPose);
+    onionSkin   = sequence_old.get(nPose);
   } else {
     stickFigure = null;
   }
-
+/*
   if (nPose - 1 >= 0 && nPose - 1 < sequence.size()) {
     onionSkin = sequence.get(nPose - 1);
   } else {
     onionSkin = null;
   }
+*/
 }
