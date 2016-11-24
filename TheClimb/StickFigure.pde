@@ -166,15 +166,79 @@ class Vertex {
 };
 
 //
-// StickFigure
+// StickPuppet
 //
-class StickFigure {
-  
+class StickPuppet {
+
   float size;
   int currentDrag = -1;
 
   PVector pv;
   ArrayList<Vertex> vertices;
+
+  void drawPoints() {
+    
+    pushStyle();
+    rectMode(RADIUS);
+    noStroke();
+    fill(255,0,0,128);
+
+    vertices.get(0).drawPoints(pv);
+    
+    popStyle();
+  }
+
+  boolean mousePressed() {
+
+    currentDrag = vertices.get(0).hitTest(pv);
+
+    return (currentDrag != -1);
+  }
+
+  boolean mouseReleased() {
+    if (currentDrag == -1) {
+      return false;
+    } else {
+      currentDrag = -1;
+      return true;
+    }
+  }
+
+  boolean mouseDragged() {
+
+    if (currentDrag >= 0) {
+
+      if (currentDrag == 0) {
+        
+        pv.set(mouseX, mouseY);
+
+      } else {
+
+        vertices.get(0).mouseDragged(currentDrag, pv);
+      }
+      
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void tween(float t, StickFigure a, StickFigure b) {
+
+    float x = map(t, 0, 1, a.pv.x, b.pv.x);
+    float y = map(t, 0, 1, a.pv.y, b.pv.y);
+    pv.set(x, y);
+
+    vertices.get(0).tween(t, a.vertices.get(0), b.vertices.get(0));
+
+  }
+
+};
+
+//
+// StickFigure
+//
+class StickFigure extends StickPuppet {
 
   static final int PELVIS = 0;
   static final int LEFT_KNEE = 1;
@@ -315,63 +379,6 @@ class StickFigure {
 */
 }
 
-  void drawPoints() {
-    
-    pushStyle();
-    rectMode(RADIUS);
-    noStroke();
-    fill(255,0,0,128);
-
-    pelvis().drawPoints(pv);
-    
-    popStyle();
-  }
-
-  boolean mousePressed() {
-
-    currentDrag = pelvis().hitTest(pv);
-
-    return (currentDrag != -1);
-  }
-
-  boolean mouseReleased() {
-    if (currentDrag == -1) {
-      return false;
-    } else {
-      currentDrag = -1;
-      return true;
-    }
-  }
-
-  boolean mouseDragged() {
-
-    if (currentDrag >= 0) {
-
-      if (currentDrag == 0) {
-        
-        pv.set(mouseX, mouseY);
-
-      } else {
-
-        pelvis().mouseDragged(currentDrag, pv);
-      }
-      
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  void tween(float t, StickFigure a, StickFigure b) {
-
-    float x = map(t, 0, 1, a.pv.x, b.pv.x);
-    float y = map(t, 0, 1, a.pv.y, b.pv.y);
-    pv.set(x, y);
-
-    vertices.get(PELVIS).tween(t, a.vertices.get(PELVIS), b.vertices.get(PELVIS));
-
-  }
-
   StickFigure copy() {
     
     return new StickFigure(
@@ -428,20 +435,4 @@ class StickFigure {
     println("");
   }
 
-/*
-  StickFigure(
-          float _size,
-          PVector _pv,
-          float leftKneeHeading,
-          float rightKneeHeading,
-          float leftFootHeading,
-          float rightFootHeading,
-          float chestHeading,
-          float neckHeading,
-          float headHeading,
-          float leftElbowHeading,
-          float rightElbowHeading,
-          float leftHandHeading,
-          float rightHandHeading) {
-*/
 };
