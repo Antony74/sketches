@@ -1,11 +1,11 @@
 
 class KeyFrame {
   int nFrame;
-  StickFigure_old pose;
+  StickFigure pose;
   float x;
   float y;
 
-  KeyFrame(int _nFrame, StickFigure_old _pose, float _x, float _y) {
+  KeyFrame(int _nFrame, StickFigure _pose, float _x, float _y) {
     nFrame = _nFrame;
     pose = _pose;
     x = _x;
@@ -23,7 +23,7 @@ class AnimatedFigure {
 //    println(poses.walk.size());
     
     for (int n = 0; n < poses.walk.size(); ++n) {
-      keyFrames.add(new KeyFrame( n * 10, poses.walk_old.get(n), 100 + (n * 10), 360));
+      keyFrames.add(new KeyFrame( n * 10, poses.walk.get(n), 100 + (n * 10), 360));
     }
     
   }
@@ -35,8 +35,8 @@ class AnimatedFigure {
       KeyFrame keyFrame = keyFrames.get(n);
       if (nFrame < keyFrame.nFrame || n == keyFrames.size() - 1) {
 
-        StickFigure_old fig = keyFrame.pose.copy();
-        fig.moveTo(keyFrame.x, keyFrame.y);
+        StickFigure fig = keyFrame.pose.copy();
+        fig.pv.set(keyFrame.x, keyFrame.y);
         fig.draw();
         break;
       }
