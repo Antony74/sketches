@@ -160,36 +160,36 @@ class Poses {
     // End of walk sequence
 
     ArrayList<StickFigure> sequence = walk;
-
+    
     sequence.add(new StickFigure(
         50.0,                                // Size
-        new PVector(99.0, 359.0),            // Position
-        -1.3843094,                          // Left knee
-        -1.8545908,                          // Right knee
-        -1.2047883,                          // Left foot
-        -1.5490602,                          // Right foot
-        -4.712389,                           // Chest
-        -4.712389,                           // Neck
-        -4.712389,                           // Head
-        -1.07145,                            // Left elbow
-        -2.098871,                           // Right elbow
-        -1.4641491,                          // Left hand
-        -1.7061719));                        // Right hand
-
+        new PVector(99.0, 359.0),            // Pelvis position
+        -1.3843094,                          // Left knee (direction of pelvis)
+        -1.8545908,                          // Right knee (direction of pelvis)
+        -1.2047883,                          // Left foot (direction of left knee)
+        -1.5490602,                          // Right foot (direction of right knee)
+        -4.712389,                           // Chest (direction of pelvis)
+        -4.712389,                           // Neck (direction of chest)
+        -4.712389,                           // Head (direction of neck
+        -1.07145,                            // Left elbow (direction of neck)
+        -2.098871,                           // Right elbow (direction of neck)
+        -1.4641491,                          // Left hand (direction of left elbow)
+        -1.7061719));                        // Right hand (direction of right elbow)
+        
     sequence.add(new StickFigure(
         50.0,                                // Size
-        new PVector(104.0, 361.0),           // Position
-        -1.3796121,                          // Left knee
-        -2.1401095,                          // Right knee
-        -1.200091,                           // Left foot
-        -1.5382018,                          // Right foot
-        -4.712389,                           // Chest
-        -4.712389,                           // Neck
-        -4.712389,                           // Head
-        -1.07145,                            // Left elbow
-        -2.098871,                           // Right elbow
-        -1.4641491,                          // Left hand
-        -1.7061719));                        // Right hand
+        new PVector(104.0, 361.0),           // Pelvis position
+        -1.3796121,                          // Left knee (direction of pelvis)
+        -2.1401095,                          // Right knee (direction of pelvis)
+        -1.200091,                           // Left foot (direction of left knee)
+        -1.5382018,                          // Right foot (direction of right knee)
+        -4.712389,                           // Chest (direction of pelvis)
+        -4.712389,                           // Neck (direction of chest)
+        -4.712389,                           // Head (direction of neck
+        -1.07145,                            // Left elbow (direction of neck)
+        -2.098871,                           // Right elbow (direction of neck)
+        -1.4641491,                          // Left hand (direction of left elbow)
+        -1.7061719));                        // Right hand (direction of right elbow)
 
     // End of walk sequence
   }

@@ -419,18 +419,18 @@ class StickFigure extends StickPuppet {
   void print() {
     println("sequence.add(new StickFigure(");
     printlnWithComment("    " + size + ",", "Size");
-    printVector(pv,                  ",",   "Position");
-    printAngle(leftKnee().heading,   ",",   "Left knee");
-    printAngle(rightKnee().heading,  ",",   "Right knee");
-    printAngle(leftFoot().heading,   ",",   "Left foot");
-    printAngle(rightFoot().heading,  ",",   "Right foot");
-    printAngle(chest().heading,      ",",   "Chest");
-    printAngle(neck().heading,       ",",   "Neck");
-    printAngle(head().heading,       ",",   "Head");
-    printAngle(leftElbow().heading,  ",",   "Left elbow");
-    printAngle(rightElbow().heading, ",",   "Right elbow");
-    printAngle(leftHand().heading,   ",",   "Left hand");
-    printAngle(rightHand().heading,  "));", "Right hand");
+    printVector(pv,                  ",",   "Pelvis position");
+    printAngle(leftKnee().heading,   ",",   "Left knee (direction of pelvis)");
+    printAngle(rightKnee().heading,  ",",   "Right knee (direction of pelvis)");
+    printAngle(leftFoot().heading,   ",",   "Left foot (direction of left knee)");
+    printAngle(rightFoot().heading,  ",",   "Right foot (direction of right knee)");
+    printAngle(chest().heading,      ",",   "Chest (direction of pelvis)");
+    printAngle(neck().heading,       ",",   "Neck (direction of chest)");
+    printAngle(head().heading,       ",",   "Head (direction of neck");
+    printAngle(leftElbow().heading,  ",",   "Left elbow (direction of neck)");
+    printAngle(rightElbow().heading, ",",   "Right elbow (direction of neck)");
+    printAngle(leftHand().heading,   ",",   "Left hand (direction of left elbow)");
+    printAngle(rightHand().heading,  "));", "Right hand (direction of right elbow)");
 
     println("");
   }
