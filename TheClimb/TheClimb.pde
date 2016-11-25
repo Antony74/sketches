@@ -4,7 +4,8 @@ Poses poses;
 ArrayList<StickFigure> sequence;
 AnimatedFigure fig1;
 AnimatedFigure fig2;
-boolean bAnimate = true;
+boolean bWorkOnAnimation = false;
+boolean bRunAnimation = true;
 
 int nCurrentPose;
 StickFigure stickFigure;
@@ -17,7 +18,7 @@ void setup() {
   background = loadImage("background.png");
   poses = new Poses();
 
-  sequence = poses.walk;  // We set this to the sequence we're currently working on
+  sequence = poses.lift;  // We set this to the sequence we're currently working on
   
   setCurrentPose(sequence.size() - 1); // And we usually want to start with the last frame
 
@@ -31,14 +32,16 @@ void setup() {
 void draw() {
   image(background, 0, 0);
 
-  if (bAnimate == true) {
+  if (bRunAnimation == true) {
     stroke(0, 255);
     fill(0, 255);
 
-    int nFrame = frameCount % fig1.lastFrame();
+    int nFrame = frameCount % max(fig1.lastFrame(), fig2.lastFrame());
     fig1.draw(nFrame);
     fig2.draw(nFrame);
-  } else {
+  }
+  
+  if (bWorkOnAnimation) {
 
     if (onionSkin != null) {
       stroke(0, 128);
@@ -60,25 +63,25 @@ void draw() {
 }
 
 void mousePressed() {
-  if (bAnimate == false) {
+  if (bWorkOnAnimation) {
     stickFigure.mousePressed();
   }
 }
 
 void mouseReleased() {
-  if (bAnimate == false) {
+  if (bWorkOnAnimation) {
     stickFigure.mouseReleased();
   }
 }
 
 void mouseDragged() {
-  if (bAnimate == false) {
+  if (bWorkOnAnimation) {
     stickFigure.mouseDragged();
   }
 }
 
 void keyPressed() {
-  if (bAnimate == false) {
+  if (bWorkOnAnimation) {
     char key = Character.toLowerCase((char)keyCode);
   
     switch(key) {

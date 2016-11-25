@@ -30,7 +30,7 @@ class AnimatedFigure {
     int nFrameSpacing = 10;
     ArrayList<StickFigure> sequence = poses.walk;
 
-    for (int nWalkCycle = 0; nWalkCycle < 4; ++nWalkCycle) {
+    for (int nWalkCycle = 0; nWalkCycle < 5; ++nWalkCycle) {
  
       for (int n = 0; n < sequence.size(); ++n) {
         keyFrames.add(new KeyFrame(nFrame, sequence.get(n), x, 360));
@@ -48,6 +48,8 @@ class AnimatedFigure {
     int nFrame = 0;
     int nFrameSpacing = 8;
 
+    // Figure 2 walks in from left
+    
     ArrayList<StickFigure> sequence = poses.walkShort;
 
     for (int nWalkCycle = 0; nWalkCycle < 5; ++nWalkCycle) {
@@ -58,7 +60,28 @@ class AnimatedFigure {
         nFrame += nFrameSpacing;
       }
     }
-  }
+
+    // And just a little further
+    
+    for (int n = 0; n < 3; ++n) {
+      keyFrames.add(new KeyFrame(nFrame, sequence.get(n), x, 360));
+      x += speed;
+      nFrame += nFrameSpacing;
+    }
+
+    // Figure 2 lifts figure 1
+
+    nFrameSpacing = 20;
+
+    sequence = poses.lift;
+    
+    for (int n = 0; n < sequence.size(); ++n) {
+      StickFigure pose = sequence.get(n);
+      keyFrames.add(new KeyFrame(nFrame, pose, pose.pv.x, pose.pv.y));
+      nFrame += nFrameSpacing;
+    }
+
+}
   
   void draw(int nFrame) {
     
