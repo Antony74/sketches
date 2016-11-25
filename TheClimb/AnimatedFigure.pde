@@ -24,6 +24,8 @@ class AnimatedFigure {
   void resetFig1() {
     keyFrames.clear();
 
+    // Figure 1 walks in from left
+    
     float x = -150;
     float speed = 8;
     int nFrame = 0;
@@ -39,6 +41,18 @@ class AnimatedFigure {
       }
     }
 
+    // Figure 1 recieves a leg up over the obstacle
+
+    nFrameSpacing = 20;
+    sequence = poses.lifted;
+
+    for (int n = 0; n < sequence.size(); ++n) {
+      StickFigure pose = sequence.get(n);
+      keyFrames.add(new KeyFrame(nFrame, pose, pose.pv.x, pose.pv.y));
+      x += speed;
+      nFrame += nFrameSpacing;
+    }
+  
   }
 
   void resetFig2() {

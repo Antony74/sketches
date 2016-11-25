@@ -4,8 +4,8 @@ Poses poses;
 ArrayList<StickFigure> sequence;
 AnimatedFigure fig1;
 AnimatedFigure fig2;
-boolean bWorkOnAnimation = false;
-boolean bRunAnimation = true;
+boolean bWorkOnAnimation = true;
+boolean bRunAnimation = false;
 
 int nCurrentPose;
 StickFigure stickFigure;
@@ -18,7 +18,7 @@ void setup() {
   background = loadImage("background.png");
   poses = new Poses();
 
-  sequence = poses.lift;  // We set this to the sequence we're currently working on
+  sequence = poses.lifted;  // We set this to the sequence we're currently working on
   
   setCurrentPose(sequence.size() - 1); // And we usually want to start with the last frame
 
