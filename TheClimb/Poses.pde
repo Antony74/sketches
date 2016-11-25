@@ -1,6 +1,7 @@
 
 class Poses {
   ArrayList<StickFigure> walk = new ArrayList<StickFigure>();
+  ArrayList<StickFigure> walkShort = new ArrayList<StickFigure>();
   
   Poses() {
 
@@ -36,37 +37,36 @@ class Poses {
         -1.4641491,                          // Left hand (direction of left elbow)
         -1.7061719));                        // Right hand (direction of right elbow)
 
-  sequence.add(new StickFigure(
-      50.0,                                // Size
-      new PVector(110.0, 361.0),           // Pelvis position
-      -1.4310871,                          // Left knee (direction of pelvis)
-      -2.3669472,                          // Right knee (direction of pelvis)
-      -1.1996619,                          // Left foot (direction of left knee)
-      -1.7650394,                          // Right foot (direction of right knee)
-      -4.712389,                           // Chest (direction of pelvis)
-      -4.712389,                           // Neck (direction of chest)
-      -4.712389,                           // Head (direction of neck
-      -1.07145,                            // Left elbow (direction of neck)
-      -2.098871,                           // Right elbow (direction of neck)
-      -1.4641491,                          // Left hand (direction of left elbow)
-      -1.7061719));                        // Right hand (direction of right elbow)
-
-  sequence.add(new StickFigure(
-      50.0,                                // Size
-      new PVector(123.0, 364.0),           // Pelvis position
-      -1.5316011,                          // Left knee (direction of pelvis)
-      -2.3561945,                          // Right knee (direction of pelvis)
-      -0.6203753,                          // Left foot (direction of left knee)
-      -1.7542868,                          // Right foot (direction of right knee)
-      -4.712389,                           // Chest (direction of pelvis)
-      -4.712389,                           // Neck (direction of chest)
-      -4.712389,                           // Head (direction of neck
-      -1.07145,                            // Left elbow (direction of neck)
-      -2.098871,                           // Right elbow (direction of neck)
-      -1.4641491,                          // Left hand (direction of left elbow)
-      -1.7061719));                        // Right hand (direction of right elbow)
-
-    
+    sequence.add(new StickFigure(
+        50.0,                                // Size
+        new PVector(110.0, 361.0),           // Pelvis position
+        -1.4310871,                          // Left knee (direction of pelvis)
+        -2.3669472,                          // Right knee (direction of pelvis)
+        -1.1996619,                          // Left foot (direction of left knee)
+        -1.7650394,                          // Right foot (direction of right knee)
+        -4.712389,                           // Chest (direction of pelvis)
+        -4.712389,                           // Neck (direction of chest)
+        -4.712389,                           // Head (direction of neck
+        -1.07145,                            // Left elbow (direction of neck)
+        -2.098871,                           // Right elbow (direction of neck)
+        -1.4641491,                          // Left hand (direction of left elbow)
+        -1.7061719));                        // Right hand (direction of right elbow)
+  
+    sequence.add(new StickFigure(
+        50.0,                                // Size
+        new PVector(123.0, 364.0),           // Pelvis position
+        -1.5316011,                          // Left knee (direction of pelvis)
+        -2.3561945,                          // Right knee (direction of pelvis)
+        -0.7266761,                          // Left foot (direction of left knee)
+        -1.7542868,                          // Right foot (direction of right knee)
+        -4.712389,                           // Chest (direction of pelvis)
+        -4.712389,                           // Neck (direction of chest)
+        -4.712389,                           // Head (direction of neck
+        -1.07145,                            // Left elbow (direction of neck)
+        -2.098871,                           // Right elbow (direction of neck)
+        -1.4641491,                          // Left hand (direction of left elbow)
+        -1.7061719));                        // Right hand (direction of right elbow)
+      
     sequence.add(new StickFigure(
         50.0,                                // Size
         new PVector(136.0, 363.0),           // Pelvis position
@@ -158,6 +158,12 @@ class Poses {
         -1.7061719));                        // Right hand (direction of right elbow)
 
     // End of walk sequence
+    
+    for (int n = 0; n < walk.size(); ++n) {
+      StickFigure fig = walk.get(n).copy();
+      fig.setSize(40);
+      walkShort.add(fig);
+    }
   }
 
 };

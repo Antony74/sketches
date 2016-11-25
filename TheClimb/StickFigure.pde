@@ -376,7 +376,14 @@ class StickFigure extends StickPuppet {
       vertices.get(LEFT_KNEE).draw(pv);
       popStyle();
     }
+  }
 
+  void setSize(int _size) {
+    size = _size;
+
+    for (int n = 0; n < vertices.size(); ++n) {
+      vertices.get(n).magnitude = size;
+    }
 }
 
   StickFigure copy() {

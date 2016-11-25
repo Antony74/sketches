@@ -3,6 +3,7 @@ PImage background;
 Poses poses;
 ArrayList<StickFigure> sequence;
 AnimatedFigure fig1;
+AnimatedFigure fig2;
 boolean bAnimate = true;
 
 int nCurrentPose;
@@ -22,6 +23,9 @@ void setup() {
 
   fig1 = new AnimatedFigure();
   fig1.resetFig1();
+
+  fig2 = new AnimatedFigure();
+  fig2.resetFig2();
 }
 
 void draw() {
@@ -30,7 +34,10 @@ void draw() {
   if (bAnimate == true) {
     stroke(0, 255);
     fill(0, 255);
-    fig1.draw(frameCount % (sequence.size() * 10));
+
+    int nFrame = frameCount % fig1.lastFrame();
+    fig1.draw(nFrame);
+    fig2.draw(nFrame);
   } else {
 
     if (onionSkin != null) {
