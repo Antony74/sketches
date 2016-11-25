@@ -63,6 +63,25 @@ class AnimatedFigure {
       nFrame += nFrameSpacing;
     }
 
+    // Figure 1 exit stage right
+
+    sequence = poses.walk;
+    nFrame = 1400;
+    speed = 8;
+    nFrameSpacing = 10;
+    
+    x = 508.0;
+    float y = 218.0;
+
+    for (int nWalkCycle = 0; nWalkCycle < 5; ++nWalkCycle) {
+ 
+      for (int n = 0; n < sequence.size(); ++n) {
+        keyFrames.add(new KeyFrame(nFrame, sequence.get(n), x, y));
+        x += speed;
+        nFrame += nFrameSpacing;
+      }
+    }
+
   }
 
   void resetFig2() {

@@ -369,13 +369,14 @@ class StickFigure extends StickPuppet {
     popStyle();
 
     // Use this kind of trick if you need to be able to tell one limb from the other
-
+/*
     if (alpha(g.strokeColor) == 255) {
       pushStyle();
       stroke(0, 255, 255);
       vertices.get(LEFT_KNEE).draw(pv);
       popStyle();
     }
+*/
   }
 
   void setSize(int _size) {
