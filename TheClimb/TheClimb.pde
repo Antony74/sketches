@@ -1,11 +1,15 @@
 
+// These important flags indicate which role(s) this program is taking on.  We tend to flip between bWorkOnAnimation
+// and bRunAnimation while working in this way
+boolean bWorkOnAnimation = false;
+boolean bRunAnimation = true;
+boolean bRecord = true;
+
 PImage background;
 Poses poses;
 ArrayList<StickFigure> sequence;
 AnimatedFigure fig1;
 AnimatedFigure fig2;
-boolean bWorkOnAnimation = false;
-boolean bRunAnimation = true;
 
 int nCurrentPose;
 StickFigure stickFigure;
@@ -37,7 +41,12 @@ void draw() {
     stroke(0, 255);
     fill(0, 255);
 
-    int nFrame = (frameCount + 700) % max(fig1.lastFrame(), fig2.lastFrame());
+    int nFrame = (frameCount) % max(fig1.lastFrame(), fig2.lastFrame());
+    
+    if (nFrame < frameCount) {
+      bRecord = false;
+    }
+    
     fig1.draw(nFrame);
     fig2.draw(nFrame);
   }
@@ -60,6 +69,10 @@ void draw() {
     }
   
     text("Current pose " + nCurrentPose, 10, 10);
+  }
+
+  if (bRecord) {
+    saveFrame("TheClimb-######.png");
   }
 }
 
