@@ -3,7 +3,7 @@ PImage background;
 Poses poses;
 ArrayList<StickFigure> sequence;
 AnimatedFigure fig1;
-boolean bAnimate = false;
+boolean bAnimate = true;
 
 int nCurrentPose;
 StickFigure stickFigure;
