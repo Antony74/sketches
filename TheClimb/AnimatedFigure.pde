@@ -49,10 +49,20 @@ class AnimatedFigure {
     for (int n = 0; n < sequence.size(); ++n) {
       StickFigure pose = sequence.get(n);
       keyFrames.add(new KeyFrame(nFrame, pose, pose.pv.x, pose.pv.y));
-      x += speed;
       nFrame += nFrameSpacing;
     }
   
+    // Figure 1 pulls
+
+    nFrame = 1040;
+    sequence = poses.pull;
+
+    for (int n = 0; n < sequence.size(); ++n) {
+      StickFigure pose = sequence.get(n);
+      keyFrames.add(new KeyFrame(nFrame, pose, pose.pv.x, pose.pv.y));
+      nFrame += nFrameSpacing;
+    }
+
   }
 
   void resetFig2() {
@@ -95,6 +105,33 @@ class AnimatedFigure {
       nFrame += nFrameSpacing;
     }
 
+    // Figure 2 is pulled up
+
+    nFrame = 900;
+    sequence = poses.pulled;
+
+    for (int n = 0; n < sequence.size(); ++n) {
+      StickFigure pose = sequence.get(n);
+      keyFrames.add(new KeyFrame(nFrame, pose, pose.pv.x, pose.pv.y));
+      nFrame += nFrameSpacing;
+    }
+
+    // Figure 2 exit stage right
+
+    x = 465;
+    float y = 252;
+    speed = 8;
+    nFrameSpacing = 8;
+    sequence = poses.walkShort;
+
+    for (int nWalkCycle = 0; nWalkCycle < 5; ++nWalkCycle) {
+
+      for (int n = 0; n < sequence.size(); ++n) {
+        keyFrames.add(new KeyFrame(nFrame, sequence.get(n), x, y));
+        x += speed;
+        nFrame += nFrameSpacing;
+      }
+    }
 }
   
   void draw(int nFrame) {

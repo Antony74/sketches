@@ -4,6 +4,8 @@ class Poses {
   ArrayList<StickFigure> walkShort = new ArrayList<StickFigure>();
   ArrayList<StickFigure> lift = new ArrayList<StickFigure>();
   ArrayList<StickFigure> lifted = new ArrayList<StickFigure>();
+  ArrayList<StickFigure> pulled = new ArrayList<StickFigure>();
+  ArrayList<StickFigure> pull = new ArrayList<StickFigure>();
   
   Poses() {
 
@@ -641,8 +643,424 @@ class Poses {
         -1.4821572,                          // Left hand (direction of left elbow)
         -0.9206071));                        // Right hand (direction of right elbow)
 
-    // End of lifted sequence
+    // Pulled sequence
+    sequence = pulled;
+
+    sequence.add(new StickFigure(            // 0
+        40.0,                                // Size
+        new PVector(347.0, 403.0),           // Pelvis position
+        -0.46364784,                         // Left knee (direction of pelvis)
+        -2.1527019,                          // Right knee (direction of pelvis)
+        -1.4168835,                          // Left foot (direction of left knee)
+        -2.710081,                           // Right foot (direction of right knee)
+        -5.120538,                           // Chest (direction of pelvis)
+        -5.120538,                           // Neck (direction of chest)
+        -5.120538,                           // Head (direction of neck
+        -1.1509335,                          // Left elbow (direction of neck)
+        -1.9227922,                          // Right elbow (direction of neck)
+        -1.8221608,                          // Left hand (direction of left elbow)
+        -1.3683008));                        // Right hand (direction of right elbow)
+
+    sequence.add(new StickFigure(            // 1
+        40.0,                                // Size
+        new PVector(343.0, 390.0),           // Pelvis position
+        -0.7672186,                          // Left knee (direction of pelvis)
+        -1.7577758,                          // Right knee (direction of pelvis)
+        -1.3873653,                          // Left foot (direction of left knee)
+        -2.100618,                           // Right foot (direction of right knee)
+        -4.993621,                           // Chest (direction of pelvis)
+        -4.993621,                           // Neck (direction of chest)
+        -4.993621,                           // Head (direction of neck
+        -1.0240161,                          // Left elbow (direction of neck)
+        -1.7958748,                          // Right elbow (direction of neck)
+        -1.6952435,                          // Left hand (direction of left elbow)
+        -1.2413834));                        // Right hand (direction of right elbow)
+
+    sequence.add(new StickFigure(            // 2
+        40.0,                                // Size
+        new PVector(342.0, 376.0),           // Pelvis position
+        -1.0303769,                          // Left knee (direction of pelvis)
+        -1.7782927,                          // Right knee (direction of pelvis)
+        -1.4026041,                          // Left foot (direction of left knee)
+        -1.8365326,                          // Right foot (direction of right knee)
+        -4.8542857,                          // Chest (direction of pelvis)
+        -4.8542857,                          // Neck (direction of chest)
+        -4.8542857,                          // Head (direction of neck
+        -0.47311044,                         // Left elbow (direction of neck)
+        -1.2943819,                          // Right elbow (direction of neck)
+        -1.1443378,                          // Left hand (direction of left elbow)
+        -0.73989046));                       // Right hand (direction of right elbow)
+    
+    sequence.add(new StickFigure(            // 3
+        40.0,                                // Size
+        new PVector(342.0, 380.0),           // Pelvis position
+        -1.1354432,                          // Left knee (direction of pelvis)
+        -1.9173355,                          // Right knee (direction of pelvis)
+        -1.3392758,                          // Left foot (direction of left knee)
+        -1.7316055,                          // Right foot (direction of right knee)
+        -4.789161,                           // Chest (direction of pelvis)
+        -4.789161,                           // Neck (direction of chest)
+        -4.789161,                           // Head (direction of neck
+        0.11617446,                          // Left elbow (direction of neck)
+        -0.78366446,                         // Right elbow (direction of neck)
+        -0.5550529,                          // Left hand (direction of left elbow)
+        -0.22917306));                       // Right hand (direction of right elbow)
+    
+    sequence.add(new StickFigure(            // 4
+        40.0,                                // Size
+        new PVector(342.0, 380.0),           // Pelvis position
+        -1.1354432,                          // Left knee (direction of pelvis)
+        -1.9173355,                          // Right knee (direction of pelvis)
+        -1.3392758,                          // Left foot (direction of left knee)
+        -1.7316055,                          // Right foot (direction of right knee)
+        -4.789161,                           // Chest (direction of pelvis)
+        -4.789161,                           // Neck (direction of chest)
+        -4.789161,                           // Head (direction of neck
+        0.67700005,                          // Left elbow (direction of neck)
+        -0.09921169,                         // Right elbow (direction of neck)
+        0.16050565,                          // Left hand (direction of left elbow)
+        0.18394887));                        // Right hand (direction of right elbow)
+    
+    sequence.add(new StickFigure(            // 5
+        40.0,                                // Size
+        new PVector(342.0, 380.0),           // Pelvis position
+        -1.1354432,                          // Left knee (direction of pelvis)
+        -1.9173355,                          // Right knee (direction of pelvis)
+        -1.3392758,                          // Left foot (direction of left knee)
+        -1.7316055,                          // Right foot (direction of right knee)
+        -4.789161,                           // Chest (direction of pelvis)
+        -4.789161,                           // Neck (direction of chest)
+        -4.789161,                           // Head (direction of neck
+        1.3669648,                           // Left elbow (direction of neck)
+        0.8212588,                           // Right elbow (direction of neck)
+        1.2476994,                           // Left hand (direction of left elbow)
+        1.1044194));                         // Right hand (direction of right elbow)
+
+    sequence.add(new StickFigure(            // 6
+        40.0,                                // Size
+        new PVector(342.0, 380.0),           // Pelvis position
+        -1.1354432,                          // Left knee (direction of pelvis)
+        -1.9173355,                          // Right knee (direction of pelvis)
+        -1.3392758,                          // Left foot (direction of left knee)
+        -1.7316055,                          // Right foot (direction of right knee)
+        -4.789161,                           // Chest (direction of pelvis)
+        -4.789161,                           // Neck (direction of chest)
+        -4.53821,                            // Head (direction of neck
+        1.9846013,                           // Left elbow (direction of neck)
+        1.4449024,                           // Right elbow (direction of neck)
+        1.8653358,                           // Left hand (direction of left elbow)
+        1.728063));                          // Right hand (direction of right elbow)
+    
+    sequence.add(new StickFigure(            // 7
+        40.0,                                // Size
+        new PVector(342.0, 380.0),           // Pelvis position
+        -1.1354432,                          // Left knee (direction of pelvis)
+        -1.9173355,                          // Right knee (direction of pelvis)
+        -1.3392758,                          // Left foot (direction of left knee)
+        -1.7316055,                          // Right foot (direction of right knee)
+        -4.789161,                           // Chest (direction of pelvis)
+        -4.789161,                           // Neck (direction of chest)
+        -4.9947534,                          // Head (direction of neck
+        2.31397,                             // Left elbow (direction of neck)
+        1.8637357,                           // Right elbow (direction of neck)
+        2.1947048,                           // Left hand (direction of left elbow)
+        2.437216));                          // Right hand (direction of right elbow)
+
+    sequence.add(new StickFigure(            // 8
+        40.0,                                // Size
+        new PVector(347.0, 371.0),           // Pelvis position
+        -1.5056715,                          // Left knee (direction of pelvis)
+        -2.145101,                           // Right knee (direction of pelvis)
+        -1.7095041,                          // Left foot (direction of left knee)
+        -1.9593711,                          // Right foot (direction of right knee)
+        -4.770017,                           // Chest (direction of pelvis)
+        -4.770017,                           // Neck (direction of chest)
+        -4.9756093,                          // Head (direction of neck
+        2.3331141,                           // Left elbow (direction of neck)
+        1.8828797,                           // Right elbow (direction of neck)
+        2.2138488,                           // Left hand (direction of left elbow)
+        2.45636));                           // Right hand (direction of right elbow)
+    
+    sequence.add(new StickFigure(            // 9
+        40.0,                                // Size
+        new PVector(353.0, 359.0),           // Pelvis position
+        -1.877842,                           // Left knee (direction of pelvis)
+        -2.5602126,                          // Right knee (direction of pelvis)
+        -1.8086829,                          // Left foot (direction of left knee)
+        -2.0460563,                          // Right foot (direction of right knee)
+        -4.770017,                           // Chest (direction of pelvis)
+        -4.770017,                           // Neck (direction of chest)
+        -4.9756093,                          // Head (direction of neck
+        2.3331141,                           // Left elbow (direction of neck)
+        1.8828797,                           // Right elbow (direction of neck)
+        2.2138488,                           // Left hand (direction of left elbow)
+        2.45636));                           // Right hand (direction of right elbow)
+
+     sequence.add(new StickFigure(           // 10
+        40.0,                                // Size
+        new PVector(359.0, 351.0),           // Pelvis position
+        -2.7430706,                          // Left knee (direction of pelvis)
+        -2.164546,                           // Right knee (direction of pelvis)
+        -2.1607199,                          // Left foot (direction of left knee)
+        -1.6503897,                          // Right foot (direction of right knee)
+        -4.770017,                           // Chest (direction of pelvis)
+        -4.770017,                           // Neck (direction of chest)
+        -4.9756093,                          // Head (direction of neck
+        2.3331141,                           // Left elbow (direction of neck)
+        1.8828797,                           // Right elbow (direction of neck)
+        2.2138488,                           // Left hand (direction of left elbow)
+        2.45636));                           // Right hand (direction of right elbow)
+
+    sequence.add(new StickFigure(
+        40.0,                                // Size
+        new PVector(364.0, 312.0),           // Pelvis position
+        -2.896614,                           // Left knee (direction of pelvis)
+        -1.8993497,                          // Right knee (direction of pelvis)
+        -1.4074306,                          // Left foot (direction of left knee)
+        -1.3851933,                          // Right foot (direction of right knee)
+        -4.770017,                           // Chest (direction of pelvis)
+        -4.770017,                           // Neck (direction of chest)
+        -4.9756093,                          // Head (direction of neck
+        2.3331141,                           // Left elbow (direction of neck)
+        1.8828797,                           // Right elbow (direction of neck)
+        2.3867831,                           // Left hand (direction of left elbow)
+        2.6701944));                         // Right hand (direction of right elbow)
+    
+     sequence.add(new StickFigure(
+        40.0,                                // Size
+        new PVector(379.0, 282.0),           // Pelvis position
+        -3.0750246,                          // Left knee (direction of pelvis)
+        -2.1815224,                          // Right knee (direction of pelvis)
+        -2.071773,                           // Left foot (direction of left knee)
+        -1.9252033,                          // Right foot (direction of right knee)
+        -4.5364494,                          // Chest (direction of pelvis)
+        -4.5364494,                          // Neck (direction of chest)
+        -4.7420416,                          // Head (direction of neck
+        2.2107358,                           // Left elbow (direction of neck)
+        1.7833147,                           // Right elbow (direction of neck)
+        1.9011583,                           // Left hand (direction of left elbow)
+        2.1749256));                         // Right hand (direction of right elbow)
+    
+    sequence.add(new StickFigure(
+        40.0,                                // Size
+        new PVector(371.0, 273.0),           // Pelvis position
+        -3.0750246,                          // Left knee (direction of pelvis)
+        -2.34127,                            // Right knee (direction of pelvis)
+        -2.071773,                           // Left foot (direction of left knee)
+        -2.084951,                           // Right foot (direction of right knee)
+        -4.661152,                           // Chest (direction of pelvis)
+        -4.661152,                           // Neck (direction of chest)
+        -4.866744,                           // Head (direction of neck
+        2.445072,                            // Left elbow (direction of neck)
+        1.9178686,                           // Right elbow (direction of neck)
+        2.1354945,                           // Left hand (direction of left elbow)
+        2.3094795));                         // Right hand (direction of right elbow)
+    
+    sequence.add(new StickFigure(
+        40.0,                                // Size
+        new PVector(396.0, 279.0),           // Pelvis position
+        -3.0750246,                          // Left knee (direction of pelvis)
+        -2.045196,                           // Right knee (direction of pelvis)
+        -2.071773,                           // Left foot (direction of left knee)
+        -1.788877,                           // Right foot (direction of right knee)
+        -4.7540317,                          // Chest (direction of pelvis)
+        -4.7540317,                          // Neck (direction of chest)
+        -4.959624,                           // Head (direction of neck
+        2.3521922,                           // Left elbow (direction of neck)
+        1.8249888,                           // Right elbow (direction of neck)
+        2.0426147,                           // Left hand (direction of left elbow)
+        2.2165997));                         // Right hand (direction of right elbow)
+
+    sequence.add(new StickFigure(
+        40.0,                                // Size
+        new PVector(413.0, 267.0),           // Pelvis position
+        -2.8198419,                          // Left knee (direction of pelvis)
+        -1.8925471,                          // Right knee (direction of pelvis)
+        -1.8165903,                          // Left foot (direction of left knee)
+        -1.6362281,                          // Right foot (direction of right knee)
+        -4.7540317,                          // Chest (direction of pelvis)
+        -4.7540317,                          // Neck (direction of chest)
+        -4.959624,                           // Head (direction of neck
+        2.3521922,                           // Left elbow (direction of neck)
+        1.8249888,                           // Right elbow (direction of neck)
+        2.0426147,                           // Left hand (direction of left elbow)
+        2.2165997));                         // Right hand (direction of right elbow)
+    
+    sequence.add(new StickFigure(
+        40.0,                                // Size
+        new PVector(433.0, 258.0),           // Pelvis position
+        -2.4788632,                          // Left knee (direction of pelvis)
+        -1.5964317,                          // Right knee (direction of pelvis)
+        -1.4756117,                          // Left foot (direction of left knee)
+        -1.3401127,                          // Right foot (direction of right knee)
+        -4.7540317,                          // Chest (direction of pelvis)
+        -4.7540317,                          // Neck (direction of chest)
+        -4.959624,                           // Head (direction of neck
+        2.748405,                            // Left elbow (direction of neck)
+        2.228761,                            // Right elbow (direction of neck)
+        2.4388275,                           // Left hand (direction of left elbow)
+        2.6203718));                         // Right hand (direction of right elbow)
+    
+    sequence.add(new StickFigure(
+        40.0,                                // Size
+        new PVector(451.0, 255.0),           // Pelvis position
+        -2.2253675,                          // Left knee (direction of pelvis)
+        -1.4121413,                          // Right knee (direction of pelvis)
+        -1.6897063,                          // Left foot (direction of left knee)
+        -1.1558223,                          // Right foot (direction of right knee)
+        -4.7540317,                          // Chest (direction of pelvis)
+        -4.7540317,                          // Neck (direction of chest)
+        -4.959624,                           // Head (direction of neck
+        2.014172,                            // Left elbow (direction of neck)
+        1.397362,                            // Right elbow (direction of neck)
+        1.7045946,                           // Left hand (direction of left elbow)
+        1.7889729));                         // Right hand (direction of right elbow)
+    
+    sequence.add(new StickFigure(
+        40.0,                                // Size
+        new PVector(451.0, 255.0),           // Pelvis position
+        -2.2253675,                          // Left knee (direction of pelvis)
+        -1.4121413,                          // Right knee (direction of pelvis)
+        -1.6897063,                          // Left foot (direction of left knee)
+        -1.1558223,                          // Right foot (direction of right knee)
+        -4.7540317,                          // Chest (direction of pelvis)
+        -4.7540317,                          // Neck (direction of chest)
+        -4.85077,                            // Head (direction of neck
+        1.19591,                             // Left elbow (direction of neck)
+        0.56038594,                          // Right elbow (direction of neck)
+        0.8863325,                           // Left hand (direction of left elbow)
+        0.9519968));                         // Right hand (direction of right elbow)
+    
+    sequence.add(new StickFigure(
+        40.0,                                // Size
+        new PVector(465.0, 252.0),           // Pelvis position
+        -1.6983061,                          // Left knee (direction of pelvis)
+        -2.107232,                           // Right knee (direction of pelvis)
+        -1.1626449,                          // Left foot (direction of left knee)
+        -1.4124746,                          // Right foot (direction of right knee)
+        -4.7540317,                          // Chest (direction of pelvis)
+        -4.7540317,                          // Neck (direction of chest)
+        -4.85077,                            // Head (direction of neck
+        0.17711496,                          // Left elbow (direction of neck)
+        -0.610337,                           // Right elbow (direction of neck)
+        -0.1324625,                          // Left hand (direction of left elbow)
+        -0.21872616));                       // Right hand (direction of right elbow)
+    
+    sequence.add(new StickFigure(
+        40.0,                                // Size
+        new PVector(465.0, 252.0),           // Pelvis position
+        -1.570796,                           // Left knee (direction of pelvis)
+        -2.327631,                           // Right knee (direction of pelvis)
+        -1.0351348,                          // Left foot (direction of left knee)
+        -1.6328735,                          // Right foot (direction of right knee)
+        -4.6880035,                          // Chest (direction of pelvis)
+        -4.6880035,                          // Neck (direction of chest)
+        -4.784742,                           // Head (direction of neck
+        -0.7346363,                          // Left elbow (direction of neck)
+        -1.4467123,                          // Right elbow (direction of neck)
+        -1.0442138,                          // Left hand (direction of left elbow)
+        -1.0551014));                        // Right hand (direction of right elbow)
+
+    StickFigure walkStart = walkShort.get(0).copy();
+    walkStart.pv.set(465, 252);
+    sequence.add(walkStart);
+
+    // Pull sequence
+
+    sequence = pull;
+  
+    sequence.add(new StickFigure(
+        50.0,                                // Size
+        new PVector(475.0, 239.0),           // Pelvis position
+        -0.6470475,                          // Left knee (direction of pelvis)
+        -0.09347677,                         // Right knee (direction of pelvis)
+        -2.052702,                           // Left foot (direction of left knee)
+        -1.4713659,                          // Right foot (direction of right knee)
+        -5.753596,                           // Chest (direction of pelvis)
+        -5.753596,                           // Neck (direction of chest)
+        -5.753596,                           // Head (direction of neck
+        -1.0894582,                          // Left elbow (direction of neck)
+        -1.664324,                           // Right elbow (direction of neck)
+        -1.4821572,                          // Left hand (direction of left elbow)
+        -0.9206071));                        // Right hand (direction of right elbow)
+
+      sequence.add(new StickFigure(
+        50.0,                                // Size
+        new PVector(493.0, 231.0),           // Pelvis position
+        -0.8557048,                          // Left knee (direction of pelvis)
+        -0.23684883,                         // Right knee (direction of pelvis)
+        -2.1273375,                          // Left foot (direction of left knee)
+        -1.2091155,                          // Right foot (direction of right knee)
+        -5.709745,                           // Chest (direction of pelvis)
+        -5.709745,                           // Neck (direction of chest)
+        -5.709745,                           // Head (direction of neck
+        -1.0456073,                          // Left elbow (direction of neck)
+        -1.6204731,                          // Right elbow (direction of neck)
+        -1.4383063,                          // Left hand (direction of left elbow)
+        -0.8767562));                        // Right hand (direction of right elbow)
+
+    sequence.add(new StickFigure(
+        50.0,                                // Size
+        new PVector(497.0, 226.0),           // Pelvis position
+        -0.8318763,                          // Left knee (direction of pelvis)
+        -0.6022873,                          // Right knee (direction of pelvis)
+        -1.7142816,                          // Left foot (direction of left knee)
+        -1.574554,                           // Right foot (direction of right knee)
+        -5.4578085,                          // Chest (direction of pelvis)
+        -5.4578085,                          // Neck (direction of chest)
+        -5.4578085,                          // Head (direction of neck
+        -0.7936709,                          // Left elbow (direction of neck)
+        -1.3685367,                          // Right elbow (direction of neck)
+        -1.1863699,                          // Left hand (direction of left elbow)
+        -0.62481976));                       // Right hand (direction of right elbow)
+    
+
+    sequence.add(new StickFigure(
+        50.0,                                // Size
+        new PVector(508.0, 218.0),           // Pelvis position
+        -1.2036228,                          // Left knee (direction of pelvis)
+        -0.4711666,                          // Right knee (direction of pelvis)
+        -1.4637899,                          // Left foot (direction of left knee)
+        -1.4434333,                          // Right foot (direction of right knee)
+        -5.3003917,                          // Chest (direction of pelvis)
+        -5.3003917,                          // Neck (direction of chest)
+        -5.3003917,                          // Head (direction of neck
+        -0.6362541,                          // Left elbow (direction of neck)
+        -1.2111199,                          // Right elbow (direction of neck)
+        -1.0289531,                          // Left hand (direction of left elbow)
+        -0.46740294));                       // Right hand (direction of right elbow)
+
+    sequence.add(new StickFigure(
+        50.0,                                // Size
+        new PVector(508.0, 218.0),           // Pelvis position
+        -1.4369855,                          // Left knee (direction of pelvis)
+        -0.8884797,                          // Right knee (direction of pelvis)
+        -1.6971526,                          // Left foot (direction of left knee)
+        -1.5176158,                          // Right foot (direction of right knee)
+        -4.8954997,                          // Chest (direction of pelvis)
+        -4.8954997,                          // Neck (direction of chest)
+        -4.8954997,                          // Head (direction of neck
+        -0.2313621,                          // Left elbow (direction of neck)
+        -0.8062279,                          // Right elbow (direction of neck)
+        -0.6240611,                          // Left hand (direction of left elbow)
+        -0.06251097));                       // Right hand (direction of right elbow)
+
+    sequence.add(new StickFigure(
+        50.0,                                // Size
+        new PVector(508.0, 218.0),           // Pelvis position
+        -1.4369855,                          // Left knee (direction of pelvis)
+        -0.8884797,                          // Right knee (direction of pelvis)
+        -1.6971526,                          // Left foot (direction of left knee)
+        -1.5176158,                          // Right foot (direction of right knee)
+        -4.653633,                           // Chest (direction of pelvis)
+        -4.653633,                           // Neck (direction of chest)
+        -4.653633,                           // Head (direction of neck
+        0.010504484,                         // Left elbow (direction of neck)
+        -0.56436133,                         // Right elbow (direction of neck)
+        -0.38219452,                         // Left hand (direction of left elbow)
+        0.17935562));                        // Right hand (direction of right elbow)
+
+    // End of pull sequence
+
   }
-
-
 };
