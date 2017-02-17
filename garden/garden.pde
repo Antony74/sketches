@@ -18,6 +18,9 @@ void draw() {
   
   float xPace = abs(x(1) - x(0));
   float yPace = abs(y(1) - y(0));
+
+  float fenceSection = 2.12 * xPace;
+  float gate = 1.59 * xPace;
   
   // Patio
   fill(255, 255, 128);
@@ -51,7 +54,7 @@ void draw() {
   // Water butt
   ellipseMode(CORNER);
   fill(0, 128, 0);
-  ellipse(x(8), y(5), 1.5 * xPace, -1.5 * yPace);
+  ellipse(x(9), y(5), 1.5 * xPace, -1.5 * yPace);
   
   // Arbour
   pushMatrix();
@@ -69,6 +72,24 @@ void draw() {
   // Garage door
   fill(255);
   rect(x(8) - 0.5*doorThickness*xPace, y(1), doorThickness * xPace, -2.5 * yPace);
+ 
+  // Fence
+  strokeWeight(5);
+ 
+  float xPos = x(13);
+  float yPos = y(8);
+  
+  for (int n = 0; n < 3; ++n) {
+
+    xPos -= fenceSection;
+
+    stroke(165,42,42);
+    line(xPos, yPos, xPos + fenceSection, yPos); 
+
+    stroke(255);
+    point(xPos, yPos);
+    point(xPos + fenceSection, yPos);
+  }
   
   noLoop();
 }
