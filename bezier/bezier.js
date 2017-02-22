@@ -38,7 +38,7 @@ function updateMatrix() {
     var row = [];
     
     for (var k = 0; k < points.length; ++k) {
-      row.push(binom(n,n - k));
+      row.push(binom(n,k));
     }
 
     matrix.push(row);
