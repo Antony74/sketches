@@ -1,27 +1,29 @@
-<html><head>
+<html>
+<head>
   <meta charset="UTF-8" />
+  <title>Bézier</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
 
   <!-- PLEASE NO CHANGES BELOW THIS LINE (UNTIL I SAY SO) -->
   <script language="javascript" type="text/javascript" src="libraries/p5.js"></script>
-  <!-- uncomment lines below to include extra p5 libraries -->
-  <!--<script language="javascript" src="libraries/p5.dom.js"></script>-->
-  <!--<script language="javascript" src="libraries/p5.sound.js"></script>-->
-  <script language="javascript" type="text/javascript" src="sketch_170222b.js"></script>
+  <script language="javascript" type="text/javascript" src="bezier.js"></script>
   <!-- OK, YOU CAN MAKE CHANGES BELOW THIS LINE AGAIN -->
 
-<script language="javascript" type="text/javascript" src="bezier.js"></script></head>
+  <script type="text/javascript" async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
 
-<style>
-  #canvasParent
-  {
-    border-style: solid;
-  }
-</style>
+  <style>
+    #canvasParent {
+      border-style: solid;
+      border-width: 1px;
+      display: inline-block;
+    }
+  </style>
 
 <body>
 
 <form>
-  <input name="mode" type="radio" checked />
+  <input name="mode" type="radio" checked>
     Drag (x,y)
   </input>
   
@@ -42,6 +44,13 @@
 <div id="canvasParent"> 
 </div>  
 
+<p>
+  <div id="matrix">
+  
+  \( \begin{bmatrix}a && b \\ c && d\end{bmatrix} \)
+  
+  </div>
+</p>
 
-
-</body></html>
+</body>
+</html>
