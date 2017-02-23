@@ -36,9 +36,15 @@ function updateMatrix() {
   for (var n = 0; n < points.length; ++n) {
     
     var row = [];
+	var rowCoefficent = binom(points.length - 1, n);
     
+	var sign1 = (points.length % 2) ? 1 : -1;
+
     for (var k = 0; k < points.length; ++k) {
-      row.push(binom(n,k));
+	  var value = binom(points.length - n - 1, k);
+	  var sign2 = ((k - n) % 2) ? -1 : 1;
+
+      row.push(sign1 * sign2 * rowCoefficent * value);
     }
 
     matrix.push(row);
