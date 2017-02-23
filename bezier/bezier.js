@@ -1,3 +1,4 @@
+/* global matrixToString */
 
 var points = [
   [100, 600],
@@ -72,19 +73,21 @@ function writeEquations() {
     }
   }
 
-  var sMatrixT = '\\begin{bmatrix}' + arrTerms.join(' && ') + '\\end{bmatrix}';
-  
-  var arrRows = [];
-  for (n = 0; n < matrix.length; ++n) {
-    arrRows.push(matrix[n].join(' && '));
+  var matrixX = [];
+  var matrixY = [];
+
+  for (n = 0; n < points.length; ++n) {
+    matrixX.push([points[n][0]]);
+    matrixY.push([points[n][1]]);
   }
 
-  var sMatrix = arrRows.join(' \\\\ ');
-  sMatrix = '\\begin{bmatrix}' + sMatrix + '\\end{bmatrix}';
-    
-  var sEqX = 'x(t) = ' + sMatrixT + sMatrix;
+  var sEqX = '\\begin{array}{ccc}x(t) = ';
+  sEqX    += '\\\\';
+  sEqX    += '\\textit{ }';
+  sEqX    += '\\end{array}';
+  
+  sEqX += matrixToString([arrTerms]) + matrixToString(matrix) + matrixToString(matrixX, 'control points x');
     
   $('#matrix').text('\\( ' + sEqX + '\\)');
 
 }
-
