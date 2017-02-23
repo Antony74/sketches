@@ -56,7 +56,19 @@ function updateMatrix() {
 }
 
 function writeEquations() {
+  var matrixX = [];
+  var matrixY = [];
 
+  for (var n = 0; n < points.length; ++n) {
+    matrixX.push([points[n][0]]);
+    matrixY.push([points[n][1]]);
+  }
+
+  writeEquation('x', matrixX);
+  writeEquation('y', matrixY);
+}
+
+function writeEquation(v, matrixV) {
   var arrTerms = [];
   
   for (var n = points.length - 1; n >= 0; --n) {
@@ -73,24 +85,15 @@ function writeEquations() {
     }
   }
 
-  var matrixX = [];
-  var matrixY = [];
+  var co = matrixMult(matrix, matrixV);
 
-  for (n = 0; n < points.length; ++n) {
-    matrixX.push([points[n][0]]);
-    matrixY.push([points[n][1]]);
-  }
-
-  var coX = matrixMult(matrix, matrixX);
-  console.log(JSON.stringify(coX, null, 4));
-
-  var sEqX = '\\begin{array}{ccc}x(t) = \\\\ \\textit{ } \\end{array}';
-  sEqX += matrixToString([arrTerms]) + matrixToString(matrix) + matrixToString(matrixX, 'control points x');
+  var sEq = '\\begin{array}{ccc}' + v + '(t) = \\\\ \\textit{ } \\end{array}';
+  sEq    += matrixToString([arrTerms]) + matrixToString(matrix) + matrixToString(matrixV, 'control points ' + v);
 
   var arr = [];
 
   for (n = 0; n < points.length; ++n) {
-    var s = coX[n][0];
+    var s = co[n][0];
     
     if (arrTerms[n] != '1') {
       s += arrTerms[n];
@@ -99,13 +102,8 @@ function writeEquations() {
     arr.push(s); 
   }
 
-  sEqX += ' = ' + arr.join(' + ');
+  sEq += ' = ' + arr.join(' + ');
     
-  $('#equationX').text('\\( ' + sEqX + '\\)');
-
-  var sEqY = '\\begin{array}{ccc}y(t) = \\\\ \\textit{ } \\end{array}';
-  sEqY += matrixToString([arrTerms]) + matrixToString(matrix) + matrixToString(matrixY, 'control points y');
-
-  $('#equationY').text('\\( ' + sEqY + '\\)');
+  $('#equation-' + v).text('\\( ' + sEq + '\\)');
 
 }
