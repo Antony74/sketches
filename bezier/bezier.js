@@ -1,4 +1,4 @@
-/* global matrixToString */
+/* global matrixToString, matrixMult */
 
 var points = [
   [100, 600],
@@ -59,7 +59,7 @@ function writeEquations() {
 
   var arrTerms = [];
   
-  for (var n = points.length; n >= 0; --n) {
+  for (var n = points.length - 1; n >= 0; --n) {
     switch(n) {
     default:
       arrTerms.push('t^' + n);
@@ -81,13 +81,31 @@ function writeEquations() {
     matrixY.push([points[n][1]]);
   }
 
-  var sEqX = '\\begin{array}{ccc}x(t) = ';
-  sEqX    += '\\\\';
-  sEqX    += '\\textit{ }';
-  sEqX    += '\\end{array}';
-  
+  var coX = matrixMult(matrix, matrixX);
+  console.log(JSON.stringify(coX, null, 4));
+
+  var sEqX = '\\begin{array}{ccc}x(t) = \\\\ \\textit{ } \\end{array}';
   sEqX += matrixToString([arrTerms]) + matrixToString(matrix) + matrixToString(matrixX, 'control points x');
+
+  var arr = [];
+
+  for (n = 0; n < points.length; ++n) {
+    var s = coX[n][0];
     
-  $('#matrix').text('\\( ' + sEqX + '\\)');
+    if (arrTerms[n] != '1') {
+      s += arrTerms[n];
+    }
+    
+    arr.push(s); 
+  }
+
+  sEqX += ' = ' + arr.join(' + ');
+    
+  $('#equationX').text('\\( ' + sEqX + '\\)');
+
+  var sEqY = '\\begin{array}{ccc}y(t) = \\\\ \\textit{ } \\end{array}';
+  sEqY += matrixToString([arrTerms]) + matrixToString(matrix) + matrixToString(matrixY, 'control points y');
+
+  $('#equationY').text('\\( ' + sEqY + '\\)');
 
 }

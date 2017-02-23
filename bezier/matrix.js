@@ -28,3 +28,21 @@ function matrixToString(matrix, sDescription) {
 
   return sText;
 }
+
+function matrixMult(a, b) {
+  
+  var c = [];
+  
+  for(var i = 0; i < a.length; ++i) {
+      c[i] = [];
+      for (var j = 0; j < b[0].length; j++) {
+          var sum = 0;
+          for (var k = 0; k < b.length; k++) {
+              sum += a[i][k] * b[k][j];
+          }
+          c[i][j] = sum;
+      }
+   }
+
+  return c;
+}
