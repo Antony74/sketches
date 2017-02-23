@@ -15,6 +15,7 @@ function setup() {
   
   $(document).ready(function() {
     matrix = updateMatrix();
+    writeEquations();
     loop();
   });
 }
@@ -50,12 +51,39 @@ function updateMatrix() {
     matrix.push(row);
   }
 
-  var rows = [];
-  for (var n = 0; n < matrix.length; ++n) {
-    rows.push(matrix[n].join(' && '));
+  return matrix;
+}
+
+function writeEquations() {
+
+  var arrTerms = [];
+  
+  for (var n = points.length; n >= 0; --n) {
+    switch(n) {
+    default:
+      arrTerms.push('t^' + n);
+      break;
+    case 1:
+      arrTerms.push('t');
+      break;
+    case 0:
+      arrTerms.push('1');
+      break;
+    }
   }
 
-  var sMatrix = rows.join(' \\\\ ');
+  var sMatrixT = '\\begin{bmatrix}' + arrTerms.join(' && ') + '\\end{bmatrix}';
+  
+  var arrRows = [];
+  for (var n = 0; n < matrix.length; ++n) {
+    arrRows.push(matrix[n].join(' && '));
+  }
+
+  var sMatrix = arrRows.join(' \\\\ ');
+  sMatrix = '\\begin{bmatrix}' + sMatrix + '\\end{bmatrix}';
     
-  $('#matrix').text('\\( \\begin{bmatrix}' + sMatrix + '\\end{bmatrix} \\)');
+  var sEqX = 'x(t) = ' + sMatrixT + sMatrix;
+    
+  $('#matrix').text('\\( ' + sEqX + '\\)');
+
 }
