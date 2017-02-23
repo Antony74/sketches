@@ -1,0 +1,36 @@
+{
+    "env": {
+        "browser": true,
+        "jquery": true
+    },
+    "globals": {
+        "createCanvas": false,
+        "loop": false,
+        "noLoop": false
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+        "linebreak-style": [
+            "error",
+            "windows"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-tabs": [
+            "error"
+        ],
+        "no-console": [
+            "off"
+        ],
+        "no-unused-vars": [
+            "off"
+        ]
+    }
+}
+

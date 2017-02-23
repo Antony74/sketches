@@ -1,0 +1,27 @@
+{
+    "name": "bezier",
+    "description": "p5js bezier sketch.  The packaging is just so it can be linted",
+    "url": "https://github.com/Antony74/sketches/tree/master/bezier",
+    "author": {
+        "name": "Antony Bartlett",
+        "email": "akb@akb.me.uk"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Antony74/sketches/tree/master/bezier"
+    },
+    "version": "0.1.0",
+    "readme": "p5js bezier sketch.  The packaging is just so it can be linted",
+    "bugs": {
+        "url": "https://github.com/Antony74/sketches/issues"
+    },
+    "license": "MIT",
+    "devDependencies": {
+        "eslint":  "3.16.1",
+        "true": "0.0.2"
+    },
+  "scripts": {
+        "lint": "eslint . || node node_modules/true/index.js",
+        "lint-init":  "eslint --init"
+    }
+}
