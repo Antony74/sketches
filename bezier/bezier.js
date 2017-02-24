@@ -25,12 +25,15 @@ function draw() {
   
 }
 
-// https://rosettacode.org/wiki/Evaluate_binomial_coefficients#JavaScript
 function binom(n, k) {
-    var coeff = 1;
-    for (var i = n-k+1; i <= n; i++) coeff *= i;
-    for (i = 1;     i <= k; i++) coeff /= i;
-    return coeff;
+
+    var coefficient = 1;
+
+    for (var i = 1; i <= k; ++i) {
+        coefficient *= (n + 1 - i) / i;
+    }
+
+    return coefficient;
 }
 
 function updateMatrix() {
