@@ -65,8 +65,6 @@ function writeEquation(v) {
   while (sEq.indexOf(' + -') != -1) {
     sEq = sEq.replace(' + -', ' -'); // An addition followed by a negation is better written as a subtraction
   }
-    
-  $(document).ready(function() {
-    $('#equation-' + v).text('\\( ' + sEq + '\\)');
-  });
+ 
+  document.getElementById('equation-' + v).textContent = '\\( ' + sEq + '\\)';
 }
