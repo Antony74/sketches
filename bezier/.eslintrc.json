@@ -3,11 +3,17 @@
         "browser": true
     },
     "globals": {
+        "MathJax":  false,
+        // Add all the Processing keywords we use as globals
+        "background": false,
         "beginShape": false,
         "createCanvas": false,
-        "endShape": false,    
-        "fill":  false,
+        "endShape": false,
+        "fill": false,
         "loop": false,
+        "mouseReleased": false,
+        "mouseX": false,
+        "mouseY": false,
         "noFill": false,
         "noLoop": false,
         "noStroke": false,
@@ -17,7 +23,7 @@
         "stroke": false,
         "strokeWeight": false,
         "vertex": false
-},
+    },
     "extends": "eslint:recommended",
     "rules": {
         "linebreak-style": [

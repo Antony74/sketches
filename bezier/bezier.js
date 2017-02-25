@@ -18,11 +18,13 @@ function setup() {
   drawCurve();
   noLoop();
   
-  writeEquation('x');
-  writeEquation('y');
+  writeEquations();
 }
 
 function drawCurve() {
+
+  background(255);
+  
   bezierCurve = createBezierCurve(points);
 
   // Draw the curve
@@ -55,6 +57,46 @@ function drawCurve() {
   }
 }
 
+function mousePressed() {
+
+  for (var n = 0; n < points.length; ++n) {
+    
+    var v = points[n];
+    if (Math.abs(mouseX - v.x) <= rectRadius && Math.abs(mouseY - v.y) <= rectRadius) {
+      dragIndex = n;
+      return;
+    }
+  }
+  
+  dragIndex = -1;
+}
+
+function mouseDragged() {
+
+  if (dragIndex < points.length) {
+    
+    points[dragIndex].x = mouseX;
+    points[dragIndex].y = mouseY;
+    
+    drawCurve();
+  }
+}
+
+function mouseReleased() {
+  if (dragIndex != -1) {
+    writeEquations();
+    dragIndex = -1;
+  }
+}
+
+function writeEquations() {
+
+  writeEquation('x');
+  writeEquation('y');
+
+  MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
+}
+
 function writeEquation(v) {
 
   var sEq = '\\begin{array}{ccc}' + v + '(t) = \\\\ \\textit{ } \\end{array}';
@@ -65,7 +107,7 @@ function writeEquation(v) {
   var arr = [];
 
   for (var n = 0; n < points.length; ++n) {
-    var s = bezierCurve[v].matrixPolynomialCoefficients[n][0];
+    var s = bezierCurve[v].matrixPolynomialCoefficients[n][0].toFixed();
     var sT = bezierCurve.t.matrix[0][n];
     
     if (sT != '1') {

@@ -1,9 +1,30 @@
 
+var decimalPlaces = 0;
+
 function matrixToString(matrix, sDescription) {
 
+  var displayMatrix = [];
+  
+  for (var i = 0; i < matrix.length; ++i) {
+
+    var arrRow = [];
+    
+    for (var j = 0; j < matrix[i].length; ++j) {
+      var value = matrix[i][j];
+      
+      if (value.toFixed) {
+        value = value.toFixed(decimalPlaces);
+      }
+      
+      arrRow.push(value);
+    }
+
+    displayMatrix.push(arrRow);
+  }
+  
   var arrRows = [];
-  for (var n = 0; n < matrix.length; ++n) {
-    arrRows.push(matrix[n].join(' && '));
+  for (i = 0; i < displayMatrix.length; ++i) {
+    arrRows.push(displayMatrix[i].join(' && '));
   }
 
   var sMatrix = arrRows.join(' \\\\ ');
