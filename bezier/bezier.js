@@ -1,18 +1,11 @@
 /* global createBezierCurve, matrixToString */
 
 var points = [
-
-  {x: 100, y: 600},
-  {x: 200, y:   0},
-  {x: 200, y: 900},
-  {x: 300, y: 300},
-  {x: 400, y: 600}
-  /*
-{x:  75, y: 300},
+  {x:  75, y: 300},
   {x: 150, y:  50},
   {x: 225, y: 350},
   {x: 300, y: 150},
-  {x: 375, y: 300}*/
+  {x: 375, y: 300}
 ];
 
 var bezierCurve = null;
@@ -32,10 +25,32 @@ function setup() {
 function drawCurve() {
   bezierCurve = createBezierCurve(points);
 
+  // Draw the curve
+  stroke(0);
+  strokeWeight(2);
+  noFill();
+
+  var x = bezierCurve.x.fn;
+  var y = bezierCurve.y.fn;
+  
+  beginShape();
+  for (var t = 0; t <= 1; t += 0.004) {
+    vertex(x(t), y(t));
+  }
+  endShape();
+  
+  // Draw the control points
+
   noStroke();
-  fill(255, 0, 0, 128);
 
   for (var n = 0; n < points.length; ++n) {
+    
+     if (n == 0 || n == points.length - 1) {
+       fill(255, 0, 0, 128);
+     } else {
+       fill(0, 255, 0, 128);
+     }
+    
      rect(points[n].x, points[n].y, rectRadius, rectRadius);
   }
 }

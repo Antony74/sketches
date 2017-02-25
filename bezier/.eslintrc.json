@@ -3,15 +3,21 @@
         "browser": true
     },
     "globals": {
+        "beginShape": false,
         "createCanvas": false,
+        "endShape": false,    
+        "fill":  false,
         "loop": false,
+        "noFill": false,
         "noLoop": false,
-        "rectMode": false,
+        "noStroke": false,
         "RADIUS": false,
         "rect": false,
-        "noStroke": false,
-        "fill":  false
-    },
+        "rectMode": false,
+        "stroke": false,
+        "strokeWeight": false,
+        "vertex": false
+},
     "extends": "eslint:recommended",
     "rules": {
         "linebreak-style": [

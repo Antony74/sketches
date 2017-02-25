@@ -92,7 +92,7 @@ function createBezierCurveDimension(matrixBinomial, matrixControlPoints) {
       var sum = 0;
       for (var n = 0; n < arrPolynomialCofficients.length; ++n) {
         var order = arrPolynomialCofficients.length - 1 - n;
-        sum += arrPolynomialCofficients * (t^order);
+        sum += arrPolynomialCofficients[n] * Math.pow(t, order);
       }
       return sum;
     }
