@@ -77,8 +77,8 @@ function createBezierCurve(points) {
   };
 }
 
-function createBezierCurveDimension(matrixBinomial, matrixV) {
-  var matrixPolynomialCoefficients = matrixMult(matrixBinomial, matrixV);
+function createBezierCurveDimension(matrixBinomial, matrixControlPoints) {
+  var matrixPolynomialCoefficients = matrixMult(matrixBinomial, matrixControlPoints);
   var arrPolynomialCofficients = [];
   
   for (var n = 0; n < matrixPolynomialCoefficients.length; ++n) {
@@ -86,7 +86,8 @@ function createBezierCurveDimension(matrixBinomial, matrixV) {
   }
 
   return {
-    'matrix': matrixPolynomialCoefficients,
+    'matrixControlPoints': matrixControlPoints,
+    'matrixPolynomialCoefficients': matrixPolynomialCoefficients,
     'fn': function(t) {
       var sum = 0;
       for (var n = 0; n < arrPolynomialCofficients.length; ++n) {

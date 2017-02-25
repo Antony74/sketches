@@ -6,7 +6,12 @@
     "globals": {
         "createCanvas": false,
         "loop": false,
-        "noLoop": false
+        "noLoop": false,
+        "rectMode": false,
+        "RADIUS": false,
+        "rect": false,
+        "noStroke": false,
+        "fill":  false
     },
     "extends": "eslint:recommended",
     "rules": {
