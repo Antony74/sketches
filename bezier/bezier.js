@@ -47,6 +47,10 @@ function writeEquation(v) {
   }
 
   sEq += ' = ' + arr.join(' + ');
+
+  while (sEq.indexOf(' + -') != -1) {
+    sEq = sEq.replace(' + -', ' -'); // An addition followed by a negation is better written as a subtraction
+  }
     
   $('#equation-' + v).text('\\( ' + sEq + '\\)');
 
