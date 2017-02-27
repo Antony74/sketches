@@ -73,7 +73,7 @@ function mousePressed() {
 
 function mouseDragged() {
 
-  if (dragIndex > 0 && dragIndex < points.length) {
+  if (dragIndex >= 0 && dragIndex < points.length) {
     
     points[dragIndex].x = mouseX;
     points[dragIndex].y = mouseY;
