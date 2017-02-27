@@ -3,7 +3,7 @@
 function createBezierCurve(points) {
 
   // Create a matrix of t raised to various powers.  This is purely
-  // for the documentation this program displays.
+  // for the formula this program displays.
   var arrTerms = [];
   
   for (var n = points.length - 1; n >= 0; --n) {
@@ -34,9 +34,9 @@ function createBezierCurve(points) {
       return coefficient;
   }
 
-  // Populate a matrix with the curious pattern of
+  // Populate Bezier basis matrix - the curious pattern of
   // binomial coefficents used to generate bezier curves.
-  var matrixBinomial = [];
+  var matrixBezierBasis = [];
   for (n = 0; n < points.length; ++n) {
     
     var row = [];
@@ -51,7 +51,7 @@ function createBezierCurve(points) {
       row.push(sign1 * sign2 * rowCoefficent * value);
     }
 
-    matrixBinomial.push(row);
+    matrixBezierBasis.push(row);
   }
 
   // Extract a matrix of x-control-points and y-control-points
@@ -68,16 +68,17 @@ function createBezierCurve(points) {
   // we have our results, return them in this structure
 
   return {
-    'matrixBinomial': matrixBinomial,
+    'matrixBezierBasis': matrixBezierBasis,
     't': {  
       'matrix': matrixT,
     },
-    'x': createBezierCurveDimension(matrixBinomial, matrixX),
-    'y': createBezierCurveDimension(matrixBinomial, matrixY)
+    'x': createBezierCurveDimension(matrixBezierBasis, matrixX),
+    'y': createBezierCurveDimension(matrixBezierBasis, matrixY)
   };
 }
 
 function createBezierCurveDimension(matrixBinomial, matrixControlPoints) {
+
   var matrixPolynomialCoefficients = matrixMult(matrixBinomial, matrixControlPoints);
   var arrPolynomialCofficients = [];
   

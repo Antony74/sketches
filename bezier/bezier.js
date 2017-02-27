@@ -73,7 +73,7 @@ function mousePressed() {
 
 function mouseDragged() {
 
-  if (dragIndex < points.length) {
+  if (dragIndex > 0 && dragIndex < points.length) {
     
     points[dragIndex].x = mouseX;
     points[dragIndex].y = mouseY;
@@ -101,8 +101,8 @@ function writeEquation(v) {
 
   var sEq = '\\begin{array}{ccc}' + v + '(t) = \\\\ \\textit{ } \\end{array}';
   sEq    += matrixToString(bezierCurve.t.matrix);
-  sEq    += matrixToString(bezierCurve.matrixBinomial);
-  sEq    += matrixToString(bezierCurve[v].matrixControlPoints, 'control points ' + v);
+  sEq    += matrixToString(bezierCurve.matrixBezierBasis, 'Bezier basis matrix');
+  sEq    += matrixToString(bezierCurve[v].matrixControlPoints, 'Control points ' + v);
 
   var arr = [];
 
