@@ -8,8 +8,35 @@ void setup() {
 }
 
 void draw() {
-  background(128);
+  background(200);
   int valueInCycle = millis() % cycleLength;
+  
+  // Draw the conveyor belt
+  pushStyle();
+  fill(32);
+  stroke(64);
+  strokeWeight(10);
+  int slats = 10;
+  float xOffset = getProductX(0, valueInCycle);
+  float inset = height / 2;
+  float stationWidth = width / stations;
+  float slatsEnd = stationWidth * transits;
+  
+  for (int slat = 0; slat < slats; ++slat)
+  {
+    float xStart = map(slat, 0, slats, 0, slatsEnd) + xOffset;
+    float xEnd = map(slat + 1, 0, slats, 0, slatsEnd) + xOffset;
+    
+    beginShape();
+    vertex(xStart, height);
+    vertex(xEnd, height);
+    vertex(xEnd - inset, height - inset);
+    vertex(xStart - inset, height - inset);
+    endShape(CLOSE);
+  }
+  popStyle();
+  
+  // Draw a product at each station
   for (int station = 0; station < transits; ++station) {
     float position = (float)station + norm(valueInCycle, 0, cycleLength);
     push();
@@ -63,14 +90,16 @@ void drawProduct(float position /* the whole number represents the station the p
   float x = 35;
   float y = -30;
   
-  // At station 1 on the assembly line (between 1.3 and 1.8) the eyes and mouth appear
-  float faceAlpha = boundedMap(position, 1.3, 1.8, 0, 255);
+  // At station 1 on the assembly line (between 1.2 and 1.8) the eyes and mouth appear
+  float faceAlpha = boundedMap(position, 1.2, 1.8, 0, 1);
+  faceAlpha *= pow(faceAlpha, 1.5);
+  faceAlpha *= 255;
   
   // At station 2 the mouth is turned around
-  float mouthRotation = boundedMap(position, 2.3, 2.7, 0, PI);
+  float mouthRotation = boundedMap(position, 2.2, 2.8, 0, PI);
 
   // At station 3 the glasses go on
-  float glassesY = boundedMap(position, 3.3, 3.7, -height * 0.7, y);
+  float glassesY = boundedMap(position, 3.2, 3.8, -height * 0.7, y);
 
   push();
   translate(-x, y);
