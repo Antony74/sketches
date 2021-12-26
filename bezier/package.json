@@ -17,11 +17,15 @@
     },
     "license": "MIT",
     "devDependencies": {
-        "eslint":  "3.16.1",
+        "eslint": "3.16.1",
         "true": "0.0.2"
     },
-  "scripts": {
+    "scripts": {
         "lint": "eslint . || node node_modules/true/index.js",
-        "lint-init":  "eslint --init"
+        "lint-init": "eslint --init",
+        "start": "http-server ."
+    },
+    "dependencies": {
+        "http-server": "^14.0.0"
     }
 }
