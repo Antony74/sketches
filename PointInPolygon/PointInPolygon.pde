@@ -5,6 +5,24 @@ int nMovers = 200;
 int moverRadius = 4;
 color bgColor = color(255, 255, 200);
 
+class PolygonPoints {
+  ArrayList<PVector> arr = new ArrayList<PVector>();
+
+  PolygonPoints add(float x, float y) {
+    arr.add(new PVector(x, y));
+    return this;
+  }
+}
+
+Polygon createArrowHeadedTriangle(float x, float y, float halfWidth, float halfHeight) {
+    return new Polygon(new PolygonPoints()
+      .add(x - halfWidth, y + halfHeight)
+      .add(x, y - halfHeight)
+      .add(x + halfHeight, y + halfHeight)
+      .add(x, y + (0.5 * halfHeight)).arr
+   );
+}
+
 void setup() {
   size(900, 900, P3D);
   smooth(8);
@@ -15,10 +33,20 @@ void setup() {
   testPolys.add(new Polygon(getPolyPoints(700, 300, 5, 100)));
   testPolys.add(new Polygon(getPolyPoints(width / 2, height / 2, 6, 125)));
   testPolys.add(new Polygon(getPolyPoints(200, 700, 20, 150)));
-  
+
+  testPolys.add(createArrowHeadedTriangle(700, 700, 150, 150));
+  testPolys.add(createArrowHeadedTriangle(700, 700, 60, 60).setColor(255, 255, 200));
+
   for (int i = 0; i < nMovers; i++) {
     PVector pos = new PVector(random(moverRadius, width - moverRadius), random(moverRadius, height - moverRadius));
-    PVector velocity = new PVector(1 + random(1), 1 + random(1));
+
+    float x = random(-1, 1);
+    float y = random(-1, 1);
+    
+    x += sign(x);
+    y += sign(y);
+    
+    PVector velocity = new PVector(x, y);
     movers.add(new Mover(moverRadius, pos, velocity));
   }
 }
@@ -41,21 +69,20 @@ ArrayList<PVector> getPolyPoints(float x, float y, float sides, float radius) {
 
 void runDemo() {
   strokeWeight(1);
-  PVector mouseV = new PVector(mouseX, mouseY);
+//  PVector mouseV = new PVector(mouseX, mouseY);
   for (Mover m : movers) {
-    boolean contained = false;
+    int contained = 0;
     for (Polygon poly : testPolys) {
       if (poly.contains(m.pos)) {
-        contained = true;
-        break;
+        ++contained;
       }
     }
     m.move();
-    m.fillColor = contained ? color(255, 0, 0) : color(0, 0, 255);
+    m.fillColor = (contained % 2 == 1) ? color(255, 0, 0) : color(0, 0, 255);
   }
   
   for (Polygon poly : testPolys) {
-    fill(poly.contains(mouseV) ? color(0, 255, 0) : color(255));
+    fill(poly.polygonColor);
     poly.show();
   }
   for (Mover m : movers) {
@@ -73,9 +100,16 @@ void drawMouse() {
 class Polygon {
   
   ArrayList<PVector> points;
+  color polygonColor;
   
   Polygon(ArrayList<PVector> list) {
     this.points = list;
+    this.polygonColor = color(255);
+  }
+  
+  Polygon setColor(int r, int g, int b) {
+    this.polygonColor = color(r, g, b);
+    return this;
   }
   
   // ray-casting test for containment: https://en.wikipedia.org/wiki/Point_in_polygon#Ray_casting_algorithm
